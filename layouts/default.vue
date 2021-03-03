@@ -29,10 +29,10 @@
       >
         <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
       </v-btn>
-      <v-toolbar-title>Project Name</v-toolbar-title>
+      <v-toolbar-title class="text-h5">Project Name</v-toolbar-title>
     </v-app-bar>
-    <v-main>
-      <v-container>
+    <v-main class="blue lighten-5">
+      <v-container class="main-container pt-8">
         <nuxt />
       </v-container>
     </v-main>
@@ -72,3 +72,13 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style scoped>
+.main-container {
+  display: flex;
+  height: 100%;
+}
+.main-container > * {
+  width: 100%;
+}
+</style>

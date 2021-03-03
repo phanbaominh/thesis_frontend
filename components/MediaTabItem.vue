@@ -1,0 +1,47 @@
+<template>
+  <v-card>
+    <v-card-title> {{ `${type}: ${mediaArray.length}` }}</v-card-title>
+    <v-card-actions
+      ><v-btn block x-large>
+        Upload {{ type }}
+        <v-icon class="ml-2" large> mdi-cloud-upload </v-icon>
+      </v-btn>
+    </v-card-actions>
+    <v-list>
+      <template v-for="media in mediaArray">
+        <v-list-item :key="media.title">
+          <v-list-item-content class="text-h6 font-weight-regular">
+            {{ media.title }}
+          </v-list-item-content>
+          <v-list-item-action>
+            <v-btn fab depressed small color="primary"
+              ><v-icon>mdi-play</v-icon>
+            </v-btn>
+          </v-list-item-action>
+          <v-list-item-action>
+            <v-btn fab depressed small color="error"
+              ><v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </v-list-item-action>
+        </v-list-item>
+        <!--eslint-disable-next-line vue/valid-v-for-->
+        <v-divider class="mx-2" />
+      </template>
+    </v-list>
+  </v-card>
+</template>
+<script lang="ts">
+import Vue, { PropOptions } from 'vue';
+export default Vue.extend({
+  props: {
+    mediaArray: {
+      required: true,
+      type: Array,
+    } as PropOptions<{ title: string }[]>,
+    type: {
+      required: true,
+      type: String,
+    },
+  },
+});
+</script>
