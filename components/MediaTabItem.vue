@@ -1,14 +1,30 @@
 <template>
   <v-card>
-    <v-card-title> {{ `${type}: ${mediaArray.length}` }}</v-card-title>
-    <v-card-actions
-      ><v-btn block x-large>
+    <v-row class="mt-2">
+      <v-col class="mr-auto">
+        <v-card-title>
+          {{ `${type}: ${mediaArray.length}` }}
+        </v-card-title>
+      </v-col>
+      <v-col sm="3" class="search-box">
+        <v-text-field
+          v-model="searchText"
+          outlined
+          height="20px"
+          :placeholder="`Search ${type}`"
+        >
+        </v-text-field>
+      </v-col>
+    </v-row>
+
+    <v-card-actions>
+      <v-btn block x-large>
         Upload {{ type }}
         <v-icon class="ml-2" large> mdi-cloud-upload </v-icon>
       </v-btn>
     </v-card-actions>
     <v-list>
-      <template v-for="media in mediaArray">
+      <template v-for="media in displayMediaArray">
         <v-list-item :key="media.title">
           <v-list-item-content class="text-h6 font-weight-regular">
             {{ media.title }}
@@ -43,5 +59,25 @@ export default Vue.extend({
       type: String,
     },
   },
+  data() {
+    return {
+      searchText: '',
+      displayMediaArray: this.mediaArray,
+    };
+  },
+  watch: {
+    searchText(text) {
+      const searchRegex = new RegExp(`.*${text}`);
+      this.displayMediaArray = this.mediaArray.filter((media) =>
+        searchRegex.test(media.title)
+      );
+    },
+  },
 });
 </script>
+<style scoped>
+.search-box {
+  transform: scale(0.875);
+  transform-origin: left;
+}
+</style>
