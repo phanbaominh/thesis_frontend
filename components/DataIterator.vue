@@ -124,7 +124,7 @@ export default Vue.extend({
       search: '',
       filter: {},
       page: 1,
-      itemsPerPage: 8,
+      itemsPerPage: 12,
       items: this.initItems, // this.mediaArray,
     };
   },

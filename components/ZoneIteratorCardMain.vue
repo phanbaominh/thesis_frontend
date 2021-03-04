@@ -21,28 +21,31 @@
         </v-card-title>
 
         <v-divider></v-divider>
-
-        <v-list dense>
+        <v-container class="d-flex flex-column">
+          <v-icon x-large color="primary" class="align-self-center">
+            mdi-monitor
+          </v-icon>
+        </v-container>
+        <!-- <v-list dense>
           <v-list-item v-for="(key, index) in filteredKeys" :key="index">
             <v-list-item-content> {{ key }}: </v-list-item-content>
             <v-list-item-content class="align-end">
               {{ item[key.toLowerCase()] }}
             </v-list-item-content>
           </v-list-item>
-        </v-list>
+        </v-list> -->
       </v-card>
     </v-col>
   </v-row>
 </template>
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
-import { Device } from '~/types/types';
 export default Vue.extend({
   props: {
     items: {
       required: true,
       type: Array,
-    } as PropOptions<Device[]>,
+    } as PropOptions<Record<string, any>[]>,
     type: {
       required: true,
       type: String,

@@ -1,8 +1,8 @@
 <template>
   <DataIterator
-    main-component="DataIteratorCardMain"
-    type="Devices"
-    :init-items="devices"
+    main-component="ZoneIteratorCardMain"
+    type="Zones"
+    :init-items="zones"
   >
     <v-btn small depressed fab color="blue" class="align-self-center">
       <v-icon>mdi-plus</v-icon>
@@ -11,13 +11,13 @@
 </template>
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
-import { Device } from 'types/types';
+import { Zone } from 'types/types';
 export default Vue.extend({
   props: {
-    devices: {
+    zones: {
       required: true,
       type: Array,
-    } as PropOptions<Device[]>,
+    } as PropOptions<Zone[]>,
   },
 });
 </script>

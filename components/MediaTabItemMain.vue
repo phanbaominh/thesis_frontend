@@ -1,11 +1,5 @@
 <template>
   <div>
-    <v-card-actions>
-      <v-btn block x-large>
-        Upload {{ type }}
-        <v-icon class="ml-2" large> mdi-cloud-upload </v-icon>
-      </v-btn>
-    </v-card-actions>
     <v-list>
       <template v-for="media in items">
         <v-list-item :key="media.title">

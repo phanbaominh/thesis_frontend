@@ -4,3 +4,7 @@ export interface Device {
   serialNumber: string;
   deviceType: string;
 }
+
+export interface Zone {
+  name: string;
+}

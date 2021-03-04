@@ -1,10 +1,6 @@
 <template>
   <v-card>
-    <DeviceIterator :devices="devices">
-      <v-btn small depressed fab color="blue" class="align-self-center">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-    </DeviceIterator>
+    <DeviceIterator :devices="devices"> </DeviceIterator>
   </v-card>
 </template>
 <script lang="ts">
