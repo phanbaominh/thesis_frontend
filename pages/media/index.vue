@@ -17,6 +17,8 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
+// let testArray = new Array(10).fill(0);
+// testArray = testArray.map((_n, i) => ({ title: `Video${i}` }));
 export default Vue.extend({
   data() {
     return {
