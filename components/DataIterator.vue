@@ -13,6 +13,7 @@
             <v-card-title>
               {{ `${type}: ${initItems.length}` }}
             </v-card-title>
+            <slot></slot>
             <v-spacer></v-spacer>
             <v-col cols="6" md="3">
               <v-text-field
@@ -123,7 +124,7 @@ export default Vue.extend({
       search: '',
       filter: {},
       page: 1,
-      itemsPerPage: 4,
+      itemsPerPage: 8,
       items: this.initItems, // this.mediaArray,
     };
   },
