@@ -1,21 +1,20 @@
 <template>
   <DataIterator
-    main-component="ZoneIteratorCardMain"
-    type="Zones"
-    :init-items="zones"
+    main-component="MediaPlaylistTabItemMain"
+    :type="'Playlist'"
+    :init-items="playlistArray"
   >
     <BaseButtonToolbar icon="plus" />
   </DataIterator>
 </template>
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
-import { Zone } from 'types/types';
 export default Vue.extend({
   props: {
-    zones: {
+    playlistArray: {
       required: true,
       type: Array,
-    } as PropOptions<Zone[]>,
+    } as PropOptions<{ title: string }[]>,
   },
 });
 </script>

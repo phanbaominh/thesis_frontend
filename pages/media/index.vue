@@ -12,6 +12,9 @@
       <v-tab-item>
         <MediaTabItem :media-array="imageArray" :type="'Images'" />
       </v-tab-item>
+      <v-tab-item>
+        <MediaPlaylistTabItem :playlist-array="playlistArray" />
+      </v-tab-item>
     </v-tabs-items>
   </v-card>
 </template>
@@ -23,9 +26,10 @@ export default Vue.extend({
   data() {
     return {
       tab: null,
-      tabItems: ['Videos', 'Images'],
-      videoArray: [{ title: 'Video 1' }, { title: 'Video 2' }],
-      imageArray: [{ title: 'Image 1' }, { title: 'Image 2' }],
+      tabItems: ['Videos', 'Images', 'Playlists'],
+      videoArray: [{ name: 'Video 1' }, { name: 'Video 2' }],
+      imageArray: [{ name: 'Image 1' }, { name: 'Image 2' }],
+      playlistArray: [{ name: 'Playlist 1' }, { name: 'Playlist 2' }],
     };
   },
 });

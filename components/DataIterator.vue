@@ -31,11 +31,7 @@
       </template>
 
       <template #default="props">
-        <component
-          :is="mainComponent"
-          :items="props.items"
-          :type="type"
-        ></component>
+        <component :is="mainComponent" :items="props.items"></component>
       </template>
 
       <template #footer>

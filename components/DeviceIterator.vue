@@ -4,9 +4,7 @@
     type="Devices"
     :init-items="devices"
   >
-    <v-btn small depressed fab color="blue" class="align-self-center">
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
+    <BaseButtonToolbar icon="plus" />
   </DataIterator>
 </template>
 <script lang="ts">
