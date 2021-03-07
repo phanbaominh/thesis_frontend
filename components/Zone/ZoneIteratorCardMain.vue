@@ -10,7 +10,7 @@
     >
       <v-card>
         <v-card-title class="subheading font-weight-bold">
-          {{ item.name }}
+          <nuxt-link :to="`/zones/${item.name}`">{{ item.name }}</nuxt-link>
           <v-spacer></v-spacer>
           <v-btn class="mr-2" color="primary" x-small fab depressed>
             <v-icon>mdi-pencil</v-icon>

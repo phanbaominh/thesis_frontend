@@ -6,14 +6,21 @@
       app
       fixed
       :mini-variant="miniVariant"
+      width="150"
     >
       <v-list nav>
-        <v-list-item v-for="(item, i) in navItems" :key="i" :to="item.to">
+        <v-list-item
+          v-for="(item, i) in navItems"
+          :key="i"
+          :to="item.to"
+          nuxt
+          dense
+        >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="text-md-h6 font-weight-regular">{{
+            <v-list-item-title class="font-weight-regular">{{
               item.title
             }}</v-list-item-title>
           </v-list-item-content>
