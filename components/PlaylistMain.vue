@@ -1,25 +1,25 @@
 <template>
   <DataIterator :type="'Items'" :init-items="mediaArray">
     <slot></slot>
-    <template v-if="isDeleting">
+    <template v-if="isSelecting">
       <BaseButtonToolbar
         icon="check"
         color="success"
-        title="Confirm delete"
+        title="Confirm"
         @click="onConfirm"
       />
       <BaseButtonToolbar
         icon="close"
         color="grey"
         title="Cancel"
-        @click="onDeleteSwitching"
+        @click="onSwitchSelecting"
       />
     </template>
     <BaseButtonToolbar
       v-else
       color="error"
       icon="delete"
-      @click="onDeleteSwitching"
+      @click="onSwitchSelecting"
     />
     <template #main="{ items: displayedMediaArray }">
       <MediaList :items="displayedMediaArray">
@@ -30,9 +30,9 @@
         </template>
         <template #actions="{ item: media }">
           <v-checkbox
-            v-if="isDeleting"
+            v-if="isSelecting"
             v-model="selectedMediaArray"
-            :value="media.name"
+            :value="media"
           >
           </v-checkbox>
         </template>
@@ -43,31 +43,36 @@
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
 import BaseButtonToolbar from './BaseButtonToolbar.vue';
+import { Media } from '~/types/types';
 export default Vue.extend({
   components: { BaseButtonToolbar },
   props: {
     mediaArray: {
       required: true,
       type: Array,
-    } as PropOptions<{ title: string }[]>,
-    type: {
-      required: true,
-      type: String,
+    } as PropOptions<Media[]>,
+    isAdd: {
+      default: false,
+      type: Boolean,
     },
   },
   data() {
     return {
-      isDeleting: false,
+      isSelecting: this.isAdd,
       selectedMediaArray: [] as string[],
     };
   },
   methods: {
-    onDeleteSwitching() {
-      this.isDeleting = !this.isDeleting;
+    onSwitchSelecting() {
+      this.changeSelect();
+      if (this.isAdd) this.$emit('onClose');
     },
     onConfirm() {
-      this.isDeleting = !this.isDeleting;
+      this.changeSelect();
       this.$emit('onConfirm', this.selectedMediaArray);
+    },
+    changeSelect() {
+      if (this.isAdd === false) this.isSelecting = !this.isSelecting;
     },
   },
 });

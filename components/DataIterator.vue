@@ -35,7 +35,7 @@
       </template>
 
       <template #footer>
-        <v-row class="mt-2 px-2" align="center" justify="center">
+        <v-row class="mt-2 px-2 mb-1" align="center" justify="center">
           <span class="grey--text">Items per page</span>
           <v-menu offset-y>
             <template #activator="{ on, attrs }">

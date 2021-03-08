@@ -1,25 +1,43 @@
 <template>
-  <v-card>
-    <v-card-title> {{ playlist.name }}</v-card-title>
-    <v-card-actions>
-      <v-btn color="primary">
-        <v-icon> mdi-pencil</v-icon>
-      </v-btn>
-    </v-card-actions>
-    <v-card outlined class="mx-2">
+  <v-card class="pa-4">
+    <v-row>
+      <v-col v-if="isNameChanging" cols="2">
+        <v-text-field ref="nameInput" v-model="playlist.name"></v-text-field>
+      </v-col>
+
+      <v-card-title v-else> {{ playlist.name }}</v-card-title>
+      <v-card-actions>
+        <v-btn color="primary" fab small depressed @click="onChangeName">
+          <v-icon> mdi-{{ isNameChanging ? 'check' : 'pencil' }}</v-icon>
+        </v-btn>
+      </v-card-actions>
+    </v-row>
+    <v-card outlined class="mt-2">
       <PlaylistMain
-        :type="'Items'"
         :media-array="playlist.mediaArray"
         @onConfirm="onConfirmDelete"
       >
-        <BaseButtonToolbar icon="plus" />
+        <v-dialog v-model="isAddDialog" width="1000" scrollable>
+          <template #activator="{ on, attrs }">
+            <BaseButtonToolbar icon="plus" v-bind="attrs" v-on="on" />
+          </template>
+
+          <v-card>
+            <PlaylistMain
+              is-add
+              :media-array="allMediaArray"
+              @onConfirm="onConfirmAdd"
+              @onClose="closeDialog"
+            />
+          </v-card>
+        </v-dialog>
       </PlaylistMain>
     </v-card>
   </v-card>
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { Playlist } from 'types/types';
+import { Media, Playlist } from 'types/types';
 import BaseButtonToolbar from '~/components/BaseButtonToolbar.vue';
 export default Vue.extend({
   components: { BaseButtonToolbar },
@@ -39,13 +57,32 @@ export default Vue.extend({
   data() {
     return {
       playlist: (null as any) as Playlist,
+      isAddDialog: false,
+      isNameChanging: false,
+      allMediaArray: new Array(10)
+        .fill(0)
+        .map((_n, i) => ({ name: `New Media${i}` })),
     };
   },
+  updated() {
+    if (this.isNameChanging) (this.$refs.nameInput as any).focus();
+  },
   methods: {
-    onConfirmDelete(deletedMediaArray: string[]) {
+    onConfirmDelete(deletedMediaArray: Media[]) {
+      const deletedNames = deletedMediaArray.map((media) => media.name);
       this.playlist.mediaArray = this.playlist.mediaArray.filter(
-        (media) => !deletedMediaArray.includes(media.name)
+        (media) => !deletedNames.includes(media.name)
       );
+    },
+    onConfirmAdd(addedMediaArray: Media[]) {
+      addedMediaArray.forEach((media) => this.playlist.mediaArray.push(media));
+      this.closeDialog();
+    },
+    closeDialog() {
+      this.isAddDialog = false;
+    },
+    onChangeName() {
+      this.isNameChanging = !this.isNameChanging;
     },
   },
 });
