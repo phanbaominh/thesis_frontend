@@ -1,17 +1,9 @@
 <template>
   <v-card class="pa-4">
-    <v-row>
-      <v-col v-if="isNameChanging" cols="2">
-        <v-text-field ref="nameInput" v-model="playlist.name"></v-text-field>
-      </v-col>
-
-      <v-card-title v-else> {{ playlist.name }}</v-card-title>
-      <v-card-actions>
-        <v-btn color="primary" fab small depressed @click="onChangeName">
-          <v-icon> mdi-{{ isNameChanging ? 'check' : 'pencil' }}</v-icon>
-        </v-btn>
-      </v-card-actions>
-    </v-row>
+    <EditableName
+      :init-name="playlist.name"
+      @updateName="playlist.name = $event"
+    />
     <v-card outlined class="mt-2">
       <PlaylistMain
         :media-array="playlist.mediaArray"
@@ -58,14 +50,10 @@ export default Vue.extend({
     return {
       playlist: (null as any) as Playlist,
       isAddDialog: false,
-      isNameChanging: false,
       allMediaArray: new Array(10)
         .fill(0)
         .map((_n, i) => ({ name: `New Media${i}` })),
     };
-  },
-  updated() {
-    if (this.isNameChanging) (this.$refs.nameInput as any).focus();
   },
   methods: {
     onConfirmDelete(deletedMediaArray: Media[]) {
@@ -80,9 +68,6 @@ export default Vue.extend({
     },
     closeDialog() {
       this.isAddDialog = false;
-    },
-    onChangeName() {
-      this.isNameChanging = !this.isNameChanging;
     },
   },
 });
