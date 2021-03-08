@@ -8,6 +8,11 @@ export interface Zone {
   name: string;
 }
 
+export interface Playlist {
+  name: string;
+  mediaArray: { name: string }[];
+}
+
 export interface FetchState {
   error: Error | null;
   pending: boolean;

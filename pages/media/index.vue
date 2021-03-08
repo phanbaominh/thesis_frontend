@@ -7,13 +7,13 @@
     </v-tabs>
     <v-tabs-items v-model="tab">
       <v-tab-item>
-        <MediaTabItem :media-array="videoArray" :type="'Videos'" />
+        <MediaTabItem :media-array="videos" :type="'Videos'" />
       </v-tab-item>
       <v-tab-item>
-        <MediaTabItem :media-array="imageArray" :type="'Images'" />
+        <MediaTabItem :media-array="images" :type="'Images'" />
       </v-tab-item>
       <v-tab-item>
-        <MediaPlaylistTabItem :playlist-array="playlistArray" />
+        <MediaTabItemPlaylist :playlists="playlists" />
       </v-tab-item>
     </v-tabs-items>
   </v-card>
@@ -27,9 +27,9 @@ export default Vue.extend({
     return {
       tab: null,
       tabItems: ['Videos', 'Images', 'Playlists'],
-      videoArray: [{ name: 'Video 1' }, { name: 'Video 2' }],
-      imageArray: [{ name: 'Image 1' }, { name: 'Image 2' }],
-      playlistArray: [{ name: 'Playlist 1' }, { name: 'Playlist 2' }],
+      videos: [{ name: 'Video 1' }, { name: 'Video 2' }],
+      images: [{ name: 'Image 1' }, { name: 'Image 2' }],
+      playlists: [{ name: 'Playlist 1' }, { name: 'Playlist 2' }],
     };
   },
 });

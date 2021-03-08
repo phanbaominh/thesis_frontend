@@ -31,7 +31,7 @@
       </template>
 
       <template #default="props">
-        <component :is="mainComponent" :items="props.items"></component>
+        <slot name="main" :items="props.items"></slot>
       </template>
 
       <template #footer>
@@ -109,10 +109,6 @@ export default Vue.extend({
       required: true,
       type: String,
     },
-    mainComponent: {
-      required: true,
-      type: String,
-    },
   },
   data() {
     return {
@@ -127,6 +123,11 @@ export default Vue.extend({
   computed: {
     numberOfPages(): number {
       return Math.ceil(this.items.length / this.itemsPerPage);
+    },
+  },
+  watch: {
+    initItems() {
+      this.items = this.initItems;
     },
   },
   methods: {
