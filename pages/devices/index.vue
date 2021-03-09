@@ -3,12 +3,7 @@
     <template #pending>
       <span> Fetching devices...<LoadingSpinner /> </span>
     </template>
-    <DataIterator
-      main-component="DataIteratorCardMain"
-      type="Devices"
-      :init-items="devices"
-    >
-      <!-- <BaseButtonToolbar icon="plus" /> -->
+    <DataIterator type="Devices" :init-items="devices">
       <template #main="{ items: displayedDevices }">
         <v-row>
           <v-col
@@ -91,7 +86,6 @@ export default Vue.extend({
       type: 'Digital Signage',
     })) as Device[];
     this.devices = testArray;
-    this.isNameDialogOpened = new Array(testArray.length).fill(false);
   },
   computed: {
     filteredKeys(): string[] {

@@ -2,12 +2,13 @@
   <v-container>
     <v-toolbar dark color="blue darken-3">
       <v-row>
-        <v-card-title>
+        <EditableName :init-name="zone.name" @updateName="onUpdateName" />
+        <!-- <v-card-title>
           {{ zone.name }}
         </v-card-title>
         <v-btn fab small depressed color="blue" class="align-self-center">
           <v-icon> mdi-pencil </v-icon>
-        </v-btn>
+        </v-btn> -->
         <v-spacer></v-spacer>
         <v-btn fab small depressed color="blue" class="align-self-center mr-2">
           <v-icon> mdi-sync </v-icon>
@@ -45,6 +46,11 @@ export default Vue.extend({
     return {
       zone: (null as any) as Zone,
     };
+  },
+  methods: {
+    onUpdateName(newName: string) {
+      this.zone.name = newName;
+    },
   },
 });
 </script>

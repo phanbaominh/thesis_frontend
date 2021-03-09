@@ -51,11 +51,6 @@ export default Vue.extend({
       dialog: false,
     };
   },
-  watch: {
-    dialog(val) {
-      if (val === true) (this.$refs.nameInput as any).focus();
-    },
-  },
   methods: {
     onOpenDialog() {
       (this.$refs.nameInput as any).focus();
