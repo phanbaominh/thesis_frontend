@@ -13,7 +13,7 @@ export interface Media {
 }
 export interface Playlist {
   name: string;
-  mediaArray: Media[];
+  mediaArray?: Media[];
 }
 
 export interface FetchState {

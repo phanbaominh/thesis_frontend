@@ -57,13 +57,15 @@ export default Vue.extend({
   },
   methods: {
     onConfirmDelete(deletedMediaArray: Media[]) {
+      if (!this.playlist.mediaArray) return;
       const deletedNames = deletedMediaArray.map((media) => media.name);
       this.playlist.mediaArray = this.playlist.mediaArray.filter(
         (media) => !deletedNames.includes(media.name)
       );
     },
     onConfirmAdd(addedMediaArray: Media[]) {
-      addedMediaArray.forEach((media) => this.playlist.mediaArray.push(media));
+      if (!this.playlist.mediaArray) this.playlist.mediaArray = [];
+      addedMediaArray.forEach((media) => this.playlist.mediaArray!.push(media));
       this.closeDialog();
     },
     closeDialog() {

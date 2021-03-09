@@ -15,7 +15,7 @@
           </v-card-title>
           <slot></slot>
           <v-spacer></v-spacer>
-          <v-col cols="6" md="3">
+          <v-col :cols="6" :md="compact ? 6 : 3">
             <v-text-field
               v-model="search"
               clearable
@@ -107,6 +107,10 @@ export default Vue.extend({
     type: {
       required: true,
       type: String,
+    },
+    compact: {
+      default: false,
+      type: Boolean,
     },
   },
   data() {

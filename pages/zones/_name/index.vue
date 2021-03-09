@@ -16,13 +16,14 @@
       </v-row>
     </v-toolbar>
     <v-row class="mt-2">
-      <v-col cols="6">
+      <v-col cols="12" md="6">
         <ZoneSingleMediaControl class="cards" />
       </v-col>
       <v-spacer></v-spacer>
-      <v-col cols="6">
+      <v-col cols="12" md="6">
         <v-card class="cards pa-4">
-          <ZoneSingleMediaFetcher type="Videos" />
+          <v-card outlined><MediaTabItem type="Videos" compact /></v-card>
+          <v-card outlined><MediaTabItemPlaylist compact /></v-card>
         </v-card>
       </v-col>
     </v-row>
@@ -31,7 +32,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Zone } from 'types/types';
+import MediaTabItemPlaylist from '~/components/MediaTabItemPlaylist.vue';
 export default Vue.extend({
+  components: { MediaTabItemPlaylist },
   async asyncData({ route }) {
     // const zone = (
     //   await $axios.$get($apiUrl.getzone(route.params.zone.slice(1)))
@@ -59,5 +62,9 @@ export default Vue.extend({
   height: 500px;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.cards > * {
+  margin-bottom: 10px;
 }
 </style>

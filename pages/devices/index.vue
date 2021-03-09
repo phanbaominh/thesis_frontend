@@ -1,7 +1,7 @@
 <template>
   <BaseFetcher :fetch-state="$fetchState">
     <template #pending>
-      <span> Fetching devices...<LoadingSpinner /> </span>
+      <span> Fetching devices...</span>
     </template>
     <DataIterator type="Devices" :init-items="devices">
       <template #main="{ items: displayedDevices }">
