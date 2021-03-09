@@ -11,16 +11,21 @@
             {{ media.name }}
           </v-list-item-content>
         </template>
-        <template #actions>
+        <template #actions="{ item: media }">
           <v-list-item-action>
             <v-btn fab depressed small color="primary"
               ><v-icon>mdi-play</v-icon>
             </v-btn>
           </v-list-item-action>
           <v-list-item-action>
-            <v-btn fab depressed small color="error"
-              ><v-icon>mdi-delete</v-icon>
-            </v-btn>
+            <DialogDelete
+              v-slot="{ on, attrs }"
+              @delete="$emit('delete', media)"
+            >
+              <v-btn fab depressed small color="error" v-bind="attrs" v-on="on"
+                ><v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </DialogDelete>
           </v-list-item-action>
         </template>
       </MediaList>

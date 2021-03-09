@@ -1,20 +1,23 @@
 <template>
   <v-row class="pa-4">
-    <v-col v-if="isNameChanging" :cols="2">
-      <v-text-field
-        ref="nameInput"
-        v-model="name"
-        class="text-h6"
-        dense
-      ></v-text-field>
+    <v-col v-if="isNameChanging" :cols="3">
+      <v-text-field ref="nameInput" v-model="name" class="text-h6">
+        <template #append-outer>
+          <v-btn color="blue" dark fab small depressed @click="onChangeName">
+            <v-icon> mdi-{{ isNameChanging ? 'check' : 'pencil' }}</v-icon>
+          </v-btn>
+        </template>
+      </v-text-field>
     </v-col>
 
-    <v-card-title v-else> {{ name }}</v-card-title>
-    <v-card-actions>
-      <v-btn color="blue" dark fab small depressed @click="onChangeName">
-        <v-icon> mdi-{{ isNameChanging ? 'check' : 'pencil' }}</v-icon>
-      </v-btn>
-    </v-card-actions>
+    <template v-else>
+      <v-card-title> {{ name }}</v-card-title>
+      <v-card-actions>
+        <v-btn color="blue" dark fab small depressed @click="onChangeName">
+          <v-icon> mdi-{{ isNameChanging ? 'check' : 'pencil' }}</v-icon>
+        </v-btn>
+      </v-card-actions>
+    </template>
   </v-row>
 </template>
 <script lang="ts">

@@ -5,6 +5,7 @@
     :page.sync="page"
     :search="search"
     hide-default-footer
+    class="px-2 mt-2"
   >
     <template #header>
       <v-toolbar dark color="blue darken-3" class="mb-1">

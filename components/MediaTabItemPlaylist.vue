@@ -1,6 +1,23 @@
 <template>
   <DataIterator :type="'Playlist'" :init-items="playlists">
-    <BaseButtonToolbar icon="plus" />
+    <DialogName
+      v-slot="{ on, attrs }"
+      init-name=""
+      title="Create a playlist:"
+      @updateName="$emit('new', $event)"
+    >
+      <v-btn
+        small
+        depressed
+        fab
+        :color="'blue'"
+        class="align-self-center mr-2"
+        v-bind="attrs"
+        v-on="on"
+      >
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+    </DialogName>
     <template #main="{ items: displayedPlaylists }">
       <MediaList :items="displayedPlaylists">
         <template #default="{ item: playlist }">
