@@ -8,12 +8,12 @@
       type="Devices"
       :init-items="devices"
     >
-      <BaseButtonToolbar icon="plus" />
+      <!-- <BaseButtonToolbar icon="plus" /> -->
       <template #main="{ items: displayedDevices }">
         <v-row>
           <v-col
             v-for="(device, i) in displayedDevices"
-            :key="device.name"
+            :key="device.serial"
             cols="12"
             sm="6"
             md="4"
@@ -23,28 +23,36 @@
               <v-card-title class="subheading font-weight-bold">
                 {{ device.name }}
                 <v-spacer></v-spacer>
-                <v-dialog v-model="isNameDialogOpened[i]" width="300">
-                  <template #activator="{ on, attrs }">
-                    <v-btn
-                      class="mr-2"
-                      color="primary"
-                      x-small
-                      fab
-                      depressed
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      <v-icon>mdi-pencil</v-icon>
-                    </v-btn>
-                  </template>
-                  <DialogNameCard
-                    :init-name="device.name"
-                    @updateName="onChangeName(i, $event)"
-                  />
-                </v-dialog>
-                <v-btn color="error" x-small fab depressed>
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
+                <DialogName
+                  v-slot="{ on, attrs }"
+                  :init-name="device.name"
+                  title="Change device name:"
+                  @updateName="onChangeName(i, $event)"
+                >
+                  <v-btn
+                    class="mr-2"
+                    color="primary"
+                    x-small
+                    fab
+                    depressed
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <v-icon>mdi-pencil</v-icon>
+                  </v-btn>
+                </DialogName>
+                <DialogDelete v-slot="{ on, attrs }" @delete="onDelete(i)">
+                  <v-btn
+                    color="error"
+                    x-small
+                    fab
+                    depressed
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </DialogDelete>
               </v-card-title>
 
               <v-divider></v-divider>
@@ -71,7 +79,7 @@ export default Vue.extend({
   data() {
     return {
       devices: [] as Device[],
-      isNameDialogOpened: [] as Boolean[],
+      // isNameDialogOpened: [] as Boolean[],
     };
   },
   async fetch() {
@@ -79,7 +87,7 @@ export default Vue.extend({
     let testArray = new Array(10).fill(0);
     testArray = testArray.map((_n, i) => ({
       name: `Device${i}`,
-      serial: '123456789',
+      serial: `123456789${i}`,
       type: 'Digital Signage',
     })) as Device[];
     this.devices = testArray;
@@ -92,9 +100,11 @@ export default Vue.extend({
   },
   methods: {
     onChangeName(i: number, newName: string) {
-      this.isNameDialogOpened[i] = false;
+      // this.isNameDialogOpened[i] = false;
       this.devices[i].name = newName;
-      this.$forceUpdate();
+    },
+    onDelete(i: number) {
+      this.devices = this.devices.filter((_, index) => index !== i);
     },
   },
 });
