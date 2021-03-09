@@ -5,34 +5,19 @@
       @updateName="playlist.name = $event"
     />
     <v-card outlined class="mt-2">
-      <PlaylistMain
+      <MediaAddDelete
         :media-array="playlist.mediaArray"
-        @onConfirm="onConfirmDelete"
-      >
-        <v-dialog v-model="isAddDialog" width="1000" scrollable>
-          <template #activator="{ on, attrs }">
-            <BaseButtonToolbar icon="plus" v-bind="attrs" v-on="on" />
-          </template>
-
-          <v-card>
-            <PlaylistMain
-              is-add
-              :media-array="allMediaArray"
-              @onConfirm="onConfirmAdd"
-              @onClose="closeDialog"
-            />
-          </v-card>
-        </v-dialog>
-      </PlaylistMain>
+        type="Media"
+        @add="onConfirmAdd"
+        @delete="onConfirmDelete"
+      />
     </v-card>
   </v-card>
 </template>
 <script lang="ts">
 import Vue from 'vue';
 import { Media, Playlist } from 'types/types';
-import BaseButtonToolbar from '~/components/BaseButtonToolbar.vue';
 export default Vue.extend({
-  components: { BaseButtonToolbar },
   async asyncData({ route }) {
     // const zone = (
     //   await $axios.$get($apiUrl.getzone(route.params.zone.slice(1)))
@@ -49,7 +34,6 @@ export default Vue.extend({
   data() {
     return {
       playlist: (null as any) as Playlist,
-      isAddDialog: false,
       allMediaArray: new Array(10)
         .fill(0)
         .map((_n, i) => ({ name: `New Media${i}` })),
@@ -66,10 +50,6 @@ export default Vue.extend({
     onConfirmAdd(addedMediaArray: Media[]) {
       if (!this.playlist.mediaArray) this.playlist.mediaArray = [];
       addedMediaArray.forEach((media) => this.playlist.mediaArray!.push(media));
-      this.closeDialog();
-    },
-    closeDialog() {
-      this.isAddDialog = false;
     },
   },
 });

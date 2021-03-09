@@ -26,10 +26,7 @@
               </v-btn>
             </v-list-item-action>
             <v-list-item-action>
-              <DialogDelete
-                v-slot="{ on, attrs }"
-                @delete="$emit('delete', media)"
-              >
+              <DialogDelete v-slot="{ on, attrs }" @delete="onDelete(media)">
                 <v-btn
                   fab
                   depressed

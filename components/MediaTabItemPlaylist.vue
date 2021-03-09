@@ -6,7 +6,7 @@
         v-slot="{ on, attrs }"
         init-name=""
         title="Create a playlist:"
-        @updateName="$emit('new', $event)"
+        @updateName="onNew"
       >
         <v-btn
           small
@@ -28,6 +28,13 @@
                 {{ playlist.name }}
               </nuxt-link>
             </v-list-item-content>
+          </template>
+          <template #actions="{ item: playlist }">
+            <DialogDelete v-slot="{ on, attrs }" @delete="onDelete(playlist)">
+              <v-btn fab depressed small color="error" v-bind="attrs" v-on="on"
+                ><v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </DialogDelete>
           </template>
         </MediaList>
       </template>
@@ -58,8 +65,11 @@ export default Vue.extend({
     }));
   },
   methods: {
-    onNewPlaylist(name: string) {
+    onNew(name: string) {
       this.playlists.push({ name });
+    },
+    onDelete(playlist: Playlist) {
+      this.playlists = this.playlists.filter((m) => m.name !== playlist.name);
     },
   },
 });

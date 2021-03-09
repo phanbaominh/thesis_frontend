@@ -1,5 +1,5 @@
 <template>
-  <DataIterator :type="'Items'" :init-items="mediaArray">
+  <DataIterator :type="type" :init-items="mediaArray" :compact="compact">
     <slot></slot>
     <template v-if="isSelecting">
       <BaseButtonToolbar
@@ -35,6 +35,7 @@
             :value="media"
           >
           </v-checkbox>
+          <slot v-else name="actions" :media="media"></slot>
         </template>
       </MediaList>
     </template>
@@ -55,6 +56,14 @@ export default Vue.extend({
       default: false,
       type: Boolean,
     },
+    compact: {
+      default: false,
+      type: Boolean,
+    },
+    type: {
+      required: true,
+      type: String,
+    },
   },
   data() {
     return {
@@ -65,11 +74,11 @@ export default Vue.extend({
   methods: {
     onSwitchSelecting() {
       this.changeSelect();
-      if (this.isAdd) this.$emit('onClose');
+      if (this.isAdd) this.$emit('close');
     },
     onConfirm() {
       this.changeSelect();
-      this.$emit('onConfirm', this.selectedMediaArray);
+      this.$emit('confirm', this.selectedMediaArray);
     },
     changeSelect() {
       if (this.isAdd === false) this.isSelecting = !this.isSelecting;
