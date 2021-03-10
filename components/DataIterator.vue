@@ -9,14 +9,20 @@
   >
     <template #header>
       <v-toolbar dark color="blue darken-3" class="mb-1">
-        <v-row>
-          <v-card-title>
+        <v-row
+          :class="{ 'mt-2': $vuetify.breakpoint.width < (compact ? 430 : 300) }"
+        >
+          <v-card-title class="text-subtitle-1 text-sm-h6">
             {{ `${type}: ${initItems.length}` }}
           </v-card-title>
           <slot></slot>
           <v-spacer></v-spacer>
-          <v-col :cols="6" :md="compact ? 5 : 3">
+          <v-col
+            :cols="$vuetify.breakpoint.xsOnly ? 5 : 6"
+            :md="compact ? 5 : 3"
+          >
             <v-text-field
+              v-if="$vuetify.breakpoint.smAndUp"
               v-model="search"
               clearable
               flat
@@ -28,6 +34,16 @@
           </v-col>
         </v-row>
       </v-toolbar>
+      <v-text-field
+        v-if="!$vuetify.breakpoint.smAndUp"
+        v-model="search"
+        clearable
+        flat
+        solo-inverted
+        hide-details
+        prepend-inner-icon="mdi-magnify"
+        label="Search"
+      ></v-text-field>
     </template>
 
     <template #default="props">
@@ -35,15 +51,15 @@
     </template>
 
     <template #footer>
-      <v-row class="mt-2 px-2 mb-1" align="center" justify="center">
-        <span class="grey--text">Items per page</span>
+      <v-row class="mt-2 px-4 mb-1" align="center">
+        <span class="grey--text">Items/page</span>
         <v-menu offset-y>
           <template #activator="{ on, attrs }">
             <v-btn
               dark
               text
               color="primary"
-              class="ml-2"
+              class="ml-1"
               v-bind="attrs"
               v-on="on"
             >
@@ -64,31 +80,22 @@
 
         <v-spacer></v-spacer>
 
-        <span class="mr-4 grey--text">
-          Page {{ page }} of {{ numberOfPages }}
-        </span>
-        <v-btn
-          fab
-          dark
-          depressed
-          small
-          color="blue darken-3"
-          class="mr-1"
-          @click="formerPage"
+        <div
+          :style="{ display: $vuetify.breakpoint.smAndUp ? 'inline' : 'block' }"
         >
-          <v-icon>mdi-chevron-left</v-icon>
-        </v-btn>
-        <v-btn
-          fab
-          dark
-          color="blue darken-3"
-          class="ml-1"
-          depressed
-          small
-          @click="nextPage"
-        >
-          <v-icon>mdi-chevron-right</v-icon>
-        </v-btn>
+          <span class="mr-4 grey--text"> {{ page }}/{{ numberOfPages }} </span>
+          <BaseButton
+            dark
+            color="blue darken-3"
+            class="mr-1"
+            @click="formerPage"
+          >
+            <v-icon>mdi-chevron-left</v-icon>
+          </BaseButton>
+          <BaseButton dark color="blue darken-3" class="ml-1" @click="nextPage">
+            <v-icon>mdi-chevron-right</v-icon>
+          </BaseButton>
+        </div>
       </v-row>
     </template>
   </v-data-iterator>
@@ -96,9 +103,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import BaseButton from './BaseButton.vue';
 // let testArray = new Array(10).fill(0);
 // testArray = testArray.map((_n, i) => ({ title: `Video${i}` }));
 export default Vue.extend({
+  components: { BaseButton },
   props: {
     initItems: {
       required: true,

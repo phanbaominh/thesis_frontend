@@ -10,11 +10,11 @@
       </v-row>
     </v-toolbar>
     <v-row class="mt-2">
-      <v-col cols="12" md="6">
+      <v-col cols="12" lg="6">
         <ZoneMediaControl class="cards" />
       </v-col>
       <v-spacer></v-spacer>
-      <v-col cols="12" md="6">
+      <v-col cols="12" lg="6">
         <v-card class="cards pa-4">
           <v-card outlined>
             <ZoneMedia

@@ -1,7 +1,16 @@
 <template>
   <v-dialog v-model="dialog" max-width="290">
-    <template #activator="{ on, attrs }">
-      <slot :on="on" :attrs="attrs"></slot>
+    <template #activator="{ on }">
+      <v-btn
+        v-bind="$attrs"
+        fab
+        depressed
+        :small="!$vuetify.breakpoint.xs"
+        :x-small="$vuetify.breakpoint.xs"
+        v-on="on"
+      >
+        <slot></slot>
+      </v-btn>
     </template>
     <v-card>
       <v-card-title class="headline"> Delete this? </v-card-title>

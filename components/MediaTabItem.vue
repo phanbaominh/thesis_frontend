@@ -1,41 +1,62 @@
 <template>
   <BaseFetcher :fetch-state="$fetchState">
     <template #pending> Fetching {{ type }}... </template>
-    <DataIterator :type="type" :init-items="mediaArray" :compact="compact">
-      <v-btn
-        v-if="!compact"
-        depressed
-        class="align-self-center"
-        color="blue"
-        x-large
-      >
-        Upload {{ type }}
-        <v-icon class="ml-2" large> mdi-cloud-upload </v-icon>
-      </v-btn>
+    <DataIterator :type="type" :init-items="mediaArray">
+      <v-dialog v-model="isUploadDialog" width="500" scrollable>
+        <template #activator="{ on, attrs }">
+          <v-btn
+            depressed
+            fab
+            color="blue"
+            class="align-self-center mr-2"
+            v-bind="attrs"
+            :small="!$vuetify.breakpoint.xs"
+            :x-small="$vuetify.breakpoint.xs"
+            v-on="on"
+          >
+            <v-icon>mdi-cloud-upload</v-icon>
+          </v-btn>
+        </template>
+        <v-card class="pa-4">
+          <v-file-input
+            v-model="uploadedFiles"
+            multiple
+            label="Choose files to upload"
+          >
+            <template #selection="{ index, text }">
+              <v-chip
+                color="primary"
+                dark
+                label
+                small
+                close
+                @click:close="removeFile(index)"
+              >
+                {{ text }}
+              </v-chip>
+            </template>
+          </v-file-input>
+
+          <v-card-actions>
+            <span class="text-h6 mr-2">Confirm upload</span>
+            <BaseButton color="success" @click="onConfirmUpload">
+              <v-icon>mdi-check</v-icon>
+            </BaseButton>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
       <template #main="{ items: displayedMediaArray }">
         <MediaList :items="displayedMediaArray">
-          <template #default="{ item: media }">
-            <v-list-item-content class="text-h6 font-weight-regular">
-              {{ media.name }}
-            </v-list-item-content>
-          </template>
           <template #actions="{ item: media }">
             <v-list-item-action>
-              <v-btn fab depressed small color="primary"
+              <BaseButton color="primary"
                 ><v-icon>mdi-play</v-icon>
-              </v-btn>
+              </BaseButton>
             </v-list-item-action>
             <v-list-item-action>
-              <DialogDelete v-slot="{ on, attrs }" @delete="onDelete(media)">
-                <v-btn
-                  fab
-                  depressed
-                  small
-                  color="error"
-                  v-bind="attrs"
-                  v-on="on"
-                  ><v-icon>mdi-delete</v-icon>
-                </v-btn>
+              <DialogDelete color="error" @delete="onDelete(media)">
+                <v-icon>mdi-delete</v-icon>
               </DialogDelete>
             </v-list-item-action>
           </template>
@@ -53,14 +74,12 @@ export default Vue.extend({
       required: true,
       type: String,
     },
-    compact: {
-      default: false,
-      type: Boolean,
-    },
   },
   data() {
     return {
       mediaArray: (null as any) as Media[],
+      isUploadDialog: false,
+      uploadedFiles: [],
     };
   },
   async fetch() {
@@ -71,6 +90,12 @@ export default Vue.extend({
   methods: {
     onDelete(media: Media) {
       this.mediaArray = this.mediaArray.filter((m) => m.name !== media.name);
+    },
+    onConfirmUpload() {
+      this.isUploadDialog = false;
+    },
+    removeFile(index: number) {
+      this.uploadedFiles = this.uploadedFiles.filter((_, i) => i !== index);
     },
   },
 });

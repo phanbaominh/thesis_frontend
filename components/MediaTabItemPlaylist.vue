@@ -9,11 +9,12 @@
         @updateName="onNew"
       >
         <v-btn
-          small
           depressed
           fab
           :color="'blue'"
           class="align-self-center mr-2"
+          :small="!$vuetify.breakpoint.xs"
+          :x-small="$vuetify.breakpoint.xs"
           v-bind="attrs"
           v-on="on"
         >
@@ -23,17 +24,13 @@
       <template #main="{ items: displayedPlaylists }">
         <MediaList :items="displayedPlaylists">
           <template #default="{ item: playlist }">
-            <v-list-item-content class="text-h6 font-weight-regular">
-              <nuxt-link :to="`/playlists/${playlist.name}`">
-                {{ playlist.name }}
-              </nuxt-link>
-            </v-list-item-content>
+            <nuxt-link :to="`/playlists/${playlist.name}`">
+              {{ playlist.name }}
+            </nuxt-link>
           </template>
           <template #actions="{ item: playlist }">
-            <DialogDelete v-slot="{ on, attrs }" @delete="onDelete(playlist)">
-              <v-btn fab depressed small color="error" v-bind="attrs" v-on="on"
-                ><v-icon>mdi-delete</v-icon>
-              </v-btn>
+            <DialogDelete color="error" @delete="onDelete(playlist)">
+              <v-icon>mdi-delete</v-icon>
             </DialogDelete>
           </template>
         </MediaList>

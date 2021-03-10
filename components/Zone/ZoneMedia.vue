@@ -8,9 +8,9 @@
     @delete="onDelete"
   >
     <v-list-item-action>
-      <v-btn fab depressed small color="primary" @click="onPlay(media)">
+      <BaseButton color="primary" @click="onPlay(media)">
         <v-icon>mdi-play</v-icon>
-      </v-btn>
+      </BaseButton>
     </v-list-item-action>
   </MediaAddDelete>
 </template>

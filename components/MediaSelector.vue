@@ -24,7 +24,9 @@
     <template #main="{ items: displayedMediaArray }">
       <MediaList :items="displayedMediaArray">
         <template #default="{ item: media }">
-          <v-list-item-content class="text-h6 font-weight-regular">
+          <v-list-item-content
+            class="text-subtitle-1 text-sm-h6 font-weight-regular"
+          >
             {{ media.name }}
           </v-list-item-content>
         </template>

@@ -11,18 +11,18 @@
     <v-dialog v-model="isAddDialog" width="1000" scrollable>
       <template #activator="{ on, attrs }">
         <v-btn
-          small
           depressed
           fab
           color="blue"
           class="align-self-center mr-2"
           v-bind="attrs"
+          :small="!$vuetify.breakpoint.xs"
+          :x-small="$vuetify.breakpoint.xs"
           v-on="on"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </template>
-
       <v-card>
         <MediaSelector
           is-add
