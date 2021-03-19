@@ -5,7 +5,7 @@
     :page.sync="page"
     :search="search"
     hide-default-footer
-    class="px-2 mt-2"
+    class="px-2 mt-2 data_iterator"
   >
     <template #header>
       <v-toolbar dark color="blue darken-3" class="mb-1">
@@ -155,3 +155,9 @@ export default Vue.extend({
   },
 });
 </script>
+<style scoped>
+.data_iterator {
+  overflow: auto;
+  overflow-x: hidden;
+}
+</style>

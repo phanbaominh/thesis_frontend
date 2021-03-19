@@ -1,6 +1,5 @@
 <template>
   <DataIterator :type="type" :init-items="mediaArray" :compact="compact">
-    <slot></slot>
     <template v-if="isSelecting">
       <BaseButtonToolbar
         icon="check"
@@ -15,12 +14,14 @@
         @click="onSwitchSelecting"
       />
     </template>
-    <BaseButtonToolbar
-      v-else
-      color="error"
-      icon="delete"
-      @click="onSwitchSelecting"
-    />
+    <template v-else>
+      <slot></slot>
+      <BaseButtonToolbar
+        color="error"
+        icon="delete"
+        @click="onSwitchSelecting"
+      />
+    </template>
     <template #main="{ items: displayedMediaArray }">
       <MediaList :items="displayedMediaArray">
         <template #default="{ item: media }">

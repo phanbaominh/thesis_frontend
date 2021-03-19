@@ -3,7 +3,7 @@
     :media-array="mediaArray"
     :type="deleteType"
     :compact="compact"
-    @confirm="$emit('delete', $event)"
+    @confirm="onConfirmDelete"
   >
     <template #actions="{ media }">
       <slot :media="media"></slot>
@@ -71,6 +71,9 @@ export default Vue.extend({
     onConfirmAdd(newMediaArray: Media[]) {
       this.$emit('add', newMediaArray);
       this.isAddDialog = false;
+    },
+    onConfirmDelete(deletedMediaArray: Media[]) {
+      this.$emit('delete', deletedMediaArray);
     },
   },
 });

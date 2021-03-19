@@ -16,8 +16,8 @@
       <v-card-title class="headline"> Delete this? </v-card-title>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="green darken-1" text @click="dialog = false"> No </v-btn>
-        <v-btn color="green darken-1" text @click="onYes"> Yes </v-btn>
+        <v-btn color="blue darken-1" text @click="dialog = false"> No </v-btn>
+        <v-btn color="blue darken-1" text @click="onYes"> Yes </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

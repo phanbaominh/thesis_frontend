@@ -5,30 +5,21 @@
     </template>
     <v-card class="pt-2 px-4">
       <v-card-title>{{ title }}</v-card-title>
-      <v-card-text>
-        <v-container>
-          <v-row no-gutters>
-            <v-col cols="8">
-              <v-text-field
-                ref="nameInput"
-                v-model="name"
-                outlined
-                dense
-              ></v-text-field>
-            </v-col>
-            <v-btn
-              color="primary"
-              class="ml-2 mt-1"
-              fab
-              x-small
-              depressed
-              @click="onChangeName"
-            >
-              <v-icon> mdi-check</v-icon>
-            </v-btn>
-          </v-row>
-        </v-container>
-      </v-card-text>
+
+      <v-text-field
+        ref="nameInput"
+        v-model="name"
+        outlined
+        dense
+      ></v-text-field>
+
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="blue darken-1" text @click="dialog = false">
+          Close
+        </v-btn>
+        <v-btn color="blue darken-1" text @click="onChangeName"> Save </v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
