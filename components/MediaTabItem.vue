@@ -37,12 +37,13 @@
             </template>
           </v-file-input>
 
-          <v-card-actions>
-            <span class="text-h6 mr-2">Confirm upload</span>
-            <BaseButton color="success" @click="onConfirmUpload">
-              <v-icon>mdi-check</v-icon>
-            </BaseButton>
-          </v-card-actions>
+          <BaseDialogActions
+            @close="isUploadDialog = false"
+            @confirm="onConfirmUpload"
+          >
+            Confirm
+            <template #close> Close </template>
+          </BaseDialogActions>
         </v-card>
       </v-dialog>
 

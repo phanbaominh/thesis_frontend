@@ -13,13 +13,10 @@
         dense
       ></v-text-field>
 
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="dialog = false">
-          Close
-        </v-btn>
-        <v-btn color="blue darken-1" text @click="onChangeName"> Save </v-btn>
-      </v-card-actions>
+      <BaseDialogActions @close="dialog = false" @confirm="onChangeName">
+        Save
+        <template #close> Close </template>
+      </BaseDialogActions>
     </v-card>
   </v-dialog>
 </template>
