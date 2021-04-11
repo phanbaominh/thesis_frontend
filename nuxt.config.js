@@ -20,7 +20,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ['~/plugins/api.ts'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -62,7 +62,9 @@ export default {
       // },
     },
   },
-
+  publicRuntimeConfig: {
+    apiURL: process.env.API_URL || 'http://localhost:3000',
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 };
