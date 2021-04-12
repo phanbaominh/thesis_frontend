@@ -10,7 +10,9 @@
     <template #header>
       <v-toolbar dark color="blue darken-3" class="mb-1">
         <v-row
-          :class="{ 'mt-2': $vuetify.breakpoint.width < (compact ? 430 : 300) }"
+          :class="{
+            'mt-2': $vuetify.breakpoint.width < (compact ? 430 : 300),
+          }"
         >
           <v-card-title class="text-subtitle-1 text-sm-h6">
             {{ `${type}: ${initItems.length}` }}
@@ -45,11 +47,9 @@
         label="Search"
       ></v-text-field>
     </template>
-
     <template #default="props">
       <slot name="main" :items="props.items"></slot>
     </template>
-
     <template #footer>
       <v-row class="mt-2 px-4 mb-1" align="center">
         <span class="grey--text">Items/page</span>
@@ -77,11 +77,11 @@
             </v-list-item>
           </v-list>
         </v-menu>
-
         <v-spacer></v-spacer>
-
         <div
-          :style="{ display: $vuetify.breakpoint.smAndUp ? 'inline' : 'block' }"
+          :style="{
+            display: $vuetify.breakpoint.smAndUp ? 'inline' : 'block',
+          }"
         >
           <span class="mr-4 grey--text"> {{ page }}/{{ numberOfPages }} </span>
           <BaseButton

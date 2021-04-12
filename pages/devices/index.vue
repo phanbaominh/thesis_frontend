@@ -82,8 +82,9 @@ export default Vue.extend({
     let testArray = new Array(10).fill(0);
     testArray = testArray.map((_n, i) => ({
       name: `Device${i}`,
-      serial: `123456789${i}`,
+      serialNumber: `123456789${i}`,
       type: 'Digital Signage',
+      zoneId: 'lalala',
     })) as Device[];
     this.devices = testArray;
   },

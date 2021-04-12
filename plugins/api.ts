@@ -1,8 +1,14 @@
 import { Plugin } from '@nuxt/types';
 
 type Url = string;
+interface IdToUrl {
+  (id: string): Url;
+}
 interface ApiUrl {
-  getZone: Url;
+  zones: Url;
+  zone: IdToUrl;
+  playlists: Url;
+  videos: Url;
 }
 
 declare module 'vue/types/vue' {
@@ -26,10 +32,14 @@ declare module '@nuxt/types' {
 //   }
 // }
 const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
-  const articlesUrl = `${apiURL}/api/articles`;
-  const articleUrl = (slug: string) => `${articlesUrl}/${slug}`;
+  const zonesUrl = `${apiURL}/zones`;
+  const playlistUrl = `${apiURL}/playlists`;
+  const videoUrl = `${apiURL}/videos`;
   inject('apiUrl', {
-    getArticle: (slug: string) => articleUrl(slug),
+    zones: zonesUrl,
+    zone: (id: string) => `${zonesUrl}/${id}`,
+    playlists: playlistUrl,
+    videos: videoUrl,
   });
 };
 

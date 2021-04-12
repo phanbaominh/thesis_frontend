@@ -39,6 +39,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/toast',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -63,7 +64,16 @@ export default {
     },
   },
   publicRuntimeConfig: {
-    apiURL: process.env.API_URL || 'http://localhost:3000',
+    apiURL: process.env.API_URL || 'http://localhost:3000/api',
+  },
+  server: {
+    port: process.env.PORT || 8000,
+  },
+  ssr: false,
+  toast: {
+    duration: 3000,
+    position: 'bottom-center',
+    keepOnHover: true,
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},

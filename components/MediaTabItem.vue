@@ -84,9 +84,7 @@ export default Vue.extend({
     };
   },
   async fetch() {
-    await Promise.resolve();
-    const testArray = new Array(10).fill(0);
-    this.mediaArray = testArray.map((_n, i) => ({ name: `Video${i}` }));
+    this.mediaArray = (await this.$axios.$get(this.$apiUrl.videos)).video;
   },
   methods: {
     onDelete(media: Media) {

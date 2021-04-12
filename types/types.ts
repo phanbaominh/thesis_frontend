@@ -1,23 +1,43 @@
-export interface Device {
-  [key: string]: string;
-  name: string;
-  serial: string;
-  type: string;
-}
 export interface Media {
   name: string;
+  path: string;
 }
-export interface Playlist {
-  name: string;
-  mediaArray?: Media[];
-}
-export interface Zone {
-  name: string;
-  playlists?: Playlist[];
-  videos?: Media[];
-}
+
 export interface FetchState {
   error: Error | null;
   pending: boolean;
   timestamp: number;
+}
+
+export interface Tag {
+  name: string;
+}
+export interface Video {
+  name: string;
+  path: string;
+  size: number;
+  duration: number;
+  tag: Tag[];
+  cDate: Date;
+  mDate: Date;
+}
+
+export interface Playlist {
+  name: string;
+  type: string;
+  mediaArray: Media[];
+}
+
+export interface Device {
+  name: string;
+  serialNumber: string;
+  zoneId: string;
+}
+export interface Zone {
+  _id: string;
+  name: string;
+  playlistArray: Playlist[];
+  videoArray: Video[];
+  deviceArray: Device[];
+  volumeVideo: number;
 }

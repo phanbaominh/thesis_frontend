@@ -18,14 +18,14 @@
         <v-card class="cards pa-4">
           <v-card outlined>
             <ZoneMedia
-              :media-array="zone.videos"
+              :media-array="zone.videoArray"
               type="Videos"
               @add="onAddVideos"
               @delete="onDeleteVideos"
             />
           </v-card>
           <v-card outlined>
-            <ZoneMedia :media-array="zone.playlists" type="Playlists" />
+            <ZoneMedia :media-array="zone.playlistArray" type="Playlists" />
           </v-card>
         </v-card>
       </v-col>
@@ -34,7 +34,7 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { Media, Zone } from 'types/types';
+import { Video, Zone } from 'types/types';
 export default Vue.extend({
   async asyncData({ route }) {
     // const zone = (
@@ -56,16 +56,16 @@ export default Vue.extend({
     };
   },
   methods: {
-    onDeleteVideos(deletedVideos: Media[]) {
-      if (!this.zone.videos) return;
+    onDeleteVideos(deletedVideos: Video[]) {
+      if (!this.zone.videoArray) return;
       const deletedNames = deletedVideos.map((media) => media.name);
-      this.zone.videos = this.zone.videos.filter(
+      this.zone.videoArray = this.zone.videoArray.filter(
         (media) => !deletedNames.includes(media.name)
       );
     },
-    onAddVideos(addedVideos: Media[]) {
-      if (!this.zone.videos) this.zone.videos = [];
-      addedVideos.forEach((media) => this.zone.videos!.push(media));
+    onAddVideos(addedVideos: Video[]) {
+      if (!this.zone.videoArray) this.zone.videoArray = [];
+      addedVideos.forEach((media) => this.zone.videoArray!.push(media));
     },
     onUpdateName(newName: string) {
       this.zone.name = newName;

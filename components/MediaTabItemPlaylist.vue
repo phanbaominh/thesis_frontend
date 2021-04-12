@@ -58,12 +58,22 @@ export default Vue.extend({
     const testArray = new Array(10).fill(0);
     this.playlists = testArray.map((_n, i) => ({
       name: `Playlist${i}`,
-      mediaArray: [{ name: `Video${i}` }],
+      mediaArray: [{ name: `Video${i}`, path: 'kakaka' }],
+      type: 'Video',
     }));
   },
   methods: {
-    onNew(name: string) {
-      this.playlists.push({ name });
+    async onNew(name: string) {
+      try {
+        const newPlaylist = await this.$axios.$post(this.$apiUrl.playlists, {
+          name,
+          type: 'video',
+          mediaArray: [],
+        });
+        this.playlists.push(newPlaylist);
+      } catch (error) {
+        console.log(error);
+      }
     },
     onDelete(playlist: Playlist) {
       this.playlists = this.playlists.filter((m) => m.name !== playlist.name);
