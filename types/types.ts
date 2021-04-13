@@ -1,4 +1,5 @@
 export interface Media {
+  _id: string;
   name: string;
   path: string;
 }
@@ -13,6 +14,7 @@ export interface Tag {
   name: string;
 }
 export interface Video {
+  _id: string;
   name: string;
   path: string;
   size: number;

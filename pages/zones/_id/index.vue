@@ -36,18 +36,8 @@
 import Vue from 'vue';
 import { Video, Zone } from 'types/types';
 export default Vue.extend({
-  async asyncData({ route }) {
-    // const zone = (
-    //   await $axios.$get($apiUrl.getzone(route.params.zone.slice(1)))
-    // ).zone;
-    await Promise.resolve();
-    const zone = {
-      name: route.params.name,
-      playlists: new Array(10)
-        .fill(0)
-        .map((_n, i) => ({ name: `Playlist${i}` })),
-      videos: new Array(10).fill(0).map((_n, i) => ({ name: `Video${i}` })),
-    };
+  async asyncData({ route, $axios, $apiUrl }) {
+    const zone = (await $axios.$get($apiUrl.zone(route.params.id))).zone;
     return { zone };
   },
   data() {

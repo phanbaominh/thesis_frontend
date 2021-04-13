@@ -17,43 +17,44 @@
             <v-icon>mdi-cloud-upload</v-icon>
           </v-btn>
         </template>
-        <v-card class="pa-4">
-          <v-file-input
-            v-model="uploadedFiles"
-            multiple
-            label="Choose files to upload"
-          >
-            <template #selection="{ index, text }">
-              <v-chip
-                color="primary"
-                dark
-                label
-                small
-                close
-                @click:close="removeFile(index)"
-              >
-                {{ text }}
-              </v-chip>
-            </template>
-          </v-file-input>
-
-          <BaseDialogActions
-            @close="isUploadDialog = false"
-            @confirm="onConfirmUpload"
-          >
-            Confirm
-            <template #close> Close </template>
-          </BaseDialogActions>
-        </v-card>
+        <v-form v-model="valid">
+          <v-card class="pa-4">
+            <v-file-input
+              v-model="uploadedFile"
+              label="Choose file to upload"
+              accept="video/*"
+              name="file"
+              :rules="[Boolean(duration && uploadedFile)]"
+            >
+              <!-- <template #selection="{ index, text }">
+                <v-chip
+                  color="primary"
+                  dark
+                  label
+                  small
+                  close
+                  @click:close="removeFile(index)"
+                >
+                  {{ text }}
+                </v-chip>
+              </template> -->
+            </v-file-input>
+            <BaseDialogActions
+              @close="isUploadDialog = false"
+              @confirm="onConfirmUpload"
+            >
+              Confirm
+              <template #close> Close </template>
+            </BaseDialogActions>
+          </v-card>
+        </v-form>
       </v-dialog>
 
       <template #main="{ items: displayedMediaArray }">
         <MediaList :items="displayedMediaArray">
           <template #actions="{ item: media }">
             <v-list-item-action>
-              <BaseButton color="primary"
-                ><v-icon>mdi-play</v-icon>
-              </BaseButton>
+              <MediaTabItemPlayDialog :media="media" />
             </v-list-item-action>
             <v-list-item-action>
               <DialogDelete color="error" @delete="onDelete(media)">
@@ -80,22 +81,58 @@ export default Vue.extend({
     return {
       mediaArray: (null as any) as Media[],
       isUploadDialog: false,
-      uploadedFiles: [],
+      uploadedFile: null as File | null,
+      duration: 0,
+      valid: false,
+      tags: [],
     };
   },
   async fetch() {
     this.mediaArray = (await this.$axios.$get(this.$apiUrl.videos)).video;
   },
-  methods: {
-    onDelete(media: Media) {
-      this.mediaArray = this.mediaArray.filter((m) => m.name !== media.name);
+  watch: {
+    uploadedFile(newVal) {
+      if (newVal) {
+        const video = document.createElement('video');
+        video.preload = 'metadata';
+
+        video.onloadedmetadata = () => {
+          (window.URL || window.webkitURL).revokeObjectURL(video.src);
+          this.duration = video.duration;
+          video.remove();
+        };
+
+        video.src = URL.createObjectURL(newVal);
+      }
     },
-    onConfirmUpload() {
+  },
+  methods: {
+    async onDelete(media: Media) {
+      await this.$axios.$delete(this.$apiUrl.video(media._id));
+      this.mediaArray = this.mediaArray.filter((m) => m._id !== media._id);
+    },
+    async onConfirmUpload() {
+      if (this.uploadedFile) {
+        const bodyFormData = new FormData();
+        bodyFormData.append('video', this.uploadedFile!);
+        bodyFormData.append('duration', this.duration.toString());
+        bodyFormData.append('tags', this.tags.toString());
+
+        const newVideo = (
+          await this.$axios({
+            method: 'post',
+            url: `${this.$apiUrl.videos}`,
+            data: bodyFormData,
+            headers: { 'Content-Type': 'multipart/form-data' },
+          })
+        ).data;
+        this.mediaArray.push(newVideo);
+      }
       this.isUploadDialog = false;
     },
-    removeFile(index: number) {
-      this.uploadedFiles = this.uploadedFiles.filter((_, i) => i !== index);
-    },
+    // removeFile(index: number) {
+    //   this.uploadedFiles = this.uploadedFiles.filter((_, i) => i !== index);
+    // },
   },
 });
 </script>

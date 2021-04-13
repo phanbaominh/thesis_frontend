@@ -31,7 +31,7 @@
           >
             <v-card>
               <v-card-title class="subheading font-weight-bold">
-                <nuxt-link :to="`/zones/${zone.name}`">{{
+                <nuxt-link :to="`/zones/${zone._id}`">{{
                   zone.name
                 }}</nuxt-link>
                 <v-spacer></v-spacer>
