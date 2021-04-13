@@ -44,6 +44,10 @@ export default Vue.extend({
       type: Array,
       required: true,
     } as PropOptions<Media[]>,
+    allMediaArray: {
+      type: Array,
+      required: true,
+    } as PropOptions<Media[]>,
     compact: {
       default: false,
       type: Boolean,
@@ -62,9 +66,6 @@ export default Vue.extend({
   data() {
     return {
       isAddDialog: false,
-      allMediaArray: new Array(10)
-        .fill(0)
-        .map((_n, i) => ({ name: `New Media${i}` })),
     };
   },
   methods: {

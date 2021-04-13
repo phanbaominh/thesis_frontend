@@ -25,9 +25,10 @@ export interface Video {
 }
 
 export interface Playlist {
+  _id: string;
   name: string;
   type: string;
-  mediaArray: Media[];
+  mediaArray: string[];
 }
 
 export interface Device {

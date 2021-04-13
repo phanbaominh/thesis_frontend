@@ -24,9 +24,13 @@
       <template #main="{ items: displayedPlaylists }">
         <MediaList :items="displayedPlaylists">
           <template #default="{ item: playlist }">
-            <nuxt-link :to="`/playlists/${playlist.name}`">
+            <!-- <nuxt-link :to="`/playlists/${playlist._id}`">
               {{ playlist.name }}
-            </nuxt-link>
+            </nuxt-link> -->
+            <MediaTabItemPlaylistDialog
+              :init-playlist="playlist"
+              @update:playlist="updatePlaylist"
+            />
           </template>
           <template #actions="{ item: playlist }">
             <DialogDelete color="error" @delete="onDelete(playlist)">
@@ -54,29 +58,31 @@ export default Vue.extend({
     };
   },
   async fetch() {
-    await Promise.resolve();
-    const testArray = new Array(10).fill(0);
-    this.playlists = testArray.map((_n, i) => ({
-      name: `Playlist${i}`,
-      mediaArray: [{ name: `Video${i}`, path: 'kakaka' }],
-      type: 'Video',
-    }));
+    this.playlists = (await this.$axios.$get(this.$apiUrl.playlists)).playlist;
   },
   methods: {
     async onNew(name: string) {
       try {
-        const newPlaylist = await this.$axios.$post(this.$apiUrl.playlists, {
-          name,
-          type: 'video',
-          mediaArray: [],
-        });
+        const newPlaylist = (
+          await this.$axios.$post(this.$apiUrl.playlists, {
+            name,
+            type: 'video',
+            mediaArray: [],
+          })
+        ).playlist;
         this.playlists.push(newPlaylist);
       } catch (error) {
         console.log(error);
       }
     },
-    onDelete(playlist: Playlist) {
-      this.playlists = this.playlists.filter((m) => m.name !== playlist.name);
+    async onDelete(playlist: Playlist) {
+      await this.$axios.$delete(this.$apiUrl.playlist(playlist._id));
+      this.playlists = this.playlists.filter((m) => m._id !== playlist._id);
+    },
+    updatePlaylist(newPlaylist: Playlist) {
+      this.playlists = this.playlists.map((playlist) =>
+        playlist._id === newPlaylist._id ? newPlaylist : playlist
+      );
     },
   },
 });

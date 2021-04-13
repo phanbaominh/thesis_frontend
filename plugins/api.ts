@@ -8,8 +8,10 @@ interface ApiUrl {
   zones: Url;
   zone: IdToUrl;
   playlists: Url;
+  playlist: IdToUrl;
   videos: Url;
   video: IdToUrl;
+  videoArray: Url;
 }
 
 declare module 'vue/types/vue' {
@@ -40,8 +42,10 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     zones: zonesUrl,
     zone: (id: string) => `${zonesUrl}/${id}`,
     playlists: playlistUrl,
+    playlist: (id: string) => `${playlistUrl}/${id}`,
     videos: videoUrl,
     video: (id: string) => `${videoUrl}/${id}`,
+    videoArray: `${videoUrl}/get-many`,
   });
 };
 
