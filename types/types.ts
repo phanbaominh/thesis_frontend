@@ -36,10 +36,16 @@ export interface Playlist {
 }
 
 export interface Device {
+  _id: string;
   name: string;
   serialNumber: string;
   zoneId: string;
 }
+export type ArrayElement<
+  ArrayType extends readonly unknown[]
+> = ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
+export type ZoneArrayable = 'video' | 'playlist';
+export type ZoneArrayType = `${ZoneArrayable}Array`;
 export interface Zone {
   _id: string;
   name: string;

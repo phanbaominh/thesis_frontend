@@ -81,6 +81,7 @@ export default Vue.extend({
     await Promise.resolve();
     let testArray = new Array(10).fill(0);
     testArray = testArray.map((_n, i) => ({
+      _id: 'lalaal',
       name: `Device${i}`,
       serialNumber: `123456789${i}`,
       type: 'Digital Signage',

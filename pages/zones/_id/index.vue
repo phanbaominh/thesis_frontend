@@ -22,8 +22,8 @@
               :media-array="zone.videoArray"
               :all-media-array="nonZoneVideoArray"
               type="Videos"
-              @add="onAddVideos"
-              @delete="onDeleteVideos"
+              @add="onAdd('video', $event)"
+              @delete="onDelete('video', $event)"
             >
               <v-list-item-action>
                 <MediaTabItemPlayDialog :media="media" />
@@ -35,6 +35,8 @@
               :media-array="zone.playlistArray"
               :all-media-array="nonZonePlaylistArray"
               type="Playlists"
+              @add="onAdd('playlist', $event)"
+              @delete="onDelete('playlist', $event)"
             />
           </v-card>
         </v-card>
@@ -44,7 +46,14 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { Playlist, Video, Zone } from 'types/types';
+import {
+  Nameable,
+  Playlist,
+  Video,
+  Zone,
+  ZoneArrayable,
+  ZoneArrayType,
+} from 'types/types';
 export default Vue.extend({
   async asyncData({ route, $axios, $apiUrl }) {
     const zone = (await $axios.$get($apiUrl.zone(route.params.id))).zone;
@@ -64,44 +73,42 @@ export default Vue.extend({
     this.allPlaylistArray = (
       await this.$axios.$get(this.$apiUrl.playlists)
     ).playlist;
-    this.updateNonZoneVideoArray();
-    this.updateNonZonePlaylistArray();
+    this.updateNonZoneArray('video');
+    this.updateNonZoneArray('playlist');
   },
   methods: {
-    async onDeleteVideos(deletedVideos: Video[]) {
+    async onDelete(type: ZoneArrayable, deletedArray: Nameable[]) {
       if (!this.zone.videoArray) return;
-      const deletedIds = deletedVideos.map((media) => media._id);
-      this.zone.videoArray = this.zone.videoArray.filter(
+      const deletedIds = deletedArray.map((media) => media._id);
+      const key = `${type}Array` as ZoneArrayType;
+
+      this.zone[key] = (this.zone[key] as Array<any>).filter(
         (media) => !deletedIds.includes(media._id)
       );
-      await this.updateZoneWithVideo();
+      await this.updateZone(type);
     },
-    async onAddVideos(addedVideos: Video[]) {
+    async onAdd(type: ZoneArrayable, addedVideos: Nameable[]) {
       if (!this.zone.videoArray) this.zone.videoArray = [];
-      this.zone.videoArray = this.zone.videoArray.concat(addedVideos);
-      await this.updateZoneWithVideo();
+      const key = `${type}Array` as ZoneArrayType;
+      this.zone[key] = (this.zone[key] as Array<any>).concat(addedVideos);
+      await this.updateZone(type);
     },
-    async updateZoneWithVideo() {
+    async updateZone(type: ZoneArrayable) {
       await this.$axios.$put(this.$apiUrl.zone(this.zone._id), this.zone);
-      this.updateNonZoneVideoArray();
+      this.updateNonZoneArray(type);
     },
-    onUpdateName(newName: string) {
+    async onUpdateName(newName: string) {
       this.zone.name = newName;
+      await this.$axios.$put(this.$apiUrl.zone(this.zone._id), this.zone);
     },
-    updateNonZoneVideoArray() {
-      this.nonZoneVideoArray = this.updateNonZoneArray(
-        this.allVideoArray,
-        this.zone.videoArray
+    updateNonZoneArray(type: ZoneArrayable) {
+      const captializedType = type.charAt(0).toUpperCase() + type.slice(1);
+      const nonZoneKey = `nonZone${captializedType}Array` as `nonZone${Capitalize<ZoneArrayable>}Array`;
+      const allKey = `all${captializedType}Array` as `all${Capitalize<ZoneArrayable>}Array`;
+      const zoneKey = `${type}Array` as ZoneArrayType;
+      this[nonZoneKey] = (this[allKey] as Array<any>).filter(
+        (elem) => !this.zone[zoneKey].includes(elem)
       );
-    },
-    updateNonZonePlaylistArray() {
-      this.nonZonePlaylistArray = this.updateNonZoneArray(
-        this.allPlaylistArray,
-        this.zone.playlistArray
-      );
-    },
-    updateNonZoneArray<T>(nonZoneArray: T[], zoneArray: T[]): T[] {
-      return nonZoneArray.filter((elem) => !zoneArray.includes(elem));
     },
   },
 });
