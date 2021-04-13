@@ -22,11 +22,32 @@
         </v-btn>
       </DialogName>
       <template #main="{ items: displayedPlaylists }">
-        <MediaList :items="displayedPlaylists">
+        <v-row class="mt-2">
+          <v-col
+            v-for="playlist in displayedPlaylists"
+            :key="playlist._id"
+            cols="12"
+            sm="6"
+            md="4"
+            lg="3"
+          >
+            <v-card outlined class="playlist_card">
+              <v-card-title class="subheading font-weight-bold">
+                <v-icon color="primary" x-large left>mdi-folder</v-icon>
+                <MediaTabItemPlaylistDialog
+                  :init-playlist="playlist"
+                  @update:playlist="updatePlaylist"
+                />
+                <v-spacer></v-spacer>
+                <DialogDelete color="error" @delete="onDelete(playlist)">
+                  <v-icon>mdi-delete</v-icon>
+                </DialogDelete>
+              </v-card-title>
+            </v-card>
+          </v-col>
+        </v-row>
+        <!-- <MediaList :items="displayedPlaylists">
           <template #default="{ item: playlist }">
-            <!-- <nuxt-link :to="`/playlists/${playlist._id}`">
-              {{ playlist.name }}
-            </nuxt-link> -->
             <MediaTabItemPlaylistDialog
               :init-playlist="playlist"
               @update:playlist="updatePlaylist"
@@ -37,7 +58,7 @@
               <v-icon>mdi-delete</v-icon>
             </DialogDelete>
           </template>
-        </MediaList>
+        </MediaList> -->
       </template>
     </DataIterator>
   </BaseFetcher>
@@ -87,3 +108,8 @@ export default Vue.extend({
   },
 });
 </script>
+<style scoped>
+.playlist_card {
+  border: 1px solid #adbbd4;
+}
+</style>

@@ -1,7 +1,14 @@
 <template>
   <v-dialog v-model="dialog" width="1000">
     <template #activator="{ on, attrs }">
-      <div v-bind="attrs" v-on="on">{{ playlist.name }}</div>
+      <a
+        href="#"
+        class="text-truncate text-decoration-underline"
+        v-bind="attrs"
+        v-on="on"
+      >
+        {{ playlist.name }}
+      </a>
     </template>
     <v-card class="pa-4">
       <EditableName
