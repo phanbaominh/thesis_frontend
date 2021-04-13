@@ -47,14 +47,14 @@
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
 import BaseButtonToolbar from './BaseButtonToolbar.vue';
-import { Media } from '~/types/types';
+import { Nameable } from '~/types/types';
 export default Vue.extend({
   components: { BaseButtonToolbar },
   props: {
     mediaArray: {
       required: true,
       type: Array,
-    } as PropOptions<Media[]>,
+    } as PropOptions<Nameable[]>,
     isAdd: {
       default: false,
       type: Boolean,

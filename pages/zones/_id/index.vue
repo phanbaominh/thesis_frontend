@@ -18,14 +18,24 @@
         <v-card class="cards pa-4">
           <v-card outlined>
             <ZoneMedia
+              v-slot="{ media }"
               :media-array="zone.videoArray"
+              :all-media-array="nonZoneVideoArray"
               type="Videos"
               @add="onAddVideos"
               @delete="onDeleteVideos"
-            />
+            >
+              <v-list-item-action>
+                <MediaTabItemPlayDialog :media="media" />
+              </v-list-item-action>
+            </ZoneMedia>
           </v-card>
           <v-card outlined>
-            <ZoneMedia :media-array="zone.playlistArray" type="Playlists" />
+            <ZoneMedia
+              :media-array="zone.playlistArray"
+              :all-media-array="nonZonePlaylistArray"
+              type="Playlists"
+            />
           </v-card>
         </v-card>
       </v-col>
@@ -34,7 +44,7 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { Video, Zone } from 'types/types';
+import { Playlist, Video, Zone } from 'types/types';
 export default Vue.extend({
   async asyncData({ route, $axios, $apiUrl }) {
     const zone = (await $axios.$get($apiUrl.zone(route.params.id))).zone;
@@ -43,22 +53,55 @@ export default Vue.extend({
   data() {
     return {
       zone: (null as any) as Zone,
+      nonZoneVideoArray: [] as Video[],
+      nonZonePlaylistArray: [] as Playlist[],
+      allVideoArray: [] as Video[],
+      allPlaylistArray: [] as Playlist[],
     };
   },
+  async fetch() {
+    this.allVideoArray = (await this.$axios.$get(this.$apiUrl.videos)).video;
+    this.allPlaylistArray = (
+      await this.$axios.$get(this.$apiUrl.playlists)
+    ).playlist;
+    this.updateNonZoneVideoArray();
+    this.updateNonZonePlaylistArray();
+  },
   methods: {
-    onDeleteVideos(deletedVideos: Video[]) {
+    async onDeleteVideos(deletedVideos: Video[]) {
       if (!this.zone.videoArray) return;
-      const deletedNames = deletedVideos.map((media) => media.name);
+      const deletedIds = deletedVideos.map((media) => media._id);
       this.zone.videoArray = this.zone.videoArray.filter(
-        (media) => !deletedNames.includes(media.name)
+        (media) => !deletedIds.includes(media._id)
       );
+      await this.updateZoneWithVideo();
     },
-    onAddVideos(addedVideos: Video[]) {
+    async onAddVideos(addedVideos: Video[]) {
       if (!this.zone.videoArray) this.zone.videoArray = [];
-      addedVideos.forEach((media) => this.zone.videoArray!.push(media));
+      this.zone.videoArray = this.zone.videoArray.concat(addedVideos);
+      await this.updateZoneWithVideo();
+    },
+    async updateZoneWithVideo() {
+      await this.$axios.$put(this.$apiUrl.zone(this.zone._id), this.zone);
+      this.updateNonZoneVideoArray();
     },
     onUpdateName(newName: string) {
       this.zone.name = newName;
+    },
+    updateNonZoneVideoArray() {
+      this.nonZoneVideoArray = this.updateNonZoneArray(
+        this.allVideoArray,
+        this.zone.videoArray
+      );
+    },
+    updateNonZonePlaylistArray() {
+      this.nonZonePlaylistArray = this.updateNonZoneArray(
+        this.allPlaylistArray,
+        this.zone.playlistArray
+      );
+    },
+    updateNonZoneArray<T>(nonZoneArray: T[], zoneArray: T[]): T[] {
+      return nonZoneArray.filter((elem) => !zoneArray.includes(elem));
     },
   },
 });

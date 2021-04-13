@@ -1,3 +1,7 @@
+export interface Nameable {
+  _id: string;
+  name: string;
+}
 export interface Media {
   _id: string;
   name: string;

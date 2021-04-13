@@ -2,21 +2,18 @@
   <MediaAddDelete
     v-slot="{ media }"
     :media-array="mediaArray"
+    :all-media-array="allMediaArray"
     :type="type"
     compact
     @add="onAdd"
     @delete="onDelete"
   >
-    <v-list-item-action>
-      <BaseButton color="primary" @click="onPlay(media)">
-        <v-icon>mdi-play</v-icon>
-      </BaseButton>
-    </v-list-item-action>
+    <slot :media="media"></slot>
   </MediaAddDelete>
 </template>
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
-import { Media } from '~/types/types';
+import { Nameable, Media } from '~/types/types';
 export default Vue.extend({
   props: {
     type: {
@@ -26,13 +23,17 @@ export default Vue.extend({
     mediaArray: {
       type: Array,
       required: true,
-    } as PropOptions<Media[]>,
+    } as PropOptions<Nameable[]>,
+    allMediaArray: {
+      type: Array,
+      required: true,
+    } as PropOptions<Nameable[]>,
   },
   methods: {
-    onDelete(deletedMediaArray: Media[]) {
+    onDelete(deletedMediaArray: Nameable[]) {
       this.$emit('delete', deletedMediaArray);
     },
-    onAdd(addedMediaArray: Media[]) {
+    onAdd(addedMediaArray: Nameable[]) {
       this.$emit('add', addedMediaArray);
     },
     onPlay(_media: Media) {

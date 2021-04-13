@@ -37,17 +37,17 @@
 </template>
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
-import { Media } from 'types/types';
+import { Nameable } from 'types/types';
 export default Vue.extend({
   props: {
     mediaArray: {
       type: Array,
       required: true,
-    } as PropOptions<Media[]>,
+    } as PropOptions<Nameable[]>,
     allMediaArray: {
       type: Array,
       required: true,
-    } as PropOptions<Media[]>,
+    } as PropOptions<Nameable[]>,
     compact: {
       default: false,
       type: Boolean,
@@ -69,11 +69,11 @@ export default Vue.extend({
     };
   },
   methods: {
-    onConfirmAdd(newMediaArray: Media[]) {
+    onConfirmAdd(newMediaArray: Nameable[]) {
       this.$emit('add', newMediaArray);
       this.isAddDialog = false;
     },
-    onConfirmDelete(deletedMediaArray: Media[]) {
+    onConfirmDelete(deletedMediaArray: Nameable[]) {
       this.$emit('delete', deletedMediaArray);
     },
   },
