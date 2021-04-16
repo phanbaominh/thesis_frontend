@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Plugin } from '@nuxt/types';
 
 type Url = string;
@@ -29,11 +30,11 @@ declare module '@nuxt/types' {
     $apiUrl: ApiUrl;
   }
 }
-// declare module 'vuex/types/index' {
-//   interface Store<S> {
-//     $apiUrl: ApiUrl;
-//   }
-// }
+declare module 'vuex/types/index' {
+  interface Store<S> {
+    $apiUrl: ApiUrl;
+  }
+}
 const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
   const zonesUrl = `${apiURL}/zones`;
   const playlistUrl = `${apiURL}/playlists`;

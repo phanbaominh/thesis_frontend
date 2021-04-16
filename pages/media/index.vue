@@ -20,9 +20,14 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      tab: null,
+      tab: this.$accessor.mediaTab,
       tabItems: ['Videos', 'Playlists'],
     };
+  },
+  watch: {
+    tab(newTab) {
+      this.$accessor.SET_MEDIA_TAB(newTab);
+    },
   },
   created() {
     this.$socket.emit('test', 'abc');

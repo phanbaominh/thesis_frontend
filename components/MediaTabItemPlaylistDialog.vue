@@ -44,7 +44,6 @@ export default Vue.extend({
       dialog: false,
       playlist: this.initPlaylist,
       playlistMediaArray: [] as Media[],
-      allMediaArray: [] as Media[],
       nonPlaylistMediaArray: [] as Media[],
     };
   },
@@ -54,8 +53,17 @@ export default Vue.extend({
         params: { videoIds: this.playlist.mediaArray },
       })
     ).video;
-    this.allMediaArray = (await this.$axios.$get(this.$apiUrl.videos)).video;
     this.updateNonPlaylistMediaArray();
+  },
+  computed: {
+    allMediaArray() {
+      return this.$accessor.allMediaArray;
+    },
+  },
+  watch: {
+    allMediaArray() {
+      this.updateNonPlaylistMediaArray();
+    },
   },
   methods: {
     async onConfirmDelete(deletedMediaArray: Media[]) {
