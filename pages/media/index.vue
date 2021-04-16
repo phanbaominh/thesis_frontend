@@ -24,5 +24,8 @@ export default Vue.extend({
       tabItems: ['Videos', 'Playlists'],
     };
   },
+  created() {
+    this.$socket.emit('test', 'abc');
+  },
 });
 </script>

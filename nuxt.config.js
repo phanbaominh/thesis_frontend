@@ -20,7 +20,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['~/plugins/api.ts'],
+  plugins: ['~/plugins/api.ts', '~/plugins/socket.ts'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -33,6 +33,7 @@ export default {
     '@nuxtjs/stylelint-module',
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
+    'nuxt-typed-vuex',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -64,6 +65,7 @@ export default {
     },
   },
   publicRuntimeConfig: {
+    WS_URL: process.env.WS_URL || 'http://localhost:3000',
     apiURL: process.env.API_URL || 'http://localhost:3000/api',
   },
   server: {
