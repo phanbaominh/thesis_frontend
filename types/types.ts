@@ -44,7 +44,7 @@ export interface Device {
 export type ArrayElement<
   ArrayType extends readonly unknown[]
 > = ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
-export type ZoneArrayable = 'video' | 'playlist';
+export type ZoneArrayable = 'video' | 'playlist' | 'device';
 export type ZoneArrayType = `${ZoneArrayable}Array`;
 export interface Zone {
   _id: string;

@@ -2,8 +2,42 @@
   <v-container>
     <v-toolbar dark color="blue darken-3">
       <v-row>
-        <EditableName :init-name="zone.name" @updateName="onUpdateName" />
+        <v-card-title class="text-subtitle-1 text-sm-h6">
+          {{ zone.name }}
+        </v-card-title>
+        <DialogName
+          :init-name="zone.name"
+          title="Change zone name:"
+          icon="pencil"
+          @updateName="onUpdateName"
+        />
+
         <v-spacer></v-spacer>
+        <v-dialog v-model="deviceDialog" width="1000" scrollable>
+          <template #activator="{ on, attrs }">
+            <v-btn
+              depressed
+              fab
+              color="blue"
+              class="align-self-center mr-2"
+              v-bind="attrs"
+              :small="!$vuetify.breakpoint.xs"
+              :x-small="$vuetify.breakpoint.xs"
+              v-on="on"
+            >
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </template>
+          <v-card>
+            <MediaAddDelete
+              :media-array="zone.deviceArray"
+              :all-media-array="nonZoneDeviceArray"
+              type="Device"
+              @add="onAddDevice"
+              @delete="onDelete('device', $event)"
+            />
+          </v-card>
+        </v-dialog>
         <v-btn fab small depressed color="blue" class="align-self-center mr-2">
           <v-icon> mdi-sync </v-icon>
         </v-btn>
@@ -47,6 +81,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import {
+  Device,
   Nameable,
   Playlist,
   Video,
@@ -61,9 +96,12 @@ export default Vue.extend({
   },
   data() {
     return {
+      deviceDialog: false,
       zone: (null as any) as Zone,
       nonZoneVideoArray: [] as Video[],
       nonZonePlaylistArray: [] as Playlist[],
+      nonZoneDeviceArray: [] as Device[],
+      allDeviceArray: [] as Device[],
       allVideoArray: [] as Video[],
       allPlaylistArray: [] as Playlist[],
     };
@@ -73,8 +111,20 @@ export default Vue.extend({
     this.allPlaylistArray = (
       await this.$axios.$get(this.$apiUrl.playlists)
     ).playlists;
+    this.allDeviceArray = (
+      await this.$axios.$get(this.$apiUrl.devices)
+    ).devices.filter((device: Device) => device.zoneId === null);
+    console.log(
+      (
+        await this.$axios.$post(this.$apiUrl.videoInfo, {
+          zoneId: this.zone._id,
+        })
+      ).result
+    );
+
     this.updateNonZoneArray('video');
     this.updateNonZoneArray('playlist');
+    this.updateNonZoneArray('device');
   },
   methods: {
     async onDelete(type: ZoneArrayable, deletedArray: Nameable[]) {
@@ -98,6 +148,7 @@ export default Vue.extend({
       this.updateNonZoneArray(type);
     },
     async onUpdateName(newName: string) {
+      if (newName === this.zone.name) return;
       this.zone.name = newName;
       await this.$axios.$put(this.$apiUrl.zone(this.zone._id), this.zone);
     },
@@ -106,12 +157,22 @@ export default Vue.extend({
       const nonZoneKey = `nonZone${captializedType}Array` as `nonZone${Capitalize<ZoneArrayable>}Array`;
       const allKey = `all${captializedType}Array` as `all${Capitalize<ZoneArrayable>}Array`;
       const zoneKey = `${type}Array` as ZoneArrayType;
-      const zoneIds = this.zone[zoneKey].map(
+      const zoneIds = (this.zone[zoneKey] as Array<any>).map(
         (elem: { _id: string }) => elem._id
       );
       this[nonZoneKey] = (this[allKey] as Array<any>).filter(
         (elem) => !zoneIds.includes(elem._id)
       );
+    },
+    async onAddDevice(devices: Device[]) {
+      for (const device of devices) {
+        await this.$axios.$post(this.$apiUrl.zoneAddDevice, {
+          zoneId: this.zone._id,
+          deviceId: device._id,
+        });
+        this.zone.deviceArray.push(device);
+      }
+      this.updateNonZoneArray('device');
     },
   },
 });

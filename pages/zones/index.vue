@@ -1,23 +1,7 @@
 <template>
   <BaseFetcher :fetch-state="$fetchState">
     <DataIterator type="Zones" :init-items="zones">
-      <DialogName
-        v-slot="{ on, attrs }"
-        init-name=""
-        title="Create a zone:"
-        @updateName="onNewZone"
-      >
-        <v-btn
-          small
-          depressed
-          fab
-          :color="'blue'"
-          class="align-self-center mr-2"
-          v-bind="attrs"
-          v-on="on"
-        >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
+      <DialogName init-name="" title="Create a zone:" @updateName="onNewZone">
       </DialogName>
       <template #main="{ items: displayedZones }">
         <v-row>

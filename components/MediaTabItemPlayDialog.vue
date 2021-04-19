@@ -15,7 +15,7 @@
     </template>
     <v-card>
       <v-card-title>
-        <span>{{ truncate(media.name) }} </span>
+        <span>{{ $truncate(media.name) }} </span>
         <v-spacer></v-spacer>
         <BaseButton color="white" @click="isPlayDialog = false">
           <v-icon>mdi-close</v-icon>
@@ -50,15 +50,6 @@ export default Vue.extend({
         videoElement.currentTime = 0;
         videoElement.pause();
       }
-    },
-  },
-  methods: {
-    truncate(name: string): string {
-      const length = 25;
-      if (name.length > length) {
-        return name.substring(0, length) + '...';
-      }
-      return name;
     },
   },
 });

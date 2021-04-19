@@ -20,7 +20,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['~/plugins/api.ts', '~/plugins/socket.ts'],
+  plugins: ['~/plugins/api.ts', '~/plugins/socket.ts', '~/plugins/filters.ts'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
