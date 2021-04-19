@@ -45,7 +45,7 @@
     </v-toolbar>
     <v-row class="mt-2">
       <v-col cols="12" lg="6">
-        <ZoneMediaControl class="cards" />
+        <ZoneMediaControl class="cards" :zone-info="zoneInfo" />
       </v-col>
       <v-spacer></v-spacer>
       <v-col cols="12" lg="6">
@@ -88,6 +88,7 @@ import {
   Zone,
   ZoneArrayable,
   ZoneArrayType,
+  ZoneInfo,
 } from 'types/types';
 export default Vue.extend({
   async asyncData({ route, $axios, $apiUrl }) {
@@ -97,6 +98,7 @@ export default Vue.extend({
   data() {
     return {
       deviceDialog: false,
+      zoneInfo: {} as ZoneInfo,
       zone: (null as any) as Zone,
       nonZoneVideoArray: [] as Video[],
       nonZonePlaylistArray: [] as Playlist[],
@@ -125,6 +127,18 @@ export default Vue.extend({
     this.updateNonZoneArray('video');
     this.updateNonZoneArray('playlist');
     this.updateNonZoneArray('device');
+  },
+  created() {
+    this.$socket.on(
+      `/recive/update/${this.zone._id}/infor-video`,
+      (payload) => {
+        this.zoneInfo = payload;
+        console.log('info', this.zoneInfo);
+      }
+    );
+  },
+  beforeDestroy() {
+    this.$socket.off(`/recive/update/${this.zone._id}/infor-video`);
   },
   methods: {
     async onDelete(type: ZoneArrayable, deletedArray: Nameable[]) {

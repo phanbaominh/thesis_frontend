@@ -29,8 +29,5 @@ export default Vue.extend({
       this.$accessor.SET_MEDIA_TAB(newTab);
     },
   },
-  created() {
-    this.$socket.emit('test', 'abc');
-  },
 });
 </script>

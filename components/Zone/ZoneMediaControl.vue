@@ -9,14 +9,15 @@
     <v-slider
       v-model="progress"
       track-color="light-grey"
-      max="100"
+      :max="zoneInfo.durationFull"
       :messages="timestamp"
       class="mt-n2 px-2"
+      @end="onDuration"
     ></v-slider>
     <v-row>
       <v-container class="d-flex justify-center mt-2">
         <v-btn fab x-small depressed @click="isPlayed = !isPlayed">
-          <v-icon> mdi-{{ isPlayed ? 'pause' : 'play' }} </v-icon>
+          <v-icon> mdi-{{ zoneInfo.isPause ? 'pause' : 'play' }} </v-icon>
         </v-btn>
       </v-container>
     </v-row>
@@ -26,24 +27,49 @@
         v-model="volume"
         track-color="light-grey"
         prepend-icon="mdi-volume-high"
+        @end="onVolume"
       ></v-slider>
     </v-card-text>
   </v-card>
 </template>
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropOptions } from 'vue';
+import { ZoneInfo } from '~/types/types';
 export default Vue.extend({
+  props: {
+    zoneInfo: {
+      type: Object,
+      required: true,
+    } as PropOptions<ZoneInfo>,
+  },
   data() {
     return {
-      progress: 0,
-      volume: 0,
+      progress: this.zoneInfo.position,
+      volume: this.zoneInfo.volumeVideo,
       isPlayed: false,
     };
   },
   computed: {
     timestamp(): string {
-      return new Date(this.progress * 1000).toISOString().substr(14, 5);
+      return `${this.time(this.progress)}/${this.time(
+        this.zoneInfo.durationFull
+      )}`;
     },
+  },
+  methods: {
+    time(value: number): string {
+      console.log(value);
+      return new Date(value ? value * 1000 : '0000')
+        .toISOString()
+        .substr(14, 5);
+    },
+    async onVolume(endVolume: number) {
+      await this.$axios.$post(this.$apiUrl.videoControl, {
+        eventName: 'volume-video',
+        payload: { zoneId: this.zoneInfo.zoneId, volumeVideo: endVolume },
+      });
+    },
+    onDuration() {},
   },
 });
 </script>

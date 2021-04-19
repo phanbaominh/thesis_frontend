@@ -53,4 +53,24 @@ export interface Zone {
   videoArray: Video[];
   deviceArray: Device[];
   volumeVideo: number;
+  isMuteVideo: boolean;
+  isLoopOneVideo: boolean;
+  isLoopAllVideo: boolean;
+}
+export interface ZoneInfo {
+  deviceId?: string;
+  durationFull: number;
+  isFinishInit: boolean;
+  isMute: boolean;
+  isPause: boolean;
+  isPlaylistRunning: boolean;
+  isVideoPlaying: boolean;
+  loopMode: number;
+  playlistVideoId?: string;
+  position: number;
+  videoId?: string;
+  volumeVideo: number;
+  zoneId: string;
+  isScheduleRunning: boolean;
+  scheduleId: string;
 }
