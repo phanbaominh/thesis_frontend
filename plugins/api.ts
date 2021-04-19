@@ -13,6 +13,8 @@ interface ApiUrl {
   videos: Url;
   video: IdToUrl;
   videoArray: Url;
+  devices: Url;
+  device: IdToUrl;
 }
 
 declare module 'vue/types/vue' {
@@ -39,6 +41,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
   const zonesUrl = `${apiURL}/zones`;
   const playlistUrl = `${apiURL}/playlists`;
   const videoUrl = `${apiURL}/videos`;
+  const deviceUrl = `${apiURL}/devices`;
   inject('apiUrl', {
     zones: zonesUrl,
     zone: (id: string) => `${zonesUrl}/${id}`,
@@ -47,6 +50,8 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     videos: videoUrl,
     video: (id: string) => `${videoUrl}/${id}`,
     videoArray: `${videoUrl}/get-many`,
+    devices: deviceUrl,
+    device: (id: string) => `${deviceUrl}/${id}`,
   });
 };
 

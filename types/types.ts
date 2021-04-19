@@ -39,7 +39,7 @@ export interface Device {
   _id: string;
   name: string;
   serialNumber: string;
-  zoneId: string;
+  zoneId: string | null;
 }
 export type ArrayElement<
   ArrayType extends readonly unknown[]

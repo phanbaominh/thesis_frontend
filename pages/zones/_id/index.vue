@@ -69,10 +69,10 @@ export default Vue.extend({
     };
   },
   async fetch() {
-    this.allVideoArray = (await this.$axios.$get(this.$apiUrl.videos)).video;
+    this.allVideoArray = (await this.$axios.$get(this.$apiUrl.videos)).videos;
     this.allPlaylistArray = (
       await this.$axios.$get(this.$apiUrl.playlists)
-    ).playlist;
+    ).playlists;
     this.updateNonZoneArray('video');
     this.updateNonZoneArray('playlist');
   },
@@ -106,8 +106,11 @@ export default Vue.extend({
       const nonZoneKey = `nonZone${captializedType}Array` as `nonZone${Capitalize<ZoneArrayable>}Array`;
       const allKey = `all${captializedType}Array` as `all${Capitalize<ZoneArrayable>}Array`;
       const zoneKey = `${type}Array` as ZoneArrayType;
+      const zoneIds = this.zone[zoneKey].map(
+        (elem: { _id: string }) => elem._id
+      );
       this[nonZoneKey] = (this[allKey] as Array<any>).filter(
-        (elem) => !this.zone[zoneKey].includes(elem)
+        (elem) => !zoneIds.includes(elem._id)
       );
     },
   },

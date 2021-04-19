@@ -37,7 +37,8 @@ export const actions = actionTree(
   { state, mutations },
   {
     async setAllMediaArray({ commit }) {
-      const allMediaArray = (await this.$axios.$get(this.$apiUrl.videos)).video;
+      const allMediaArray = (await this.$axios.$get(this.$apiUrl.videos))
+        .videos;
       commit('SET_ALL_MEDIA_ARRAY', allMediaArray);
     },
   }

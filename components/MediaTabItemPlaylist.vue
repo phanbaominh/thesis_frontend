@@ -79,7 +79,7 @@ export default Vue.extend({
     };
   },
   async fetch() {
-    this.playlists = (await this.$axios.$get(this.$apiUrl.playlists)).playlist;
+    this.playlists = (await this.$axios.$get(this.$apiUrl.playlists)).playlists;
   },
   methods: {
     async onNew(name: string) {

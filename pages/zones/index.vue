@@ -77,7 +77,7 @@ export default Vue.extend({
     };
   },
   async fetch() {
-    this.zones = (await this.$axios.$get(this.$apiUrl.zones)).zone;
+    this.zones = (await this.$axios.$get(this.$apiUrl.zones)).zones;
   },
   methods: {
     async onNewZone(name: string) {

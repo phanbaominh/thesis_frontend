@@ -4,6 +4,7 @@
       <span> Fetching devices...</span>
     </template>
     <DataIterator type="Devices" :init-items="devices">
+      <DeviceCreateDialog @newDevice="onNewDevice" />
       <template #main="{ items: displayedDevices }">
         <v-row>
           <v-col
@@ -56,7 +57,7 @@
                 <v-list-item v-for="(key, index) in filteredKeys" :key="index">
                   <v-list-item-content> {{ key }}: </v-list-item-content>
                   <v-list-item-content class="align-end">
-                    {{ device[key.toLowerCase()] }}
+                    {{ device[key] || 'None' }}
                   </v-list-item-content>
                 </v-list-item>
               </v-list>
@@ -78,29 +79,30 @@ export default Vue.extend({
     };
   },
   async fetch() {
-    await Promise.resolve();
-    let testArray = new Array(10).fill(0);
-    testArray = testArray.map((_n, i) => ({
-      _id: 'lalaal',
-      name: `Device${i}`,
-      serialNumber: `123456789${i}`,
-      type: 'Digital Signage',
-      zoneId: 'lalala',
-    })) as Device[];
-    this.devices = testArray;
+    this.devices = (await this.$axios.$get(this.$apiUrl.devices)).devices;
   },
   computed: {
     filteredKeys(): string[] {
-      return Object.keys(this.devices[0]).filter((key) => key !== 'name');
+      return Object.keys(this.devices[0]).filter(
+        (key) => key !== 'name' && key[0] !== '_'
+      );
     },
   },
   methods: {
-    onChangeName(i: number, newName: string) {
+    async onChangeName(i: number, newName: string) {
       // this.isNameDialogOpened[i] = false;
+      await this.$axios.$put(this.$apiUrl.device(this.devices[i]._id), {
+        ...this.devices[i],
+        name: newName,
+      });
       this.devices[i].name = newName;
     },
-    onDelete(i: number) {
+    async onDelete(i: number) {
+      await this.$axios.$delete(this.$apiUrl.device(this.devices[i]._id));
       this.devices = this.devices.filter((_, index) => index !== i);
+    },
+    onNewDevice(newDevice: Device) {
+      this.devices.push(newDevice);
     },
   },
 });

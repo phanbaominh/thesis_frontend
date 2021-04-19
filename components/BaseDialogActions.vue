@@ -9,6 +9,7 @@
       text
       :type="isSubmit ? 'submit' : 'button'"
       @click="$emit('confirm')"
+      @submit="onSubmit"
     >
       <slot></slot>
     </v-btn>
@@ -25,6 +26,12 @@ export default Vue.extend({
     isSubmit: {
       type: Boolean,
       default: false,
+    },
+  },
+  methods: {
+    onSubmit(e: Event) {
+      e.preventDefault();
+      this.$emit('confirm');
     },
   },
 });
