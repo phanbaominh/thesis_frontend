@@ -83,7 +83,7 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped>
+<style>
 .main-container {
   display: flex;
   height: 100%;
@@ -97,5 +97,14 @@ export default Vue.extend({
   width: 90%;
   margin-right: auto;
   padding-top: 32px;
+}
+
+.custom-toast-container {
+  top: 0% !important;
+  right: 0% !important;
+}
+
+.custom-toast-content {
+  font-size: 1em !important;
 }
 </style>

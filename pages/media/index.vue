@@ -25,8 +25,8 @@ export default Vue.extend({
     };
   },
   watch: {
-    tab(newTab) {
-      this.$accessor.SET_MEDIA_TAB(newTab);
+    tab() {
+      this.$accessor.SET_MEDIA_TAB(this.tab);
     },
   },
 });

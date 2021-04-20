@@ -20,7 +20,12 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['~/plugins/api.ts', '~/plugins/socket.ts', '~/plugins/filters.ts'],
+  plugins: [
+    '~/plugins/api.ts',
+    '~/plugins/socket.ts',
+    '~/plugins/filters.ts',
+    '~/plugins/axios.ts',
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -74,8 +79,11 @@ export default {
   ssr: false,
   toast: {
     duration: 3000,
-    position: 'bottom-center',
+    position: 'top-right',
     keepOnHover: true,
+    theme: 'toasted-primary',
+    containerClass: 'custom-toast-container',
+    className: 'custom-toast-content',
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},

@@ -45,7 +45,7 @@
     </v-toolbar>
     <v-row class="mt-2">
       <v-col cols="12" lg="6">
-        <ZoneMediaControl class="cards" :zone-info="zoneInfo" />
+        <ZoneMediaControl class="cards" :zone-info="zoneInfo" :zone="zone" />
       </v-col>
       <v-spacer></v-spacer>
       <v-col cols="12" lg="6">
@@ -60,18 +60,27 @@
               @delete="onDelete('video', $event)"
             >
               <v-list-item-action>
-                <MediaTabItemPlayDialog :media="media" />
+                <BaseButton color="primary" dark @click="onPlayVideo(media)">
+                  <v-icon>mdi-play</v-icon>
+                </BaseButton>
               </v-list-item-action>
             </ZoneMedia>
           </v-card>
           <v-card outlined>
             <ZoneMedia
+              v-slot="{ media }"
               :media-array="zone.playlistArray"
               :all-media-array="nonZonePlaylistArray"
               type="Playlists"
               @add="onAdd('playlist', $event)"
               @delete="onDelete('playlist', $event)"
-            />
+            >
+              <v-list-item-action>
+                <BaseButton color="primary" dark @click="onPlayPlaylist(media)">
+                  <v-icon>mdi-play</v-icon>
+                </BaseButton>
+              </v-list-item-action>
+            </ZoneMedia>
           </v-card>
         </v-card>
       </v-col>
@@ -90,6 +99,21 @@ import {
   ZoneArrayType,
   ZoneInfo,
 } from 'types/types';
+const exampleZI: ZoneInfo = {
+  loopMode: 0,
+  isMute: false,
+  isPause: false,
+  zoneId: '607458023db8ed2f793a554d',
+  durationFull: 90,
+  position: 0,
+  volumeVideo: 50,
+  isFinishInit: false,
+  isScheduleRunning: false,
+  scheduleId: '',
+  isVideoPlaying: true,
+  isPlaylistRunning: false,
+  videoId: '6075589672a2913ab870f2e1',
+};
 export default Vue.extend({
   async asyncData({ route, $axios, $apiUrl }) {
     const zone = (await $axios.$get($apiUrl.zone(route.params.id))).zone;
@@ -98,7 +122,7 @@ export default Vue.extend({
   data() {
     return {
       deviceDialog: false,
-      zoneInfo: {} as ZoneInfo,
+      zoneInfo: exampleZI as ZoneInfo,
       zone: (null as any) as Zone,
       nonZoneVideoArray: [] as Video[],
       nonZonePlaylistArray: [] as Playlist[],
@@ -116,13 +140,6 @@ export default Vue.extend({
     this.allDeviceArray = (
       await this.$axios.$get(this.$apiUrl.devices)
     ).devices.filter((device: Device) => device.zoneId === null);
-    console.log(
-      (
-        await this.$axios.$post(this.$apiUrl.videoInfo, {
-          zoneId: this.zone._id,
-        })
-      ).result
-    );
 
     this.updateNonZoneArray('video');
     this.updateNonZoneArray('playlist');
@@ -133,7 +150,6 @@ export default Vue.extend({
       `/recive/update/${this.zone._id}/infor-video`,
       (payload) => {
         this.zoneInfo = payload;
-        console.log('info', this.zoneInfo);
       }
     );
   },
@@ -187,6 +203,26 @@ export default Vue.extend({
         this.zone.deviceArray.push(device);
       }
       this.updateNonZoneArray('device');
+    },
+
+    async onPlayVideo(video: Video) {
+      await this.$axios.$post(this.$apiUrl.videoControl, {
+        eventName: 'play-video',
+        payload: {
+          zoneId: this.zone._id,
+          videoId: video._id,
+        },
+      });
+    },
+
+    async onPlayPlaylist(playlist: Playlist) {
+      await this.$axios.$post(this.$apiUrl.videoControl, {
+        eventName: 'play-playlist',
+        payload: {
+          zoneId: this.zone._id,
+          videoId: playlist._id,
+        },
+      });
     },
   },
 });
