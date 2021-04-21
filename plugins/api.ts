@@ -9,6 +9,7 @@ interface ApiUrl {
   zones: Url;
   zone: IdToUrl;
   zoneAddDevice: Url;
+  zoneDeleteDevice: Url;
   playlists: Url;
   playlist: IdToUrl;
   videos: Url;
@@ -51,6 +52,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     zones: zonesUrl,
     zone: (id: string) => `${zonesUrl}/${id}`,
     zoneAddDevice: `${zonesUrl}/add-device`,
+    zoneDeleteDevice: `${zonesUrl}/remove-device`,
     playlists: playlistUrl,
     playlist: (id: string) => `${playlistUrl}/${id}`,
     videos: videoUrl,

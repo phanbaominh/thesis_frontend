@@ -34,18 +34,22 @@
               :all-media-array="nonZoneDeviceArray"
               type="Device"
               @add="onAddDevice"
-              @delete="onDelete('device', $event)"
+              @delete="onDeleteDevice"
             />
           </v-card>
         </v-dialog>
         <v-btn fab small depressed color="blue" class="align-self-center mr-2">
-          <v-icon> mdi-sync </v-icon>
+          <v-icon @click="updateZone"> mdi-sync </v-icon>
         </v-btn>
       </v-row>
     </v-toolbar>
     <v-row class="mt-2">
       <v-col cols="12" lg="6">
-        <ZoneMediaControl class="cards" :zone-info="zoneInfo" :zone="zone" />
+        <ZoneMediaControl
+          class="cards"
+          :zone="zone"
+          :playlist-videos="playlistVideos"
+        />
       </v-col>
       <v-spacer></v-spacer>
       <v-col cols="12" lg="6">
@@ -87,7 +91,7 @@
     </v-row>
     <v-card class="mt-10">
       <v-card-title>Media Log</v-card-title>
-      <ZoneDevicesLog :devices-log="devicesLog" />
+      <ZoneDevicesLog :zone="zone" />
     </v-card>
   </v-container>
 </template>
@@ -101,24 +105,22 @@ import {
   Zone,
   ZoneArrayable,
   ZoneArrayType,
-  ZoneDeviceLog,
-  ZoneInfo,
 } from 'types/types';
-const exampleZI: ZoneInfo = {
-  loopMode: 0,
-  isMute: false,
-  isPause: false,
-  zoneId: '607fb34f4108621b8b64b2cf',
-  durationFull: 90,
-  position: 0,
-  volumeVideo: 50,
-  isFinishInit: false,
-  isScheduleRunning: false,
-  scheduleId: '',
-  isVideoPlaying: true,
-  isPlaylistRunning: false,
-  videoId: '607fb1afeca9500c39e591c1',
-};
+// const exampleZI: ZoneInfo = {
+//   loopMode: 0,
+//   isMute: false,
+//   isPause: false,
+//   zoneId: '607fb34f4108621b8b64b2cf',
+//   durationFull: 90,
+//   position: 0,
+//   volumeVideo: 50,
+//   isFinishInit: false,
+//   isScheduleRunning: false,
+//   scheduleId: '',
+//   isVideoPlaying: true,
+//   isPlaylistRunning: false,
+//   videoId: '607fb1afeca9500c39e591c1',
+// };
 export default Vue.extend({
   async asyncData({ route, $axios, $apiUrl }) {
     const zone = (await $axios.$get($apiUrl.zone(route.params.id))).zone;
@@ -127,7 +129,6 @@ export default Vue.extend({
   data() {
     return {
       deviceDialog: false,
-      zoneInfo: exampleZI as ZoneInfo,
       zone: (null as any) as Zone,
       nonZoneVideoArray: [] as Video[],
       nonZonePlaylistArray: [] as Playlist[],
@@ -135,7 +136,7 @@ export default Vue.extend({
       allDeviceArray: [] as Device[],
       allVideoArray: [] as Video[],
       allPlaylistArray: [] as Playlist[],
-      devicesLog: [] as ZoneDeviceLog[],
+      playlistVideos: [] as { id: string; videos: Video[] }[],
     };
   },
   async fetch() {
@@ -151,30 +152,11 @@ export default Vue.extend({
     this.updateNonZoneArray('playlist');
     this.updateNonZoneArray('device');
   },
-  created() {
-    this.$socket.on(
-      `/recive/update/${this.zone._id}/infor-video`,
-      (payload) => {
-        this.zoneInfo = payload;
-        this.newDeviceLog(payload);
-      }
-    );
-  },
   beforeDestroy() {
     this.$socket.off(`/recive/update/${this.zone._id}/infor-video`);
   },
   methods: {
-    newDeviceLog(zoneInfo: ZoneInfo) {
-      const name =
-        this.zone.deviceArray?.find(
-          (device) => device._id === zoneInfo.deviceId
-        ).name || 'None';
-      const mediaName =
-        this.zone.videoArray.find((video) => video._id === zoneInfo.videoId)
-          ?.name || 'None';
-      this.devicesLog.push({ name, mediaName });
-    },
-    async onDelete(type: ZoneArrayable, deletedArray: Nameable[]) {
+    onDelete(type: ZoneArrayable, deletedArray: Nameable[]) {
       if (!this.zone.videoArray) return;
       const deletedIds = deletedArray.map((media) => media._id);
       const key = `${type}Array` as ZoneArrayType;
@@ -182,17 +164,22 @@ export default Vue.extend({
       this.zone[key] = (this.zone[key] as Array<any>).filter(
         (media) => !deletedIds.includes(media._id)
       );
-      await this.updateZone(type);
+      if (type === 'playlist') {
+        this.playlistVideos = this.playlistVideos.filter(
+          (pl) => !deletedIds.includes(pl.id)
+        );
+      }
+      this.updateNonZoneArray(type);
     },
-    async onAdd(type: ZoneArrayable, addedVideos: Nameable[]) {
+    onAdd(type: ZoneArrayable, addedVideos: Nameable[]) {
       if (!this.zone.videoArray) this.zone.videoArray = [];
       const key = `${type}Array` as ZoneArrayType;
       this.zone[key] = (this.zone[key] as Array<any>).concat(addedVideos);
-      await this.updateZone(type);
-    },
-    async updateZone(type: ZoneArrayable) {
-      await this.$axios.$put(this.$apiUrl.zone(this.zone._id), this.zone);
       this.updateNonZoneArray(type);
+    },
+    async updateZone() {
+      await this.$axios.$put(this.$apiUrl.zone(this.zone._id), this.zone);
+      this.$toast.success('Sucessfully updated Zone');
     },
     async onUpdateName(newName: string) {
       if (newName === this.zone.name) return;
@@ -221,7 +208,21 @@ export default Vue.extend({
       }
       this.updateNonZoneArray('device');
     },
-
+    async onDeleteDevice(devices: Device[]) {
+      for (const device of devices) {
+        await this.$axios.$post(this.$apiUrl.zoneDeleteDevice, {
+          zoneId: this.zone._id,
+          deviceId: device._id,
+        });
+        this.zone.deviceArray = this.zone.deviceArray.filter(
+          (d) => d._id !== device._id
+        );
+      }
+      this.updateNonZoneArray('device');
+      this.$axios.$post(this.$apiUrl.videoInfo, {
+        zoneId: this.zone._id,
+      });
+    },
     async onPlayVideo(video: Video) {
       await this.$axios.$post(this.$apiUrl.videoControl, {
         eventName: 'play-video',
@@ -234,11 +235,21 @@ export default Vue.extend({
 
     async onPlayPlaylist(playlist: Playlist) {
       await this.$axios.$post(this.$apiUrl.videoControl, {
-        eventName: 'play-playlist',
+        eventName: 'play-playlist-video',
         payload: {
           zoneId: this.zone._id,
-          videoId: playlist._id,
+          playlistVideoId: playlist._id,
         },
+      });
+      this.playlistVideos.push({
+        id: playlist._id,
+        videos: (
+          await this.$axios.$get(this.$apiUrl.videoArray, {
+            params: {
+              videoIds: playlist.mediaArray,
+            },
+          })
+        ).video,
       });
     },
   },

@@ -1,15 +1,15 @@
 <template>
   <v-card class="pt-4 pb-4">
-    <div v-if="!video" class="d-flex justify-center">
+    <div class="d-flex justify-center">
       <v-img max-height="150px" max-width="150px" src="/compact-disk.svg">
       </v-img>
     </div>
-    <div v-else class="d-flex justify-center">
+    <!-- <div v-else class="d-flex justify-center">
       <video ref="video" width="400px" muted>
         <source :src="`http://${video.path}`" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-    </div>
+    </div> -->
     <v-card-title>Media Name</v-card-title>
     <v-card-subtitle>Author Name</v-card-subtitle>
     <v-slider
@@ -50,30 +50,28 @@ import Vue, { PropOptions } from 'vue';
 import { Video, Zone, ZoneInfo } from '~/types/types';
 export default Vue.extend({
   props: {
-    zoneInfo: {
-      type: Object,
-      required: true,
-    } as PropOptions<ZoneInfo>,
+    // zoneInfo: {
+    //   type: Object,
+    //   required: true,
+    // } as PropOptions<ZoneInfo>,
     zone: {
       type: Object,
       required: true,
     } as PropOptions<Zone>,
+    playlistVideos: {
+      type: Array,
+      required: true,
+    } as PropOptions<{ id: string; videos: Video[] }[]>,
   },
   data() {
     return {
-      progress: this.zoneInfo.position,
-      volume: this.zoneInfo.volumeVideo,
+      zoneInfo: {} as ZoneInfo,
+      progress: 0 as number,
+      volume: 0 as number,
       videoPlayer: null as HTMLVideoElement | null,
       prevProgressInterval: null as any,
     };
   },
-  // async fetch() {
-  //   if (this.zoneInfo.videoId) {
-  //     this.video = (
-  //       await this.$axios.$get(this.$apiUrl.video(this.zoneInfo.videoId))
-  //     ).video;
-  //   }
-  // },
   computed: {
     timestamp(): string {
       return `${this.time(this.progress)}/${this.time(
@@ -101,6 +99,12 @@ export default Vue.extend({
       }
     },
     video(): Video | undefined {
+      for (const pl of this.playlistVideos) {
+        const found = pl.videos.find(
+          (video) => video._id === this.zoneInfo.videoId
+        );
+        if (found) return found;
+      }
       return this.zone.videoArray.find(
         (video) => video._id === this.zoneInfo.videoId
       );
@@ -114,16 +118,23 @@ export default Vue.extend({
       this.progress = this.zoneInfo.position;
       this.volume = this.zoneInfo.volumeVideo;
     },
-    video() {
-      this.updatePlayer();
-    },
+    // video() {
+    //   this.updatePlayer();
+    // },
     'zoneInfo.position'() {
       this.resetProgressInterval();
     },
   },
   created() {
+    this.getInfo();
+    this.$socket.on(
+      `/recive/update/${this.zone._id}/infor-video`,
+      (payload) => {
+        this.zoneInfo = payload;
+      }
+    );
     if (this.video) {
-      this.updatePlayer();
+      // this.updatePlayer();
       if (this.zoneInfo.videoId && !this.zoneInfo.isPause) {
         this.setProgressInterval();
       }
@@ -133,16 +144,44 @@ export default Vue.extend({
     this.clearProgressInterval();
   },
   methods: {
-    updatePlayer() {
-      if (this.video) {
-        this.$nextTick(() => {
-          this.videoPlayer = this.$refs.video as HTMLVideoElement;
-          this.playVideo();
-          this.muteVideo();
-          this.seekVideo();
-          this.loopVideo();
-        });
-      }
+    // updatePlayer() {
+    //   if (this.video) {
+    //     this.$nextTick(() => {
+    //       this.videoPlayer = this.$refs.video as HTMLVideoElement;
+    //       this.playVideo();
+    //       this.muteVideo();
+    //       this.seekVideo();
+    //       this.loopVideo();
+    //     });
+    //   }
+    // },
+    // playVideo() {
+    //   !this.zoneInfo.isPause
+    //     ? this.videoPlayer?.play()
+    //     : this.videoPlayer?.pause();
+    // },
+    // muteVideo() {
+    //   if (!this.videoPlayer) return;
+    //   this.zoneInfo.isMute
+    //     ? (this.videoPlayer.muted = true)
+    //     : (this.videoPlayer.muted = false);
+    // },
+    // seekVideo() {
+    //   if (this.videoPlayer) {
+    //     this.videoPlayer.currentTime = this.zoneInfo.position;
+    //   }
+    // },
+    // loopVideo() {
+    //   if (this.videoPlayer) {
+    //     this.zoneInfo.loopMode === 1
+    //       ? (this.videoPlayer.loop = true)
+    //       : (this.videoPlayer.loop = false);
+    //   }
+    // },
+    getInfo() {
+      return this.$axios.$post(this.$apiUrl.videoInfo, {
+        zoneId: this.zone._id,
+      });
     },
     setProgressInterval() {
       this.prevProgressInterval = setInterval(() => {
@@ -155,29 +194,6 @@ export default Vue.extend({
     resetProgressInterval() {
       this.clearProgressInterval();
       this.setProgressInterval();
-    },
-    playVideo() {
-      !this.zoneInfo.isPause
-        ? this.videoPlayer?.play()
-        : this.videoPlayer?.pause();
-    },
-    muteVideo() {
-      if (!this.videoPlayer) return;
-      this.zoneInfo.isMute
-        ? (this.videoPlayer.muted = true)
-        : (this.videoPlayer.muted = false);
-    },
-    seekVideo() {
-      if (this.videoPlayer) {
-        this.videoPlayer.currentTime = this.zoneInfo.position;
-      }
-    },
-    loopVideo() {
-      if (this.videoPlayer) {
-        this.zoneInfo.loopMode === 1
-          ? (this.videoPlayer.loop = true)
-          : (this.videoPlayer.loop = false);
-      }
     },
     time(value: number): string {
       return new Date(value ? value * 1000 : '0000')
@@ -195,6 +211,7 @@ export default Vue.extend({
           ...payload,
         },
       });
+      await this.getInfo();
     },
     async onVolume(endVolume: number) {
       await this.videoControlRequest('volume-video', {
