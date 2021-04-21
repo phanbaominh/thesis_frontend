@@ -85,6 +85,10 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-card class="mt-10">
+      <v-card-title>Media Log</v-card-title>
+      <ZoneDevicesLog :devices-log="devicesLog" />
+    </v-card>
   </v-container>
 </template>
 <script lang="ts">
@@ -97,13 +101,14 @@ import {
   Zone,
   ZoneArrayable,
   ZoneArrayType,
+  ZoneDeviceLog,
   ZoneInfo,
 } from 'types/types';
 const exampleZI: ZoneInfo = {
   loopMode: 0,
   isMute: false,
   isPause: false,
-  zoneId: '607458023db8ed2f793a554d',
+  zoneId: '607fb34f4108621b8b64b2cf',
   durationFull: 90,
   position: 0,
   volumeVideo: 50,
@@ -112,7 +117,7 @@ const exampleZI: ZoneInfo = {
   scheduleId: '',
   isVideoPlaying: true,
   isPlaylistRunning: false,
-  videoId: '6075589672a2913ab870f2e1',
+  videoId: '607fb1afeca9500c39e591c1',
 };
 export default Vue.extend({
   async asyncData({ route, $axios, $apiUrl }) {
@@ -130,6 +135,7 @@ export default Vue.extend({
       allDeviceArray: [] as Device[],
       allVideoArray: [] as Video[],
       allPlaylistArray: [] as Playlist[],
+      devicesLog: [] as ZoneDeviceLog[],
     };
   },
   async fetch() {
@@ -150,6 +156,7 @@ export default Vue.extend({
       `/recive/update/${this.zone._id}/infor-video`,
       (payload) => {
         this.zoneInfo = payload;
+        this.newDeviceLog(payload);
       }
     );
   },
@@ -157,6 +164,16 @@ export default Vue.extend({
     this.$socket.off(`/recive/update/${this.zone._id}/infor-video`);
   },
   methods: {
+    newDeviceLog(zoneInfo: ZoneInfo) {
+      const name =
+        this.zone.deviceArray?.find(
+          (device) => device._id === zoneInfo.deviceId
+        ).name || 'None';
+      const mediaName =
+        this.zone.videoArray.find((video) => video._id === zoneInfo.videoId)
+          ?.name || 'None';
+      this.devicesLog.push({ name, mediaName });
+    },
     async onDelete(type: ZoneArrayable, deletedArray: Nameable[]) {
       if (!this.zone.videoArray) return;
       const deletedIds = deletedArray.map((media) => media._id);
@@ -229,7 +246,7 @@ export default Vue.extend({
 </script>
 <style scoped>
 .cards {
-  height: 500px;
+  height: 600px;
   overflow-y: auto;
   overflow-x: hidden;
 }

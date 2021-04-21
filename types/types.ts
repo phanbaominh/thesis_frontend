@@ -74,3 +74,8 @@ export interface ZoneInfo {
   isScheduleRunning: boolean;
   scheduleId: string;
 }
+
+export interface ZoneDeviceLog {
+  name: string;
+  mediaName: string | null;
+}

@@ -1,11 +1,11 @@
 <template>
-  <v-card class="pt-4">
-    <div v-if="!zoneInfo.videoId" class="d-flex justify-center">
+  <v-card class="pt-4 pb-4">
+    <div v-if="!video" class="d-flex justify-center">
       <v-img max-height="150px" max-width="150px" src="/compact-disk.svg">
       </v-img>
     </div>
-    <div v-else-if="video" class="d-flex justify-center">
-      <video ref="video">
+    <div v-else class="d-flex justify-center">
+      <video ref="video" width="400px" muted>
         <source :src="`http://${video.path}`" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
@@ -90,7 +90,7 @@ export default Vue.extend({
       }
     },
     volumeIcon(): string {
-      if (this.volume <= 0) {
+      if (this.volume <= 0 || this.zoneInfo.isMute) {
         return 'mdi-volume-off';
       } else if (this.volume <= 25) {
         return 'mdi-volume-low';
@@ -104,6 +104,9 @@ export default Vue.extend({
       return this.zone.videoArray.find(
         (video) => video._id === this.zoneInfo.videoId
       );
+    },
+    loadFromServer(): boolean {
+      return this.volume !== this.zoneInfo.volumeVideo && process.server;
     },
   },
   watch: {
@@ -121,9 +124,9 @@ export default Vue.extend({
   created() {
     if (this.video) {
       this.updatePlayer();
-    }
-    if (this.zoneInfo.videoId && !this.zoneInfo.isPause) {
-      this.setProgressInterval();
+      if (this.zoneInfo.videoId && !this.zoneInfo.isPause) {
+        this.setProgressInterval();
+      }
     }
   },
   beforeDestroy() {
