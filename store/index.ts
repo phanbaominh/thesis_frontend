@@ -9,6 +9,7 @@ import { Media } from '~/types/types';
 export const state = () => ({
   allMediaArray: [] as Media[],
   mediaTab: null as number | null,
+  isSocketConnected: false,
 });
 
 export const mutations = mutationTree(state, {
@@ -25,6 +26,9 @@ export const mutations = mutationTree(state, {
   },
   SET_MEDIA_TAB(state, tab) {
     state.mediaTab = tab;
+  },
+  CHANGE_SOCKET_STATUS(state, status) {
+    state.isSocketConnected = status;
   },
 });
 

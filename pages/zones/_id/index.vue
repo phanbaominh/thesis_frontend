@@ -106,21 +106,7 @@ import {
   ZoneArrayable,
   ZoneArrayType,
 } from 'types/types';
-// const exampleZI: ZoneInfo = {
-//   loopMode: 0,
-//   isMute: false,
-//   isPause: false,
-//   zoneId: '607fb34f4108621b8b64b2cf',
-//   durationFull: 90,
-//   position: 0,
-//   volumeVideo: 50,
-//   isFinishInit: false,
-//   isScheduleRunning: false,
-//   scheduleId: '',
-//   isVideoPlaying: true,
-//   isPlaylistRunning: false,
-//   videoId: '607fb1afeca9500c39e591c1',
-// };
+
 export default Vue.extend({
   async asyncData({ route, $axios, $apiUrl }) {
     const zone = (await $axios.$get($apiUrl.zone(route.params.id))).zone;
@@ -224,6 +210,7 @@ export default Vue.extend({
       });
     },
     async onPlayVideo(video: Video) {
+      this.warn();
       await this.$axios.$post(this.$apiUrl.videoControl, {
         eventName: 'play-video',
         payload: {
@@ -232,8 +219,15 @@ export default Vue.extend({
         },
       });
     },
-
+    warn() {
+      if (!this.$accessor.isSocketConnected) {
+        this.$toast.info('Need a socket connection to server');
+      } else if (this.zone.deviceArray.length === 0) {
+        this.$toast.info('Please add device to zone');
+      }
+    },
     async onPlayPlaylist(playlist: Playlist) {
+      this.warn();
       await this.$axios.$post(this.$apiUrl.videoControl, {
         eventName: 'play-playlist-video',
         payload: {

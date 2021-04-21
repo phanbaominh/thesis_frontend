@@ -20,8 +20,23 @@ declare module '@nuxt/types' {
 //     $apiUrl: ApiUrl;
 //   }
 // }
-const socketPlugin: Plugin = ({ $config: { WS_URL } }, inject) => {
+const socketPlugin: Plugin = (
+  { $config: { WS_URL }, $toast, store },
+  inject
+) => {
   const socket = io(WS_URL);
+  let hasToast = false;
+  socket.on('connect_error', () => {
+    if (!hasToast)
+      $toast.error("Couldn't establish socket connection with server");
+    hasToast = true;
+  });
+  socket.on('connect', () => {
+    store.commit('CHANGE_SOCKET_STATUS', true);
+  });
+  socket.on('disconnect', () => {
+    store.commit('CHANGE_SOCKET_STATUS', false);
+  });
   inject('socket', socket);
 };
 export default socketPlugin;

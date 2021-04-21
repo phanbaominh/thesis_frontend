@@ -10,8 +10,10 @@
         Your browser does not support the video tag.
       </video>
     </div> -->
-    <v-card-title>Media Name</v-card-title>
-    <v-card-subtitle>Author Name</v-card-subtitle>
+    <v-card-title :title="video ? video.name : 'Media name'">{{
+      mediaName
+    }}</v-card-title>
+    <v-card-subtitle> {{ subtitle }}</v-card-subtitle>
     <v-slider
       v-model="progress"
       track-color="light-grey"
@@ -48,6 +50,21 @@
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
 import { Video, Zone, ZoneInfo } from '~/types/types';
+const exampleZI: ZoneInfo = {
+  loopMode: 0,
+  isMute: false,
+  isPause: false,
+  zoneId: '607fb34f4108621b8b64b2cf',
+  durationFull: 90,
+  position: 0,
+  volumeVideo: 50,
+  isFinishInit: false,
+  isScheduleRunning: false,
+  scheduleId: '',
+  isVideoPlaying: true,
+  isPlaylistRunning: false,
+  videoId: '607fb1afeca9500c39e591c1',
+};
 export default Vue.extend({
   props: {
     // zoneInfo: {
@@ -65,7 +82,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      zoneInfo: {} as ZoneInfo,
+      zoneInfo: exampleZI as ZoneInfo,
       progress: 0 as number,
       volume: 0 as number,
       videoPlayer: null as HTMLVideoElement | null,
@@ -73,6 +90,23 @@ export default Vue.extend({
     };
   },
   computed: {
+    mediaName(): string {
+      return this.video ? this.$truncate(this.video.name) : 'Media Name';
+    },
+    subtitle(): string {
+      if (this.zoneInfo.isPause) {
+        return 'Paused';
+      } else if (this.zoneInfo.isPlaylistRunning) {
+        const playlistName =
+          this.zone.playlistArray.find(
+            (pl) => pl._id === this.zoneInfo.playlistVideoId
+          )?.name || 'None';
+        return `Playing from playlist ${playlistName}...`;
+      } else if (this.zoneInfo.videoId) {
+        return `Playing video...`;
+      }
+      return 'Select media to play';
+    },
     timestamp(): string {
       return `${this.time(this.progress)}/${this.time(
         this.zoneInfo.durationFull
@@ -126,6 +160,8 @@ export default Vue.extend({
     },
   },
   created() {
+    this.progress = this.zoneInfo.position;
+    this.volume = this.zoneInfo.volumeVideo;
     this.getInfo();
     this.$socket.on(
       `/recive/update/${this.zone._id}/infor-video`,
@@ -211,7 +247,6 @@ export default Vue.extend({
           ...payload,
         },
       });
-      await this.getInfo();
     },
     async onVolume(endVolume: number) {
       await this.videoControlRequest('volume-video', {
@@ -219,16 +254,23 @@ export default Vue.extend({
       });
     },
     async onProgress(endProgress: number) {
+      this.resetProgressInterval();
       await this.videoControlRequest('seek-video', {
         position: endProgress,
       });
     },
     async onPause() {
       const event = this.zoneInfo.isPause ? 'unpause-video' : 'pause-video';
+      this.zoneInfo.isPause
+        ? this.setProgressInterval()
+        : this.clearProgressInterval();
+      this.zoneInfo.isPause = !this.zoneInfo.isPause;
+
       await this.videoControlRequest(event);
     },
     async onMute() {
       const event = this.zoneInfo.isMute ? 'unmute-video' : 'mute-video';
+      this.zoneInfo.isMute = !this.zoneInfo.isMute;
       await this.videoControlRequest(event);
     },
     async onLoop() {
@@ -238,6 +280,7 @@ export default Vue.extend({
       } else if (this.zoneInfo.loopMode === 1) {
         event = 'loop-all-video';
       }
+      this.zoneInfo.loopMode = (this.zoneInfo.loopMode + 1) % 3;
       await this.videoControlRequest(event);
     },
   },
