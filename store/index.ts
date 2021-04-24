@@ -1,6 +1,6 @@
 import { getAccessorType } from 'typed-vuex';
 import { mutationTree, actionTree } from 'nuxt-typed-vuex';
-import { Media } from '~/types/types';
+import { Media, User } from '~/types/types';
 // Import all your submodules
 // import * as submodule from '~/store/submodule'
 
@@ -10,6 +10,7 @@ export const state = () => ({
   allMediaArray: [] as Media[],
   mediaTab: null as number | null,
   isSocketConnected: false,
+  user: null as User | null,
 });
 
 export const mutations = mutationTree(state, {
@@ -29,6 +30,12 @@ export const mutations = mutationTree(state, {
   },
   CHANGE_SOCKET_STATUS(state, status) {
     state.isSocketConnected = status;
+  },
+  SET_USER(state, user) {
+    state.user = user;
+  },
+  DELETE_USER(state) {
+    state.user = null;
   },
 });
 

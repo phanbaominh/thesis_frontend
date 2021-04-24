@@ -37,6 +37,8 @@
         <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
       </v-btn>
       <v-toolbar-title class="text-h5">Project Name</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <UserMenu />
     </v-app-bar>
     <v-main class="blue lighten-5">
       <v-container class="main-container pt-8">

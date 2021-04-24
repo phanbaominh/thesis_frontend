@@ -139,7 +139,7 @@ export default Vue.extend({
     this.updateNonZoneArray('device');
   },
   beforeDestroy() {
-    this.$socket.off(`/recive/update/${this.zone._id}/infor-video`);
+    this.$socket.off(`/receive/update/${this.zone._id}/infor-video`);
   },
   methods: {
     onDelete(type: ZoneArrayable, deletedArray: Nameable[]) {

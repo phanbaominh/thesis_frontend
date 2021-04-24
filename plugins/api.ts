@@ -19,6 +19,7 @@ interface ApiUrl {
   videoControl: Url;
   devices: Url;
   device: IdToUrl;
+  user: Url;
 }
 
 declare module 'vue/types/vue' {
@@ -62,6 +63,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     videoArray: `${videoUrl}/get-many`,
     devices: deviceUrl,
     device: (id: string) => `${deviceUrl}/${id}`,
+    user: `${apiURL}/users`,
   });
 };
 

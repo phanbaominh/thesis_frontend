@@ -27,7 +27,7 @@ export default Vue.extend({
   },
   created() {
     this.$socket.on(
-      `/recive/update/${this.zone._id}/infor-video`,
+      `/receive/update/${this.zone._id}/infor-video`,
       (payload) => {
         console.log('log', payload);
         this.newDeviceLog(payload);

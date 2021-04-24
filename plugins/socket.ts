@@ -37,6 +37,9 @@ const socketPlugin: Plugin = (
   socket.on('disconnect', () => {
     store.commit('CHANGE_SOCKET_STATUS', false);
   });
+  socket.on('receive/update/socket/disconnect', (device) => {
+    $toast.error(`Device ${device.name} just disconnected`);
+  });
   inject('socket', socket);
 };
 export default socketPlugin;

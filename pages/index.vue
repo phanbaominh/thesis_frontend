@@ -21,14 +21,13 @@
           :items-per-page="5"
           class="elevation-1"
         >
-          <!-- eslint-disable-next-line vue/valid-v-slot -->
           <template #item.status="{ item }">
             <div :class="item.status ? 'green--text' : 'red--text'">
               <span>{{ item.status ? 'Online' : 'Offline' }}</span>
               <v-icon></v-icon>
             </div>
           </template>
-          <!-- eslint-disable-next-line vue/valid-v-slot -->
+
           <template #item.zoneId="{ item }">
             {{ item.zoneId || 'None' }}
           </template>

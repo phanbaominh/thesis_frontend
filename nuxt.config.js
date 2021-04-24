@@ -50,7 +50,27 @@ export default {
     '@nuxtjs/auth-next',
   ],
   auth: {
-    // Options
+    strategies: {
+      local: {
+        token: {
+          property: 'token',
+          // required: true,
+          // type: 'Bearer'
+        },
+        user: {
+          property: 'user',
+          // autoFetch: true
+        },
+        endpoints: {
+          login: {
+            url: `${process.env.API_URL}/api/users/sign-in`,
+            method: 'post',
+          },
+          logout: false,
+          user: { url: `${process.env.API_URL}/api/auth/user`, method: 'get' },
+        },
+      },
+    },
   },
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},

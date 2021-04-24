@@ -164,7 +164,7 @@ export default Vue.extend({
     this.volume = this.zoneInfo.volumeVideo;
     this.getInfo();
     this.$socket.on(
-      `/recive/update/${this.zone._id}/infor-video`,
+      `/receive/update/${this.zone._id}/infor-video`,
       (payload) => {
         this.zoneInfo = payload;
       }

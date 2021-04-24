@@ -80,3 +80,9 @@ export interface ZoneDeviceLog {
   name: string;
   mediaName: string | null;
 }
+
+export interface User {
+  username: string;
+  email: string;
+  password: string;
+}
