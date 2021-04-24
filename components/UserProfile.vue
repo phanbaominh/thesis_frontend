@@ -5,7 +5,7 @@
       <v-text-field
         v-model="user.username"
         name="username"
-        label="Name"
+        label="Username"
         outlined
         dense
       ></v-text-field>

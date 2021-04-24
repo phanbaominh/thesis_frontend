@@ -3,9 +3,9 @@
     <v-card class="pa-4" width="500px">
       <v-card-title>Sign in</v-card-title>
       <v-text-field
-        v-model="login.username"
-        name="username"
-        label="Name"
+        v-model="login.email"
+        name="email"
+        label="Email"
         outlined
         dense
       ></v-text-field>
@@ -34,7 +34,7 @@ export default Vue.extend({
   data() {
     return {
       login: {
-        username: '',
+        email: '',
         password: '',
       },
       valid: false,

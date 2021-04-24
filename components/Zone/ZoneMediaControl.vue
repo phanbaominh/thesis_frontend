@@ -50,21 +50,21 @@
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
 import { Video, Zone, ZoneInfo } from '~/types/types';
-const exampleZI: ZoneInfo = {
-  loopMode: 0,
-  isMute: false,
-  isPause: false,
-  zoneId: '607fb34f4108621b8b64b2cf',
-  durationFull: 90,
-  position: 0,
-  volumeVideo: 50,
-  isFinishInit: false,
-  isScheduleRunning: false,
-  scheduleId: '',
-  isVideoPlaying: true,
-  isPlaylistRunning: false,
-  videoId: '607fb1afeca9500c39e591c1',
-};
+// const exampleZI: ZoneInfo = {
+//   loopMode: 0,
+//   isMute: false,
+//   isPause: false,
+//   zoneId: '607fb34f4108621b8b64b2cf',
+//   durationFull: 90,
+//   position: 0,
+//   volumeVideo: 50,
+//   isFinishInit: false,
+//   isScheduleRunning: false,
+//   scheduleId: '',
+//   isVideoPlaying: true,
+//   isPlaylistRunning: false,
+//   videoId: '607fb1afeca9500c39e591c1',
+// };
 export default Vue.extend({
   props: {
     // zoneInfo: {
@@ -82,7 +82,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      zoneInfo: exampleZI as ZoneInfo,
+      zoneInfo: {} as ZoneInfo,
       progress: 0 as number,
       volume: 0 as number,
       videoPlayer: null as HTMLVideoElement | null,

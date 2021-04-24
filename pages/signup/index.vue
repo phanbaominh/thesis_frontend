@@ -5,7 +5,7 @@
       <v-text-field
         v-model="user.username"
         name="username"
-        label="Name"
+        label="Username"
         outlined
         dense
       ></v-text-field>
@@ -35,6 +35,7 @@
 import Vue from 'vue';
 export default Vue.extend({
   layout: 'auth',
+  auth: false,
   data() {
     return {
       user: {} as { email?: string; password?: string; username?: string },
@@ -43,10 +44,10 @@ export default Vue.extend({
   },
   methods: {
     async onSignUp() {
-      await this.$axios.$post(`${this.$config.apiURL}/api/users`, {
-        user: this.user,
+      await this.$axios.$post(`${this.$apiUrl.user}/sign-up`, {
+        ...this.user,
       });
-      await this.$auth.loginWith('local', { data: { user: this.user } });
+      await this.$auth.loginWith('local', { data: { ...this.user } });
       this.$router.push('/');
     },
   },

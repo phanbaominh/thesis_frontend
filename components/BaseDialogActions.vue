@@ -1,7 +1,7 @@
 <template>
   <v-card-actions>
     <v-spacer></v-spacer>
-    <v-btn :color="color" text @click="$emit('close')">
+    <v-btn v-if="!isAuth" :color="color" text @click="$emit('close')">
       <slot name="close"></slot>
     </v-btn>
     <v-btn
@@ -24,6 +24,10 @@ export default Vue.extend({
       default: 'blue darken-1',
     },
     isSubmit: {
+      type: Boolean,
+      default: false,
+    },
+    isAuth: {
       type: Boolean,
       default: false,
     },

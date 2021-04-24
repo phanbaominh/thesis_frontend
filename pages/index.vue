@@ -1,7 +1,8 @@
 <template>
   <v-container>
     <v-row class="mb-4">
-      <v-col cols="6">
+      <v-col cols="12" lg="6"> <UserProfile /></v-col>
+      <v-col cols="12" lg="6">
         <v-card class="pb-4">
           <v-card-title>Device report: {{ devices.length }} total</v-card-title>
           <DashboardChart
@@ -10,7 +11,6 @@
           />
         </v-card>
       </v-col>
-      <v-col cols="6"></v-col>
     </v-row>
     <v-card>
       <v-card-title>Device report</v-card-title>
@@ -39,8 +39,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import UserProfile from '~/components/UserProfile.vue';
 import { Device, ZoneDeviceLog } from '~/types/types';
 export default Vue.extend({
+  components: { UserProfile },
   data() {
     return {
       devices: [] as Device[],

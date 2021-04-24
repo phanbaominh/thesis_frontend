@@ -6,7 +6,9 @@
           <v-avatar>
             <img src="/default-avatar.png" alt="Avatar" />
           </v-avatar>
-          {{ 'Username' }}
+          <span v-if="!$vuetify.breakpoint.xs">{{
+            $auth.user ? $auth.user.username : 'None'
+          }}</span>
         </div>
       </template>
       <v-list>

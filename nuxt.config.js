@@ -63,11 +63,14 @@ export default {
         },
         endpoints: {
           login: {
-            url: `${process.env.API_URL}/api/users/sign-in`,
+            url: `${process.env.API_URL}/users/sign-in`,
             method: 'post',
           },
           logout: false,
-          user: { url: `${process.env.API_URL}/api/auth/user`, method: 'get' },
+          user: {
+            url: `${process.env.API_URL}/users/current-user`,
+            method: 'get',
+          },
         },
       },
     },
@@ -111,4 +114,7 @@ export default {
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+  router: {
+    middleware: ['auth'],
+  },
 };
