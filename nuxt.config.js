@@ -25,6 +25,7 @@ export default {
     '~/plugins/socket.ts',
     '~/plugins/filters.ts',
     '~/plugins/axios.ts',
+    '~/plugins/chart.ts',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -46,8 +47,11 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/toast',
+    '@nuxtjs/auth-next',
   ],
-
+  auth: {
+    // Options
+  },
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
 

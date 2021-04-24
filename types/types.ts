@@ -40,6 +40,7 @@ export interface Device {
   name: string;
   serialNumber: string;
   zoneId: string | null;
+  status: boolean;
 }
 export type ArrayElement<
   ArrayType extends readonly unknown[]
