@@ -148,15 +148,23 @@ export default Vue.extend({
   },
   methods: {
     async onDelete(media: Media) {
-      await this.$axios.$delete(this.$apiUrl.video(media._id));
-      this.mediaArray = this.mediaArray.filter((m) => m._id !== media._id);
+      try {
+        await this.$axios.$delete(this.$apiUrl.video(media._id));
+        this.mediaArray = this.mediaArray.filter((m) => m._id !== media._id);
+      } catch {
+        // DO NOTHING
+      }
     },
     async onConfirmDelete(deletedArray: Media[]) {
       const deletedIds = deletedArray.map((media) => media._id);
-      for (const id of deletedIds) {
-        await this.$axios.$delete(this.$apiUrl.video(id));
+      try {
+        for (const id of deletedIds) {
+          await this.$axios.$delete(this.$apiUrl.video(id));
+        }
+        this.$accessor.DELETE_MEDIA_FROM_ARRAY(deletedIds);
+      } catch {
+        // DO NOTHING
       }
-      this.$accessor.DELETE_MEDIA_FROM_ARRAY(deletedIds);
     },
     async onConfirmUpload() {
       if (this.uploadedFile) {
@@ -165,17 +173,23 @@ export default Vue.extend({
         bodyFormData.append('duration', this.duration.toString());
         bodyFormData.append('tags', this.tags.toString());
 
-        const newVideo = (
-          await this.$axios({
-            method: 'post',
-            url: `${this.$apiUrl.videos}`,
-            data: bodyFormData,
-            headers: { 'Content-Type': 'multipart/form-data' },
-          })
-        ).data;
-        this.$accessor.ADD_MEDIA_TO_ARRAY(newVideo);
+        try {
+          const newVideo = (
+            await this.$axios({
+              method: 'post',
+              url: `${this.$apiUrl.videos}`,
+              data: bodyFormData,
+              headers: { 'Content-Type': 'multipart/form-data' },
+            })
+          ).data;
+          this.$accessor.ADD_MEDIA_TO_ARRAY(newVideo);
+          this.isUploadDialog = false;
+        } catch {
+          // DO NOTHING
+        }
+      } else {
+        this.isUploadDialog = false;
       }
-      this.isUploadDialog = false;
     },
     // removeFile(index: number) {
     //   this.uploadedFiles = this.uploadedFiles.filter((_, i) => i !== index);

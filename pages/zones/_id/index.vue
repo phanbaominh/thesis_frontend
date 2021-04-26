@@ -164,13 +164,22 @@ export default Vue.extend({
       this.updateNonZoneArray(type);
     },
     async updateZone() {
-      await this.$axios.$put(this.$apiUrl.zone(this.zone._id), this.zone);
-      this.$toast.success('Sucessfully updated Zone');
+      try {
+        await this.$axios.$put(this.$apiUrl.zone(this.zone._id), this.zone);
+        this.$toast.success('Sucessfully updated Zone');
+      } catch {
+        // DO NOTHING
+      }
     },
     async onUpdateName(newName: string) {
       if (newName === this.zone.name) return;
+      const oldName = this.zone.name;
       this.zone.name = newName;
-      await this.$axios.$put(this.$apiUrl.zone(this.zone._id), this.zone);
+      try {
+        await this.$axios.$put(this.$apiUrl.zone(this.zone._id), this.zone);
+      } catch {
+        this.zone.name = oldName;
+      }
     },
     updateNonZoneArray(type: ZoneArrayable) {
       const captializedType = type.charAt(0).toUpperCase() + type.slice(1);
@@ -186,23 +195,31 @@ export default Vue.extend({
     },
     async onAddDevice(devices: Device[]) {
       for (const device of devices) {
-        await this.$axios.$post(this.$apiUrl.zoneAddDevice, {
-          zoneId: this.zone._id,
-          deviceId: device._id,
-        });
-        this.zone.deviceArray.push(device);
+        try {
+          await this.$axios.$post(this.$apiUrl.zoneAddDevice, {
+            zoneId: this.zone._id,
+            deviceId: device._id,
+          });
+          this.zone.deviceArray.push(device);
+        } catch {
+          // DO NOTHING
+        }
       }
       this.updateNonZoneArray('device');
     },
     async onDeleteDevice(devices: Device[]) {
       for (const device of devices) {
-        await this.$axios.$post(this.$apiUrl.zoneDeleteDevice, {
-          zoneId: this.zone._id,
-          deviceId: device._id,
-        });
-        this.zone.deviceArray = this.zone.deviceArray.filter(
-          (d) => d._id !== device._id
-        );
+        try {
+          await this.$axios.$post(this.$apiUrl.zoneDeleteDevice, {
+            zoneId: this.zone._id,
+            deviceId: device._id,
+          });
+          this.zone.deviceArray = this.zone.deviceArray.filter(
+            (d) => d._id !== device._id
+          );
+        } catch {
+          // DO NOTHING
+        }
       }
       this.updateNonZoneArray('device');
       this.$axios.$post(this.$apiUrl.videoInfo, {
@@ -211,13 +228,17 @@ export default Vue.extend({
     },
     async onPlayVideo(video: Video) {
       this.warn();
-      await this.$axios.$post(this.$apiUrl.videoControl, {
-        eventName: 'play-video',
-        payload: {
-          zoneId: this.zone._id,
-          videoId: video._id,
-        },
-      });
+      try {
+        await this.$axios.$post(this.$apiUrl.videoControl, {
+          eventName: 'play-video',
+          payload: {
+            zoneId: this.zone._id,
+            videoId: video._id,
+          },
+        });
+      } catch {
+        // DO NOTHING
+      }
     },
     warn() {
       if (!this.$accessor.isSocketConnected) {
@@ -228,23 +249,27 @@ export default Vue.extend({
     },
     async onPlayPlaylist(playlist: Playlist) {
       this.warn();
-      await this.$axios.$post(this.$apiUrl.videoControl, {
-        eventName: 'play-playlist-video',
-        payload: {
-          zoneId: this.zone._id,
-          playlistVideoId: playlist._id,
-        },
-      });
-      this.playlistVideos.push({
-        id: playlist._id,
-        videos: (
-          await this.$axios.$get(this.$apiUrl.videoArray, {
-            params: {
-              videoIds: playlist.mediaArray,
-            },
-          })
-        ).video,
-      });
+      try {
+        await this.$axios.$post(this.$apiUrl.videoControl, {
+          eventName: 'play-playlist-video',
+          payload: {
+            zoneId: this.zone._id,
+            playlistVideoId: playlist._id,
+          },
+        });
+        this.playlistVideos.push({
+          id: playlist._id,
+          videos: (
+            await this.$axios.$get(this.$apiUrl.videoArray, {
+              params: {
+                videoIds: playlist.mediaArray,
+              },
+            })
+          ).video,
+        });
+      } catch {
+        // DO NOTHING
+      }
     },
   },
 });

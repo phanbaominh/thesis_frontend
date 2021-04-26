@@ -92,13 +92,17 @@ export default Vue.extend({
           })
         ).playlist;
         this.playlists.push(newPlaylist);
-      } catch (error) {
-        console.log(error);
+      } catch {
+        // DO NOTHING
       }
     },
     async onDelete(playlist: Playlist) {
-      await this.$axios.$delete(this.$apiUrl.playlist(playlist._id));
-      this.playlists = this.playlists.filter((m) => m._id !== playlist._id);
+      try {
+        await this.$axios.$delete(this.$apiUrl.playlist(playlist._id));
+        this.playlists = this.playlists.filter((m) => m._id !== playlist._id);
+      } catch {
+        // DO NOTHING
+      }
     },
     updatePlaylist(newPlaylist: Playlist) {
       this.playlists = this.playlists.map((playlist) =>

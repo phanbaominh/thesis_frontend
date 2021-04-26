@@ -51,7 +51,6 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { Device } from '~/types/types';
 export default Vue.extend({
   data() {
     return {
@@ -63,15 +62,19 @@ export default Vue.extend({
   },
   methods: {
     async onCreateDevice() {
-      const newDevice = (
-        await this.$axios.$post(this.$apiUrl.devices, {
-          name: this.name,
-          serialNumber: this.serialNumber,
-          zoneId: null,
-        } as Omit<Device, '_id'>)
-      ).device;
-      this.$emit('newDevice', newDevice);
-      this.dialog = false;
+      try {
+        const newDevice = (
+          await this.$axios.$post(this.$apiUrl.devices, {
+            name: this.name,
+            serialNumber: this.serialNumber,
+            zoneId: null,
+          })
+        ).device;
+        this.$emit('newDevice', newDevice);
+        this.dialog = false;
+      } catch {
+        // DO NOTHING
+      }
     },
   },
 });

@@ -20,9 +20,13 @@ import Vue from 'vue';
 import { Playlist } from 'types/types';
 export default Vue.extend({
   async asyncData({ route, $axios, $apiUrl }) {
-    const playlist = (await $axios.$get($apiUrl.playlist(route.params.id)))
-      .playlists;
-    return { playlist };
+    try {
+      const playlist = (await $axios.$get($apiUrl.playlist(route.params.id)))
+        .playlists;
+      return { playlist };
+    } catch {
+      // DO NOTHING
+    }
   },
   data() {
     return {

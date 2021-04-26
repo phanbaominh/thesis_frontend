@@ -65,15 +65,23 @@ export default Vue.extend({
   },
   methods: {
     async onNewZone(name: string) {
-      const newZone = (await this.$axios.$post(this.$apiUrl.zones, { name }))
-        .zone;
-      this.zones.push(newZone);
-      this.$toast.success('Succesfully created a zone!');
+      try {
+        const newZone = (await this.$axios.$post(this.$apiUrl.zones, { name }))
+          .zone;
+        this.zones.push(newZone);
+        this.$toast.success('Succesfully created a zone!');
+      } catch {
+        // DO NOTHING
+      }
     },
     async onDeleteZone(deletedZone: Zone) {
-      await this.$axios.$delete(this.$apiUrl.zone(deletedZone._id));
-      this.zones = this.zones.filter((zone) => deletedZone._id !== zone._id);
-      this.$toast.success('Succesfully deleted zone!', { icon: 'check' });
+      try {
+        await this.$axios.$delete(this.$apiUrl.zone(deletedZone._id));
+        this.zones = this.zones.filter((zone) => deletedZone._id !== zone._id);
+        this.$toast.success('Succesfully deleted zone!');
+      } catch {
+        // DO NOTHING
+      }
     },
   },
 });

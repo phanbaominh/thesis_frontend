@@ -17,7 +17,11 @@
         outlined
         dense
       ></v-text-field>
-      <BaseDialogActions @close="isUploadDialog = false" @confirm="onSignIn">
+      <BaseDialogActions
+        is-auth
+        @close="isUploadDialog = false"
+        @confirm="onSignIn"
+      >
         Sign in
       </BaseDialogActions>
       <div>
