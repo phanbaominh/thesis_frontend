@@ -86,3 +86,9 @@ export interface User {
   email: string;
   password: string;
 }
+
+export interface Permission {
+  _id: string;
+  name: string;
+  desc: string;
+}

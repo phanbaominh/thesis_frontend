@@ -77,6 +77,11 @@ export default Vue.extend({
           title: 'Media',
           to: '/media',
         },
+        {
+          icon: 'mdi-account-key',
+          title: 'Permissions',
+          to: '/permissions',
+        },
       ],
       drawer: true,
       miniVariant: false,

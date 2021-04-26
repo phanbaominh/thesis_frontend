@@ -9,8 +9,10 @@ import { Media, User } from '~/types/types';
 export const state = () => ({
   allMediaArray: [] as Media[],
   mediaTab: null as number | null,
+  permTab: null as number | null,
   isSocketConnected: false,
   user: null as User | null,
+  perms: [] as number[],
 });
 
 export const mutations = mutationTree(state, {
@@ -27,6 +29,15 @@ export const mutations = mutationTree(state, {
   },
   SET_MEDIA_TAB(state, tab) {
     state.mediaTab = tab;
+  },
+  SET_PERM_TAB(state, tab) {
+    state.permTab = tab;
+  },
+  SET_PERMS(state, perms) {
+    state.perms = perms;
+  },
+  ADD_TO_PERMS(state, perm) {
+    state.perms.push(perm);
   },
   CHANGE_SOCKET_STATUS(state, status) {
     state.isSocketConnected = status;

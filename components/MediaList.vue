@@ -1,7 +1,7 @@
 <template>
   <v-list>
     <template v-for="item in items">
-      <v-list-item :key="item.name">
+      <v-list-item :key="item._id">
         <v-list-item-content
           class="text-subtitle-1 text-sm-h6 font-weight-regular"
         >
@@ -17,12 +17,13 @@
 </template>
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
+import { Nameable } from '~/types/types';
 export default Vue.extend({
   props: {
     items: {
       required: true,
       type: Array,
-    } as PropOptions<{ name: string }[]>,
+    } as PropOptions<Nameable[]>,
   },
 });
 </script>
