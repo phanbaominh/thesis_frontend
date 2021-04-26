@@ -1,14 +1,18 @@
 <template>
   <v-dialog v-model="dialog" width="1000">
     <template #activator="{ on, attrs }">
-      <a
-        href="#"
-        class="text-truncate text-decoration-underline"
-        v-bind="attrs"
-        v-on="on"
-      >
-        {{ playlist.name }}
-      </a>
+      <v-card outlined class="playlist_card" v-bind="attrs" v-on="on">
+        <v-card-title class="subheading font-weight-bold">
+          <v-icon color="primary" x-large left>mdi-folder</v-icon>
+          <a href="#" class="text-truncate text-decoration-underline">
+            {{ playlist.name }}
+          </a>
+          <v-spacer></v-spacer>
+          <DialogDelete color="error" @delete="$emit('delete')">
+            <v-icon>mdi-delete</v-icon>
+          </DialogDelete>
+        </v-card-title>
+      </v-card>
     </template>
     <v-card class="pa-4">
       <EditableName

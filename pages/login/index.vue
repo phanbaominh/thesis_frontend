@@ -1,5 +1,10 @@
 <template>
-  <v-form v-model="valid" class="d-flex justify-center">
+  <v-form
+    ref="form"
+    v-model="valid"
+    class="d-flex justify-center"
+    @submit.prevent="onSignIn"
+  >
     <v-card class="pa-4" width="500px">
       <v-card-title>Sign in</v-card-title>
       <v-text-field
@@ -8,6 +13,7 @@
         label="Email"
         outlined
         dense
+        :rules="[(v) => !!v || 'Email is required']"
       ></v-text-field>
       <v-text-field
         v-model="login.password"
@@ -16,14 +22,11 @@
         type="password"
         outlined
         dense
+        :rules="[(v) => !!v || 'Password is required']"
       ></v-text-field>
-      <BaseDialogActions
-        is-auth
-        @close="isUploadDialog = false"
-        @confirm="onSignIn"
-      >
+      <BaseSubmitActions is-not-dialog @close="isUploadDialog = false">
         Sign in
-      </BaseDialogActions>
+      </BaseSubmitActions>
       <div>
         <nuxt-link to="/signup">Don't have an account? Sign up</nuxt-link>
       </div>
@@ -59,12 +62,15 @@ export default Vue.extend({
       //   this.$accessor.SET_USER(response.data.user);
       //   this.$router.push('/');
       // }
-      await this.$auth
-        .loginWith('local', {
+      if (!(this.$refs.form as any).validate()) return;
+      try {
+        await this.$auth.loginWith('local', {
           data: this.login,
-        })
-        .catch((err) => console.log('inside', err));
-      this.$router.push('/');
+        });
+        this.$router.push('/');
+      } catch {
+        // Do Nothing
+      }
     },
   },
 });

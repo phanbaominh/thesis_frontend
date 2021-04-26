@@ -1,54 +1,19 @@
 <template>
-  <v-form v-model="valid" class="d-flex justify-center">
-    <v-card class="pa-4" width="500px">
-      <v-card-title>Sign up</v-card-title>
-      <v-text-field
-        v-model="user.username"
-        name="username"
-        label="Username"
-        outlined
-        dense
-      ></v-text-field>
-      <v-text-field
-        v-model="user.email"
-        name="email"
-        label="Email"
-        outlined
-        dense
-      ></v-text-field>
-      <v-text-field
-        v-model="user.password"
-        name="password"
-        label="Password"
-        type="password"
-        outlined
-        dense
-      ></v-text-field>
-      <BaseDialogActions @confirm="onSignUp"> Sign up </BaseDialogActions>
-      <div>
-        <nuxt-link to="/login">Already have an account? Log in</nuxt-link>
-      </div>
-    </v-card>
-  </v-form>
+  <UserForm @submit="onSignUp" />
 </template>
 <script lang="ts">
 import Vue from 'vue';
+import { User } from '~/types/types';
 export default Vue.extend({
-  layout: 'auth',
   auth: false,
-  data() {
-    return {
-      user: {} as { email?: string; password?: string; username?: string },
-      valid: false,
-    };
-  },
+  layout: 'auth',
   methods: {
-    async onSignUp() {
+    async onSignUp(user: User) {
       try {
         await this.$axios.$post(`${this.$apiUrl.user}/sign-up`, {
-          ...this.user,
+          ...user,
         });
-        await this.$auth.loginWith('local', { data: { ...this.user } });
+        await this.$auth.loginWith('local', { data: { ...user } });
         this.$router.push('/');
       } catch {
         // do nothing

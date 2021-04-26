@@ -1,58 +1,6 @@
 <template>
   <BaseFetcher :fetch-state="$fetchState">
     <template #pending> Fetching {{ type }}... </template>
-    <!-- <DataIterator :type="type" :init-items="mediaArray">
-      <v-dialog v-model="isUploadDialog" width="500" scrollable>
-        <template #activator="{ on, attrs }">
-          <v-btn
-            depressed
-            fab
-            color="blue"
-            class="align-self-center mr-2"
-            v-bind="attrs"
-            :small="!$vuetify.breakpoint.xs"
-            :x-small="$vuetify.breakpoint.xs"
-            v-on="on"
-          >
-            <v-icon>mdi-cloud-upload</v-icon>
-          </v-btn>
-        </template>
-        <v-form v-model="valid">
-          <v-card class="pa-4">
-            <v-file-input
-              v-model="uploadedFile"
-              label="Choose file to upload"
-              accept="video/*"
-              name="file"
-              :rules="[Boolean(duration && uploadedFile)]"
-            >
-            </v-file-input>
-            <BaseDialogActions
-              @close="isUploadDialog = false"
-              @confirm="onConfirmUpload"
-            >
-              Confirm
-              <template #close> Close </template>
-            </BaseDialogActions>
-          </v-card>
-        </v-form>
-      </v-dialog>
-
-      <template #main="{ items: displayedMediaArray }">
-        <MediaList :items="displayedMediaArray">
-          <template #actions="{ item: media }">
-            <v-list-item-action>
-              <MediaTabItemPlayDialog :media="media" />
-            </v-list-item-action>
-            <v-list-item-action>
-              <DialogDelete color="error" @delete="onDelete(media)">
-                <v-icon>mdi-delete</v-icon>
-              </DialogDelete>
-            </v-list-item-action>
-          </template>
-        </MediaList>
-      </template>
-    </DataIterator> -->
     <MediaSelector
       :media-array="mediaArray"
       :type="'Videos'"
@@ -79,23 +27,24 @@
             <v-icon>mdi-cloud-upload</v-icon>
           </v-btn>
         </template>
-        <v-form v-model="valid">
+        <v-form v-model="valid" action="" @submit.prevent="onConfirmUpload">
           <v-card class="pa-4">
             <v-file-input
               v-model="uploadedFile"
               label="Choose file to upload"
               accept="video/*"
               name="file"
-              :rules="[Boolean(duration && uploadedFile)]"
+              :rules="uploadFileRules"
             >
             </v-file-input>
-            <BaseDialogActions
+            <input style="display: none" />
+            <BaseSubmitActions
+              :is-disabled="!Boolean(duration && uploadedFile)"
               @close="isUploadDialog = false"
-              @confirm="onConfirmUpload"
             >
               Confirm
               <template #close> Close </template>
-            </BaseDialogActions>
+            </BaseSubmitActions>
           </v-card>
         </v-form>
       </v-dialog>
@@ -120,6 +69,7 @@ export default Vue.extend({
       duration: 0,
       valid: false,
       tags: [],
+      uploadFileRules: [(v: any) => !!v || 'File is required'],
     };
   },
   async fetch() {
@@ -166,8 +116,9 @@ export default Vue.extend({
         // DO NOTHING
       }
     },
-    async onConfirmUpload() {
-      if (this.uploadedFile) {
+    async onConfirmUpload(e: Event) {
+      e.preventDefault();
+      if (this.uploadedFile && this.valid) {
         const bodyFormData = new FormData();
         bodyFormData.append('video', this.uploadedFile!);
         bodyFormData.append('duration', this.duration.toString());

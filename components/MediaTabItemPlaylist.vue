@@ -31,19 +31,11 @@
             md="4"
             lg="3"
           >
-            <v-card outlined class="playlist_card">
-              <v-card-title class="subheading font-weight-bold">
-                <v-icon color="primary" x-large left>mdi-folder</v-icon>
-                <MediaTabItemPlaylistDialog
-                  :init-playlist="playlist"
-                  @update:playlist="updatePlaylist"
-                />
-                <v-spacer></v-spacer>
-                <DialogDelete color="error" @delete="onDelete(playlist)">
-                  <v-icon>mdi-delete</v-icon>
-                </DialogDelete>
-              </v-card-title>
-            </v-card>
+            <MediaTabItemPlaylistDialog
+              :init-playlist="playlist"
+              @update:playlist="updatePlaylist"
+              @delete="onDelete(playlist)"
+            />
           </v-col>
         </v-row>
         <!-- <MediaList :items="displayedPlaylists">

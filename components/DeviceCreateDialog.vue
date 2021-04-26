@@ -17,35 +17,36 @@
     <v-card class="pt-2 px-4">
       <v-card-title> Create a device: </v-card-title>
 
-      <v-form v-model="valid" :action="`${$apiUrl}/devices`" method="post">
-        <v-card class="pa-4">
-          <v-text-field
-            ref="nameInput"
-            v-model="name"
-            name="name"
-            label="Name"
-            outlined
-            dense
-          ></v-text-field>
-          <v-text-field
-            ref="nameInput"
-            v-model="serialNumber"
-            name="serialNumber"
-            label="Serial number"
-            outlined
-            dense
-          ></v-text-field>
-        </v-card>
-      </v-form>
-
-      <BaseDialogActions
-        is-submit
-        @close="dialog = false"
-        @confirm="onCreateDevice"
+      <v-form
+        ref="form"
+        v-model="valid"
+        :action="`${$apiUrl}/devices`"
+        method="post"
+        @submit.prevent="onCreateDevice"
       >
-        Save
-        <template #close> Close </template>
-      </BaseDialogActions>
+        <v-text-field
+          ref="nameInput"
+          v-model="name"
+          name="name"
+          label="Name"
+          outlined
+          dense
+          :rules="[(v) => !!v || 'Name is required']"
+        ></v-text-field>
+        <v-text-field
+          ref="nameInput"
+          v-model="serialNumber"
+          name="serialNumber"
+          label="Serial number"
+          outlined
+          dense
+          :rules="[(v) => !!v || 'Serial number is required']"
+        ></v-text-field>
+        <BaseSubmitActions @close="dialog = false">
+          Save
+          <template #close> Close </template>
+        </BaseSubmitActions>
+      </v-form>
     </v-card>
   </v-dialog>
 </template>
@@ -62,6 +63,7 @@ export default Vue.extend({
   },
   methods: {
     async onCreateDevice() {
+      if (!(this.$refs.form as any).validate()) return;
       try {
         const newDevice = (
           await this.$axios.$post(this.$apiUrl.devices, {

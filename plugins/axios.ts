@@ -7,15 +7,15 @@ const axiosPlugin: Plugin = ({ $axios, error: nuxtError, $toast }) => {
   //   else isAuthRequest = false;
   // });
   $axios.onError((error) => {
-    console.log('error:', error.response);
-
+    console.log('error:', { ...error });
     $toast.error(
       'Error: ' +
-        (error.response?.data.message.message ||
+        (error.response?.data.message?.message ||
           error.response?.data.message ||
           error.message ||
           'Server failed to response')
     );
+
     if (!error.response) {
       nuxtError({
         statusCode: 500,

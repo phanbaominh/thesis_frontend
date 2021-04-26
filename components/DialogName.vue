@@ -18,17 +18,19 @@
     <v-card class="pt-2 px-4">
       <v-card-title>{{ title }}</v-card-title>
 
-      <v-text-field
-        ref="nameInput"
-        v-model="name"
-        outlined
-        dense
-      ></v-text-field>
-
-      <BaseDialogActions @close="dialog = false" @confirm="onChangeName">
-        Save
-        <template #close> Close </template>
-      </BaseDialogActions>
+      <v-form ref="form" v-model="valid" @submit.prevent="onChangeName">
+        <v-text-field
+          v-model="name"
+          outlined
+          dense
+          autofocus
+          :rules="[(v) => !!v || 'Name is required']"
+        ></v-text-field>
+        <BaseSubmitActions @close="dialog = false">
+          Save
+          <template #close> Close </template>
+        </BaseSubmitActions>
+      </v-form>
     </v-card>
   </v-dialog>
 </template>
@@ -53,13 +55,12 @@ export default Vue.extend({
     return {
       name: this.initName,
       dialog: false,
+      valid: false,
     };
   },
   methods: {
-    onOpenDialog() {
-      (this.$refs.nameInput as any).focus();
-    },
     onChangeName() {
+      if (!(this.$refs.form as any).validate()) return;
       this.dialog = false;
       this.$emit('updateName', this.name);
     },

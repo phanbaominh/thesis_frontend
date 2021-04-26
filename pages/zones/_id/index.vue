@@ -38,8 +38,15 @@
             />
           </v-card>
         </v-dialog>
-        <v-btn fab small depressed color="blue" class="align-self-center mr-2">
-          <v-icon @click="updateZone"> mdi-sync </v-icon>
+        <v-btn
+          fab
+          small
+          depressed
+          color="blue"
+          class="align-self-center mr-2"
+          @click="updateZone"
+        >
+          <v-icon> mdi-sync </v-icon>
         </v-btn>
       </v-row>
     </v-toolbar>
@@ -165,7 +172,9 @@ export default Vue.extend({
     },
     async updateZone() {
       try {
-        await this.$axios.$put(this.$apiUrl.zone(this.zone._id), this.zone);
+        this.zone = (
+          await this.$axios.$put(this.$apiUrl.zone(this.zone._id), this.zone)
+        ).zone;
         this.$toast.success('Sucessfully updated Zone');
       } catch {
         // DO NOTHING
