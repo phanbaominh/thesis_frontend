@@ -55,9 +55,11 @@ export default Vue.extend({
       //   this.$accessor.SET_USER(response.data.user);
       //   this.$router.push('/');
       // }
-      await this.$auth.loginWith('local', {
-        data: this.login,
-      });
+      await this.$auth
+        .loginWith('local', {
+          data: this.login,
+        })
+        .catch((err) => console.log('inside', err));
       this.$router.push('/');
     },
   },

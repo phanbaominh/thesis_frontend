@@ -1,6 +1,11 @@
 import { Plugin } from '@nuxt/types';
 
-const axiosPlugin: Plugin = ({ $axios, error: nuxtError, $toast }) => {
+const axiosPlugin: Plugin = ({ $axios, error: nuxtError, $toast, $apiUrl }) => {
+  let isAuthRequest = false;
+  $axios.onRequest((config) => {
+    if (config.url?.startsWith($apiUrl.user)) isAuthRequest = true;
+    else isAuthRequest = false;
+  });
   $axios.onError((error) => {
     console.log('error:', error.response);
 
@@ -16,7 +21,7 @@ const axiosPlugin: Plugin = ({ $axios, error: nuxtError, $toast }) => {
         message: error.message,
       });
     }
-    return Promise.resolve(false);
+    if (!isAuthRequest) return Promise.resolve(false);
   });
 
   // $axios.onRequest((config) => {

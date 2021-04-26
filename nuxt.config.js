@@ -63,12 +63,16 @@ export default {
         },
         endpoints: {
           login: {
-            url: `${process.env.API_URL}/users/sign-in`,
+            url: `${
+              process.env.API_URL || 'http://localhost:3000/api'
+            }/users/sign-in`,
             method: 'post',
           },
           logout: false,
           user: {
-            url: `${process.env.API_URL}/users/current-user`,
+            url: `${
+              process.env.API_URL || 'http://localhost:3000/api'
+            }/users/current-user`,
             method: 'get',
           },
         },

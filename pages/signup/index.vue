@@ -44,11 +44,15 @@ export default Vue.extend({
   },
   methods: {
     async onSignUp() {
-      await this.$axios.$post(`${this.$apiUrl.user}/sign-up`, {
-        ...this.user,
-      });
-      await this.$auth.loginWith('local', { data: { ...this.user } });
-      this.$router.push('/');
+      try {
+        await this.$axios.$post(`${this.$apiUrl.user}/sign-up`, {
+          ...this.user,
+        });
+        await this.$auth.loginWith('local', { data: { ...this.user } });
+        this.$router.push('/');
+      } catch {
+        // do nothing
+      }
     },
   },
 });
