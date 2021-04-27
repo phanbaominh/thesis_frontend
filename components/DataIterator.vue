@@ -5,7 +5,7 @@
     :page.sync="page"
     :search="search"
     hide-default-footer
-    class="px-2 mt-2 data_iterator"
+    class="mt-2 data_iterator"
   >
     <template #header>
       <v-toolbar dark color="blue darken-3" class="mb-1">
@@ -48,10 +48,12 @@
       ></v-text-field>
     </template>
     <template #default="props">
-      <slot name="main" :items="props.items"></slot>
+      <div class="px-2">
+        <slot name="main" :items="props.items"></slot>
+      </div>
     </template>
     <template #footer>
-      <v-row class="mt-2 px-4 mb-1" align="center">
+      <v-row class="mt-2 px-6 mb-1" align="center">
         <span class="grey--text">Items/page</span>
         <v-menu offset-y>
           <template #activator="{ on, attrs }">

@@ -1,0 +1,77 @@
+<template>
+  <v-dialog v-model="dialog" max-width="290">
+    <template #activator="{ on, attrs }">
+      <slot name="activator" :on="on" :attrs="attrs">
+        <v-btn
+          depressed
+          fab
+          :color="'blue'"
+          class="align-self-center mr-2"
+          :small="!$vuetify.breakpoint.xs"
+          :x-small="$vuetify.breakpoint.xs"
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-icon>mdi-{{ icon }}</v-icon>
+        </v-btn>
+      </slot>
+    </template>
+    <v-card class="pt-2 px-4">
+      <v-card-title> {{ title }} </v-card-title>
+
+      <v-form
+        ref="form"
+        v-model="valid"
+        :action="action"
+        method="post"
+        @submit.prevent="onSubmit"
+      >
+        <slot></slot>
+        <BaseSubmitActions @close="dialog = false">
+          Save
+          <template #close> Close </template>
+        </BaseSubmitActions>
+      </v-form>
+    </v-card>
+  </v-dialog>
+</template>
+<script lang="ts">
+import Vue from 'vue';
+export default Vue.extend({
+  props: {
+    title: {
+      required: true,
+      type: String,
+    },
+    action: {
+      required: true,
+      type: String,
+    },
+    controlDialog: {
+      required: true,
+      type: Boolean,
+    },
+    icon: {
+      default: 'plus',
+      type: String,
+    },
+  },
+  data() {
+    return {
+      dialog: false,
+      valid: false,
+    };
+  },
+  watch: {
+    controlDialog() {
+      this.dialog = this.controlDialog;
+    },
+  },
+  methods: {
+    onSubmit() {
+      if (!(this.$refs.form as any).validate()) return;
+      this.$emit('submit');
+    },
+  },
+});
+</script>

@@ -24,6 +24,7 @@
     </template>
     <template #main="{ items: displayedItems }">
       <v-list>
+        <slot name="headers"></slot>
         <template v-for="item in displayedItems">
           <v-list-item :key="item._id">
             <v-list-item-content
