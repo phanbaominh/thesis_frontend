@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="290">
+  <v-dialog v-model="dialog" :max-width="maxWidth" scrollable>
     <template #activator="{ on, attrs }">
       <slot name="activator" :on="on" :attrs="attrs">
         <v-btn
@@ -10,6 +10,7 @@
           :small="!$vuetify.breakpoint.xs"
           :x-small="$vuetify.breakpoint.xs"
           v-bind="attrs"
+          dark
           v-on="on"
         >
           <v-icon>mdi-{{ icon }}</v-icon>
@@ -55,6 +56,10 @@ export default Vue.extend({
       default: 'plus',
       type: String,
     },
+    maxWidth: {
+      default: 290,
+      type: Number,
+    },
   },
   data() {
     return {
@@ -64,7 +69,7 @@ export default Vue.extend({
   },
   watch: {
     controlDialog() {
-      this.dialog = this.controlDialog;
+      this.dialog = false;
     },
   },
   methods: {

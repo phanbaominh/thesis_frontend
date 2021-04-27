@@ -97,7 +97,16 @@ export default Vue.extend({
 });
 </script>
 <style>
+.perm-item-actions {
+  display: flex;
+  flex-direction: row-reverse;
+}
 .perm-item-actions .v-input__slot {
   flex-direction: row-reverse;
+  margin-bottom: 0 !important;
+}
+.perm-item-actions .v-input--selection-controls {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
 }
 </style>

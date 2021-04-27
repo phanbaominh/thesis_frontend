@@ -28,26 +28,22 @@
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </template>
-          <v-card>
-            <MediaAddDelete
-              :media-array="zone.deviceArray"
-              :all-media-array="nonZoneDeviceArray"
-              type="Device"
-              @add="onAddDevice"
-              @delete="onDeleteDevice"
-            />
+          <v-card class="cards pa-4">
+            <v-card class="mb-4">
+              <MediaAddDelete
+                :media-array="zone.deviceArray"
+                :all-media-array="nonZoneDeviceArray"
+                type="Device"
+                @add="onAddDevice"
+                @delete="onDeleteDevice"
+              />
+            </v-card>
+            <v-card>
+              <ZonePermIterator />
+            </v-card>
           </v-card>
         </v-dialog>
-        <v-btn
-          fab
-          small
-          depressed
-          color="blue"
-          class="align-self-center mr-2"
-          @click="updateZone"
-        >
-          <v-icon> mdi-sync </v-icon>
-        </v-btn>
+        <BaseButtonToolbar icon="sync" @click="updateZone" />
       </v-row>
     </v-toolbar>
     <v-row class="mt-2">

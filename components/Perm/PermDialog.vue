@@ -62,7 +62,9 @@
           <template #main="{ items: displayedItems }">
             <v-list>
               <v-list-item>
-                <v-list-item-content class="text-subtitle-1 text-sm-h6">
+                <v-list-item-content
+                  class="text-subtitle-1 font-weight-bold text-sm-h6"
+                >
                   <v-row>
                     <v-col cols="4">Zone</v-col>
                     <v-divider vertical></v-divider>

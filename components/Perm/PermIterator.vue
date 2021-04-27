@@ -57,7 +57,6 @@ export default Vue.extend({
           'long long long  long long long long long long long long long long long long long long long',
       },
     ];
-    console.log(this.perms);
   },
   methods: {
     async onNew() {},

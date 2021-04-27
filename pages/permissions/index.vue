@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-tabs v-model="tab" grow>
+    <v-tabs v-model="tab" grow class="mb-2">
       <v-tab v-for="item in tabItems" :key="item">
         {{ item }}
       </v-tab>
@@ -9,7 +9,9 @@
       <v-tab-item>
         <PermIterator />
       </v-tab-item>
-      <v-tab-item> </v-tab-item>
+      <v-tab-item>
+        <PermUserIterator />
+      </v-tab-item>
     </v-tabs-items>
   </v-card>
 </template>

@@ -1,9 +1,15 @@
 <template>
   <v-list-item>
-    <v-list-item-content> {{ permItem.name }}</v-list-item-content>
+    <!-- <v-list-item-content> {{ permItem.name }}</v-list-item-content> -->
     <v-list-item-action>
-      <v-checkbox v-model="isChecked" :value="permItem.value"> </v-checkbox
-    ></v-list-item-action>
+      <v-switch v-model="isChecked" flat>
+        <template #label>
+          <v-list-item-content class="ml-2">
+            {{ permItem.name }}
+          </v-list-item-content>
+        </template>
+      </v-switch>
+    </v-list-item-action>
   </v-list-item>
 </template>
 <script lang="ts">

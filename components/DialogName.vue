@@ -44,7 +44,7 @@ export default Vue.extend({
   },
   methods: {
     onChangeName() {
-      this.dialog = false;
+      this.dialog = !this.dialog;
       this.$emit('updateName', this.name);
     },
   },

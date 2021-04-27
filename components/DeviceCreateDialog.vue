@@ -48,7 +48,7 @@ export default Vue.extend({
           })
         ).device;
         this.$emit('newDevice', newDevice);
-        this.dialog = false;
+        this.dialog = !this.dialog;
       } catch {
         // DO NOTHING
       }
