@@ -21,7 +21,7 @@ declare module '@nuxt/types' {
 //   }
 // }
 const socketPlugin: Plugin = (
-  { $config: { WS_URL }, $toast, store },
+  { $config: { WS_URL }, $toast, store, $auth },
   inject
 ) => {
   const socket = io(WS_URL);
@@ -33,11 +33,19 @@ const socketPlugin: Plugin = (
   });
   socket.on('connect', () => {
     store.commit('CHANGE_SOCKET_STATUS', true);
+    if ($auth && $auth.user) {
+      socket.emit('auth', {
+        token: ($auth.strategy as any).token.get().split(' ')[1],
+      });
+    }
+    $toast.success('Socket connection to server has been established');
   });
   socket.on('disconnect', () => {
     store.commit('CHANGE_SOCKET_STATUS', false);
+    $toast.error('Socket connection to server has terminated');
   });
-  socket.on('receive/update/socket/disconnect', (device) => {
+
+  socket.on('/receive/update/socket/disconnect', (device) => {
     $toast.error(`Device ${device.name} just disconnected`);
   });
   inject('socket', socket);

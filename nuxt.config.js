@@ -22,7 +22,6 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/api.ts',
-    '~/plugins/socket.ts',
     '~/plugins/filters.ts',
     '~/plugins/axios.ts',
     '~/plugins/chart.ts',
@@ -78,6 +77,7 @@ export default {
         },
       },
     },
+    plugins: ['~/plugins/socket.ts'],
   },
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},

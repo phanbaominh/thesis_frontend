@@ -6,6 +6,7 @@
         <v-card class="pb-4">
           <v-card-title>Device report: {{ devices.length }} total</v-card-title>
           <DashboardChart
+            :key="updateChart"
             :loaded="!$fetchState.pending && !$fetchState.error"
             :chart-data="chartData"
           />
@@ -53,24 +54,48 @@ export default Vue.extend({
       ],
       devicesLog: [] as ZoneDeviceLog[],
       chartData: {},
+      updateChart: false,
     };
   },
   async fetch() {
     this.devices = (await this.$axios.$get(this.$apiUrl.devices)).devices;
-    const numOfConnected = this.devices.filter((device) => device.status)
-      .length;
-    const numOfDisconnected = this.devices.length - numOfConnected;
-    this.chartData = {
-      labels: [`Offline`, `Online`],
-      datasets: [
-        {
-          label: 'Device status',
-          data: [numOfDisconnected, numOfConnected],
-          backgroundColor: ['rgb(220, 53, 69)', '#4CAF50'],
-          hoverOffset: 4,
-        },
-      ],
-    };
+  },
+  watch: {
+    devices() {
+      const numOfConnected = this.devices.filter((device) => device.status)
+        .length;
+      const numOfDisconnected = this.devices.length - numOfConnected;
+      this.chartData = {
+        labels: [`Offline`, `Online`],
+        datasets: [
+          {
+            label: 'Device status',
+            data: [numOfDisconnected, numOfConnected],
+            backgroundColor: ['rgb(220, 53, 69)', '#4CAF50'],
+            hoverOffset: 4,
+          },
+        ],
+      };
+      this.updateChart = !this.updateChart;
+    },
+  },
+  created() {
+    this.$socket.on('/receive/update/socket/disconnect', (device) => {
+      this.replaceDevice(device);
+    });
+    this.$socket.on('/receive/update/socket/connect', (device) => {
+      this.replaceDevice(device);
+    });
+  },
+  beforeDestroy() {
+    this.$socket.off('/receive/update/socket/disconnect');
+    this.$socket.off('/receive/update/socket/connect');
+  },
+  methods: {
+    replaceDevice(device: Device) {
+      const index = this.devices.findIndex((d) => d._id === device._id);
+      this.$set(this.devices, index, device);
+    },
   },
 });
 </script>

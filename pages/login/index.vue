@@ -67,6 +67,9 @@ export default Vue.extend({
         await this.$auth.loginWith('local', {
           data: this.login,
         });
+        this.$socket.emit('auth', {
+          token: (this.$auth.strategy as any).token.get().split(' ')[1],
+        });
         this.$router.push('/');
       } catch {
         // Do Nothing
