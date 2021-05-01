@@ -5,7 +5,7 @@
       <v-switch v-model="isChecked" flat>
         <template #label>
           <v-list-item-content class="ml-2">
-            {{ permItem.name }}
+            {{ name }}
           </v-list-item-content>
         </template>
       </v-switch>
@@ -14,17 +14,31 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
+import { Permission, PermissionName } from '~/types/types';
 export default Vue.extend({
   props: {
-    permItem: {
+    enabled: {
+      type: Boolean,
       required: true,
-      type: Object,
-    } as Vue.PropOptions<{ name: string; enabled: boolean; value: number }>,
+    },
+    name: {
+      type: String,
+      required: true,
+    } as Vue.PropOptions<PermissionName>,
   },
   data() {
     return {
-      isChecked: this.permItem.enabled,
+      isChecked: this.enabled,
     };
+  },
+  watch: {
+    isChecked(value) {
+      if (value) {
+        this.$accessor.ADD_TO_PERMS(Permission[this.name]);
+      } else {
+        this.$accessor.REMOVE_PERM(Permission[this.name]);
+      }
+    },
   },
 });
 </script>

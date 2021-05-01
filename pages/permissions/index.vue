@@ -7,7 +7,7 @@
     </v-tabs>
     <v-tabs-items v-model="tab">
       <v-tab-item>
-        <PermIterator />
+        <PermGroupIterator />
       </v-tab-item>
       <v-tab-item>
         <PermUserIterator />

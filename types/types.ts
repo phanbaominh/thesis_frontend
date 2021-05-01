@@ -87,8 +87,16 @@ export interface User {
   password: string;
 }
 
-export interface Permission {
+export enum Permission {
+  ReadMedia = 1,
+  WriteMedia,
+  DeleteMedia,
+}
+export type PermissionName = keyof typeof Permission;
+export type PermissionTabItem = { [key in PermissionName]?: boolean };
+export interface PermissionGroup {
   _id: string;
   name: string;
+  permissions: Permission[];
   desc: string;
 }

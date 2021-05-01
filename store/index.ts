@@ -39,6 +39,9 @@ export const mutations = mutationTree(state, {
   ADD_TO_PERMS(state, perm) {
     state.perms.push(perm);
   },
+  REMOVE_PERM(state, perm) {
+    state.perms = state.perms.filter((p) => p !== perm);
+  },
   CHANGE_SOCKET_STATUS(state, status) {
     state.isSocketConnected = status;
   },

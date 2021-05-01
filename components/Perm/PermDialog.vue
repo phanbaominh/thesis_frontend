@@ -1,9 +1,9 @@
 <template>
-  <v-dialog width="1000">
+  <v-dialog v-model="dialog" width="1000">
     <template #activator="{ on, attrs }">
       <v-card v-bind="attrs" v-on="on">
         <v-card-title class="subheading font-weight-bold"
-          >{{ perm.name }}
+          >{{ permGroup.name }}
           <v-spacer></v-spacer>
           <DialogDelete
             v-slot="{ on: on2, attrs: attrs2 }"
@@ -29,34 +29,46 @@
 
         <v-divider></v-divider>
         <v-card-text>
-          {{ perm.desc }}
+          {{ permGroup.desc }}
         </v-card-text>
       </v-card>
     </template>
     <v-card class="pa-4">
-      <v-card class="mb-4">
-        <v-toolbar dark color="blue darken-3" class="mb-1" flat>
-          <v-row class="text-subtitle-1 text-sm-h6">
-            <v-col cols="5">Scope</v-col>
-
-            <v-col>Permission</v-col>
-          </v-row>
-        </v-toolbar>
-
-        <v-tabs v-model="tab" vertical>
-          <div class="perm-tabs">
-            <v-tab v-for="item in tabItems" :key="item">
-              {{ item }}
-            </v-tab>
-          </div>
-          <v-tabs-items v-model="tab">
-            <v-tab-item>
-              <PermItems :perm-items="mediaPermItems" />
-            </v-tab-item>
-            <v-tab-item> </v-tab-item>
-          </v-tabs-items>
-        </v-tabs>
-      </v-card>
+      <BaseDialogTitle @close="dialog = false">
+        Permission Group:
+      </BaseDialogTitle>
+      <v-row class="mb-4">
+        <v-col cols="12" sm="4">
+          <v-card class="pa-4">
+            <PermGroupUpdateForm
+              :perm-group="permGroup"
+              @submit="onUpdatePermGroup"
+            />
+          </v-card>
+        </v-col>
+        <v-col cols="12" sm="8">
+          <v-card>
+            <v-toolbar dark color="blue darken-3" class="mb-1" flat>
+              <v-row class="text-subtitle-1 text-sm-h6">
+                <v-col cols="5">Scope</v-col>
+                <v-col>Permission</v-col>
+              </v-row>
+            </v-toolbar>
+            <v-tabs v-model="tab" vertical>
+              <div class="perm-tabs">
+                <v-tab v-for="item in tabItems" :key="item">
+                  {{ item }}
+                </v-tab>
+              </div>
+              <v-tabs-items v-model="tab">
+                <v-tab-item v-for="(permTabItem, i) in permTabItems" :key="i">
+                  <PermTabItem :perm-tab-item="permTabItem" />
+                </v-tab-item>
+              </v-tabs-items>
+            </v-tabs>
+          </v-card>
+        </v-col>
+      </v-row>
       <v-card class="zone-user-card">
         <DataIterator :init-items="zoneUsers" type="Zone">
           <template #main="{ items: displayedItems }">
@@ -99,22 +111,30 @@
 </template>
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
-import { Permission } from '~/types/types';
+import {
+  Permission,
+  PermissionGroup,
+  PermissionName,
+  PermissionTabItem,
+} from '~/types/types';
 export default Vue.extend({
   props: {
-    perm: {
+    initPermGroup: {
       required: true,
       type: Object,
-    } as PropOptions<Permission>,
+    } as PropOptions<PermissionGroup>,
+    controlDialog: {
+      required: true,
+      type: Boolean,
+    },
   },
   data() {
     return {
+      dialog: false,
       tab: 0,
       tabItems: ['Media', 'User', 'Zone', 'Operation'],
-      mediaPermItems: [
-        { name: 'Add Media', enabled: false, value: 0 },
-        { name: 'Remove Media', enabled: true, value: 1 },
-      ],
+      permTabItems: [] as PermissionTabItem[],
+      permGroup: this.initPermGroup,
       zoneUsers: [
         {
           zone: 'cool',
@@ -123,7 +143,42 @@ export default Vue.extend({
       ],
     };
   },
-  methods: {},
+  // watch: {
+  //   controlDialog() {
+  //     this.dialog = false;
+  //   },
+  // },
+  created() {
+    this.setMediaPermItems();
+  },
+  methods: {
+    setMediaPermItems() {
+      const mediaPermTabItem: PermissionTabItem = {
+        ReadMedia: false,
+        WriteMedia: false,
+        DeleteMedia: false,
+      };
+      this.permGroup.permissions.forEach((perm) => {
+        const permName = Permission[perm] as PermissionName;
+        mediaPermTabItem[permName] = true;
+      });
+      this.$accessor.SET_PERMS(this.permGroup.permissions);
+      this.permTabItems = [mediaPermTabItem];
+    },
+    async onUpdatePermGroup(updatedPermGroup: PermissionGroup) {
+      try {
+        this.permGroup = (
+          await this.$axios.$put(
+            this.$apiUrl.permGroup(this.permGroup._id),
+            updatedPermGroup
+          )
+        ).permGroup;
+        this.$toasted.success('Successfully updated permission group!');
+      } catch {
+        // Do nothing
+      }
+    },
+  },
 });
 </script>
 <style scoped>
