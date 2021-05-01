@@ -1,5 +1,11 @@
 <template>
-  <UserForm is-update :init-user="$auth.user" @submit="onUpdate" />
+  <UserForm is-update :init-user="$auth.user" @submit="onUpdate">
+    <template #append>
+      <BaseSubmitActions is-not-dialog> Update profile </BaseSubmitActions>
+    </template>
+
+    <template #title> <v-card-title>Profile</v-card-title> </template>
+  </UserForm>
 </template>
 <script lang="ts">
 import Vue from 'vue';

@@ -1,29 +1,49 @@
 <template>
   <BaseFetcher :fetch-state="$fetchState">
     <template #pending> Fetching permissions... </template>
-    <BaseDataIterator type="Users" :items="users">
-      <template #toolbar>
-        <DialogName init-name="" title="Add user:" @updateName="onAddUser" />
+    <DataIterator :type="'Users'" :init-items="users" :compact="false">
+      <PermUserCreateDialog @newUser="onNewUser" />
+      <template #main="{ items: displayedUsers }">
+        <v-row class="mt-2">
+          <v-col
+            v-for="user in displayedUsers"
+            :key="user._id"
+            cols="12"
+            sm="6"
+            md="4"
+            lg="3"
+          >
+            <PermUserDialog :init-user="user" @delete="onDelete(user)" />
+          </v-col>
+        </v-row>
       </template>
-      <template #default="{ item: user }">
-        <v-col> {{ user }}</v-col>
-      </template></BaseDataIterator
-    >
+    </DataIterator>
   </BaseFetcher>
 </template>
 <script lang="ts">
 import Vue from 'vue';
+import { Subuser } from '~/types/types';
 export default Vue.extend({
   data() {
     return {
-      users: ['user1@mail.com', 'user2@mail.com'],
+      users: [] as Subuser[],
     };
   },
   async fetch() {
-    await Promise.resolve();
+    this.users = (await this.$axios.$get(this.$apiUrl.subusers)).subusers;
   },
   methods: {
-    onAddUser() {},
+    onNewUser(user: Subuser) {
+      this.users.push(user);
+    },
+    async onDelete(user: Subuser) {
+      try {
+        await this.$axios.$delete(this.$apiUrl.subuser(user._id));
+        this.users = this.users.filter((u) => u._id !== user._id);
+      } catch {
+        // do nothing
+      }
+    },
   },
 });
 </script>

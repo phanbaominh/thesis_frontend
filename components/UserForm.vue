@@ -6,7 +6,7 @@
     @submit.prevent="onSubmit"
   >
     <v-card class="pa-4" width="500px">
-      <v-card-title>Sign up</v-card-title>
+      <slot name="title"></slot>
       <v-text-field
         v-model="user.username"
         name="username"
@@ -41,12 +41,7 @@
         dense
         :rules="repeatPassRules"
       ></v-text-field>
-      <BaseSubmitActions is-not-dialog>
-        {{ isUpdate ? 'Update Profile' : 'Sign up' }}
-      </BaseSubmitActions>
-      <div v-if="!isUpdate">
-        <nuxt-link to="/login">Already have an account? Log in</nuxt-link>
-      </div>
+      <slot name="append"></slot>
     </v-card>
   </v-form>
 </template>
@@ -59,11 +54,11 @@ export default Vue.extend({
   auth: false,
   props: {
     initUser: {
-      default: () => ({ username: '', email: '', password: '' }),
+      default: () => ({ _id: 'haha', username: '', email: '', password: '' }),
       type: Object,
     } as PropOptions<User>,
-    isUpdate: {
-      default: false,
+    isNotDialog: {
+      default: true,
       type: Boolean,
     },
   },
@@ -80,9 +75,7 @@ export default Vue.extend({
       passRules: [
         (v: string) => !!v || 'Password is required',
         (v: string) =>
-          this.isUpdate ||
-          (v && v.length >= 8) ||
-          'Password must have at least 8 characters',
+          (v && v.length >= 8) || 'Password must have at least 8 characters',
       ],
     };
   },

@@ -22,6 +22,10 @@ interface ApiUrl {
   user: Url;
   permGroups: Url;
   permGroup: IdToUrl;
+  userPerms: Url;
+  userPerm: IdToUrl;
+  subusers: Url;
+  subuser: IdToUrl;
 }
 
 declare module 'vue/types/vue' {
@@ -52,6 +56,8 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
   const videoControlUrl = `${apiURL}/video-control`;
   const deviceUrl = `${apiURL}/devices`;
   const permGroupUrl = `${apiURL}/perm-groups`;
+  const userPermUrl = `${apiURL}/user-perms`;
+  const subusersUrl = `${apiURL}/users/subusers`;
   inject('apiUrl', {
     zones: zonesUrl,
     zone: (id: string) => `${zonesUrl}/${id}`,
@@ -69,6 +75,10 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     user: `${apiURL}/users`,
     permGroups: permGroupUrl,
     permGroup: (id: string) => `${permGroupUrl}/${id}`,
+    userPerms: userPermUrl,
+    userPerm: (id: string) => `${userPermUrl}/${id}`,
+    subusers: subusersUrl,
+    subuser: (id: string) => `${subusersUrl}/${id}`,
   });
 };
 
