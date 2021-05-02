@@ -31,10 +31,6 @@ export default Vue.extend({
   },
   async fetch() {
     this.users = (await this.$axios.$get(this.$apiUrl.subusers)).subusers;
-    // console.log(
-    //   (await this.$axios.$get(this.$apiUrl.userPermSubuser(this.users[0]._id)))
-    //     .userPermissions
-    // );
   },
   methods: {
     onNewUser(user: Subuser) {

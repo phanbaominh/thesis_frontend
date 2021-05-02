@@ -105,3 +105,10 @@ export interface PermissionGroup {
   permissions: Permission[];
   desc: string;
 }
+
+export interface ZonePermissionGroup {
+  zone: { _id: string; name: string };
+  permissionGroups: { _id: string; name: string; relationId: string }[];
+}
+
+export type Select = { text: string; value: string };

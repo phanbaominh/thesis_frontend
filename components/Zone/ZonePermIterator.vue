@@ -31,9 +31,6 @@
           {{ userPerm.perms.join(', ') }}
         </v-col>
       </template>
-      <template #actions>
-        <ZonePermDialog icon="pencil" />
-      </template>
     </BaseDataIterator>
     <DataIterator v-else type="User-Perms" :init-items="userPerms" compact>
       <ZonePermDialog />
@@ -52,21 +49,6 @@
                 {{ userPerm.user }}
 
                 <v-spacer></v-spacer>
-                <ZonePermDialog>
-                  <template #activator="{ on, attrs }">
-                    <v-btn
-                      color="blue"
-                      dark
-                      x-small
-                      fab
-                      depressed
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      <v-icon>mdi-pencil</v-icon>
-                    </v-btn>
-                  </template>
-                </ZonePermDialog>
                 <div class="mr-2"></div>
                 <DialogDelete
                   v-slot="{ on, attrs }"

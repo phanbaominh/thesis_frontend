@@ -39,13 +39,19 @@
       </v-card>
     </template>
     <v-card class="pa-4">
-      <BaseDialogTitle @close="dialog = false"> User: </BaseDialogTitle>
+      <BaseDialogTitle @close="dialog = false">
+        {{ user.username }} Permissions
+      </BaseDialogTitle>
+      <BaseFetcher :fetch-state="$fetchState">
+        <template #pending>Fetching permissions...</template>
+        <PermUserDialogTable :zone-perm-groups="zonePermGroups" :user="user" />
+      </BaseFetcher>
     </v-card>
   </v-dialog>
 </template>
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
-import { Subuser } from '~/types/types';
+import { Subuser, ZonePermissionGroup } from '~/types/types';
 export default Vue.extend({
   props: {
     initUser: {
@@ -57,7 +63,13 @@ export default Vue.extend({
     return {
       dialog: false,
       user: this.initUser,
+      zonePermGroups: [] as ZonePermissionGroup[],
     };
+  },
+  async fetch() {
+    this.zonePermGroups = (
+      await this.$axios.$get(this.$apiUrl.userPermSubuser(this.user._id))
+    ).userPermissions;
   },
   // watch: {
   //   controlDialog() {
