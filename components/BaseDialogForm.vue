@@ -18,7 +18,7 @@
       </slot>
     </template>
     <v-card class="pt-2 px-4">
-      <BaseDialogTitle @close="dialog = false">
+      <BaseDialogTitle @close="onCloseDialog">
         {{ title }}
       </BaseDialogTitle>
 
@@ -30,7 +30,7 @@
         @submit.prevent="onSubmit"
       >
         <slot></slot>
-        <BaseSubmitActions @close="dialog = false">
+        <BaseSubmitActions @close="onCloseDialog">
           Save
           <template #close> Close </template>
         </BaseSubmitActions>
@@ -78,6 +78,10 @@ export default Vue.extend({
     onSubmit() {
       if (!(this.$refs.form as any).validate()) return;
       this.$emit('submit');
+    },
+    onCloseDialog() {
+      this.$emit('close');
+      this.dialog = false;
     },
   },
 });

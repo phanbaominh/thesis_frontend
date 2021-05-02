@@ -34,14 +34,16 @@ import { PermissionGroup } from '~/types/types';
 export default Vue.extend({
   data() {
     return {
-      permGroups: [] as PermissionGroup[],
       dialog: true,
     };
   },
   async fetch() {
-    this.permGroups = (
-      await this.$axios.$get(this.$apiUrl.permGroups)
-    ).permGroups;
+    await this.$accessor.setAllPermGroups();
+  },
+  computed: {
+    permGroups() {
+      return this.$accessor.allPermGroups;
+    },
   },
   methods: {
     async onNew({ name, desc }: { name: string; desc: string }) {
@@ -49,7 +51,8 @@ export default Vue.extend({
         const newPermGroup = (
           await this.$axios.$post(this.$apiUrl.permGroups, { name, desc })
         ).permGroup;
-        this.permGroups.push(newPermGroup);
+
+        this.$accessor.ADD_TO_PERM_GROUPS(newPermGroup);
       } catch {
         // do nothing
       }
@@ -57,9 +60,7 @@ export default Vue.extend({
     async onDelete(permGroup: PermissionGroup) {
       try {
         await this.$axios.$delete(this.$apiUrl.permGroup(permGroup._id));
-        this.permGroups = this.permGroups.filter(
-          (p) => p._id !== permGroup._id
-        );
+        this.$accessor.DELETE_FROM_PERM_GROUPS([permGroup._id]);
       } catch {
         // do nothing
       }

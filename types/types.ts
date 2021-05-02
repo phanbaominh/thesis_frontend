@@ -112,3 +112,11 @@ export interface ZonePermissionGroup {
 }
 
 export type Select = { text: string; value: string };
+
+export interface PermissionRelation {
+  _id: string;
+  zone: string;
+  permissionGroup: string;
+  user: string;
+  adminId: string;
+}

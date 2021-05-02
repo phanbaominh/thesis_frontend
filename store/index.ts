@@ -1,13 +1,15 @@
 import { getAccessorType } from 'typed-vuex';
 import { mutationTree, actionTree } from 'nuxt-typed-vuex';
-import { Media, User } from '~/types/types';
+import { Media, PermissionGroup, User } from '~/types/types';
 // Import all your submodules
 // import * as submodule from '~/store/submodule'
 
 // Keep your existing vanilla Vuex code for state, getters, mutations, actions, plugins, etc.
 // ...
+
 export const state = () => ({
   allMediaArray: [] as Media[],
+  allPermGroups: [] as PermissionGroup[],
   mediaTab: null as number | null,
   permTab: null as number | null,
   isSocketConnected: false,
@@ -26,6 +28,17 @@ export const mutations = mutationTree(state, {
   },
   ADD_MEDIA_TO_ARRAY(state, media) {
     state.allMediaArray.push(media);
+  },
+  SET_ALL_PERM_GROUPS(state, allPermGroups) {
+    state.allPermGroups = allPermGroups;
+  },
+  DELETE_FROM_PERM_GROUPS(state, deletedIds) {
+    state.allPermGroups = state.allPermGroups.filter(
+      (pg) => !deletedIds.includes(pg._id)
+    );
+  },
+  ADD_TO_PERM_GROUPS(state, media) {
+    state.allPermGroups.push(media);
   },
   SET_MEDIA_TAB(state, tab) {
     state.mediaTab = tab;
@@ -62,13 +75,15 @@ export const actions = actionTree(
   { state, mutations },
   {
     async setAllMediaArray({ commit }) {
-      try {
-        const allMediaArray = (await this.$axios.$get(this.$apiUrl.videos))
-          .videos;
-        commit('SET_ALL_MEDIA_ARRAY', allMediaArray);
-      } catch {
-        // DO NOTHING
-      }
+      const allMediaArray = (await this.$axios.$get(this.$apiUrl.videos))
+        .videos;
+      commit('SET_ALL_MEDIA_ARRAY', allMediaArray);
+    },
+    async setAllPermGroups({ commit }) {
+      commit(
+        'SET_ALL_PERM_GROUPS',
+        (await this.$axios.$get(this.$apiUrl.permGroups)).permGroups
+      );
     },
   }
 );

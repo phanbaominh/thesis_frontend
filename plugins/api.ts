@@ -24,6 +24,7 @@ interface ApiUrl {
   permGroup: IdToUrl;
   userPerms: Url;
   userPerm: IdToUrl;
+  userPermInsertMany: Url;
   userPermSubuser: IdToUrl;
   subusers: Url;
   subuser: IdToUrl;
@@ -78,6 +79,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     permGroup: (id: string) => `${permGroupUrl}/${id}`,
     userPerms: userPermUrl,
     userPerm: (id: string) => `${userPermUrl}/${id}`,
+    userPermInsertMany: `${userPermUrl}/insert-many`,
     userPermSubuser: (id: string) => `${userPermUrl}/subusers/${id}`,
     subusers: subusersUrl,
     subuser: (id: string) => `${subusersUrl}/${id}`,

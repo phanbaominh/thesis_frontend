@@ -6,6 +6,7 @@
     :icon="icon"
     :max-width="400"
     @submit="onAddZonePermissions"
+    @close="resetSelection"
   >
     <template #activator="{ on, attrs }">
       <slot name="activator" :on="on" :attrs="attrs"></slot>
@@ -77,7 +78,6 @@ export default Vue.extend({
       selectedPermGroups: [] as Select[],
       selectedZone: null as Select | null,
       permGroups: [] as Select[],
-      allPermGroups: [] as Select[],
       zones: [] as Select[],
     };
   },
@@ -85,16 +85,21 @@ export default Vue.extend({
     this.zones = (
       await this.$axios.$get(this.$apiUrl.zones)
     ).zones.map((z: Zone) => ({ text: z.name, value: z._id }));
-    this.allPermGroups = (
-      await this.$axios.$get(this.$apiUrl.permGroups)
-    ).permGroups.map((pg: PermissionGroup) => ({
-      text: pg.name,
-      value: pg._id,
-    }));
+  },
+  computed: {
+    allPermGroups(): Select[] {
+      return this.$accessor.allPermGroups.map((pg: PermissionGroup) => ({
+        text: pg.name,
+        value: pg._id,
+      }));
+    },
   },
   watch: {
     selectedZone() {
       this.getNewPermissionGroups();
+    },
+    controlDialog() {
+      this.resetSelection();
     },
   },
   created() {
@@ -106,6 +111,10 @@ export default Vue.extend({
     }
   },
   methods: {
+    resetSelection() {
+      this.selectedPermGroups = [];
+      this.selectedZone = null;
+    },
     getNewPermissionGroups() {
       this.permGroups = this.allPermGroups;
       if (this.selectedZone) {
@@ -137,8 +146,6 @@ export default Vue.extend({
         permGroups: this.selectedPermGroups,
       });
       // this.dialog = !this.dialog;
-      // this.selectedPermGroups = [];
-      // this.selectedZone = null;
     },
   },
 });
