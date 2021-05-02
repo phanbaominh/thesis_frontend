@@ -48,7 +48,7 @@
               />
             </v-card>
             <v-card>
-              <ZonePermIterator />
+              <ZonePermIterator :zone-id="zone._id" />
             </v-card>
           </v-card>
         </v-dialog>

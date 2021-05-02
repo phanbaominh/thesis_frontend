@@ -25,7 +25,11 @@ interface ApiUrl {
   userPerms: Url;
   userPerm: IdToUrl;
   userPermInsertMany: Url;
+  userPermDeleteMany: Url;
+  userPermDeleteZone: Url;
   userPermSubuser: IdToUrl;
+  userPermZone: IdToUrl;
+  userPermPermGroup: IdToUrl;
   subusers: Url;
   subuser: IdToUrl;
 }
@@ -80,7 +84,11 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     userPerms: userPermUrl,
     userPerm: (id: string) => `${userPermUrl}/${id}`,
     userPermInsertMany: `${userPermUrl}/insert-many`,
+    userPermDeleteMany: `${userPermUrl}/delete-many-by-perm-groups`,
+    userPermDeleteZone: `${userPermUrl}/delete-zone`,
     userPermSubuser: (id: string) => `${userPermUrl}/subusers/${id}`,
+    userPermZone: (id: string) => `${userPermUrl}/zones/${id}`,
+    userPermPermGroup: (id: string) => `${userPermUrl}/perm-groups/${id}`,
     subusers: subusersUrl,
     subuser: (id: string) => `${subusersUrl}/${id}`,
   });

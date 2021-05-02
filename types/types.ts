@@ -111,6 +111,15 @@ export interface ZonePermissionGroup {
   permissionGroups: { _id: string; name: string; relationId: string }[];
 }
 
+export interface ZoneSubuser {
+  zone: { _id: string; name: string };
+  users: { _id: string; username: string; relationId: string }[];
+}
+
+export interface SubuserPermissionGroup {
+  user: { _id: string; username: string };
+  permissionGroups: { _id: string; name: string; relationId: string }[];
+}
 export type Select = { text: string; value: string };
 
 export interface PermissionRelation {

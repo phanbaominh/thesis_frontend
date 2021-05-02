@@ -15,14 +15,14 @@
         </v-list-item>
         <v-divider class="mx-2" />
         <template v-for="item in displayedItems">
-          <v-list-item :key="item._id">
+          <v-list-item :key="item.zone._id">
             <v-list-item-content class="text-body-1 font-weight-regular">
               <v-row>
-                <v-col cols="4"> {{ item.zone }}</v-col>
+                <v-col cols="4"> {{ item.zone.name }}</v-col>
                 <v-divider vertical></v-divider>
                 <v-col>
-                  <div v-for="user in item.users" :key="user">
-                    {{ user }}
+                  <div v-for="user in item.users" :key="user._id">
+                    {{ user.username }}
                   </div>
                 </v-col>
               </v-row>
@@ -37,11 +37,31 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
+import { ZoneSubuser } from '~/types/types';
 export default Vue.extend({
   props: {
-    zoneUsers: {
-      type: Array,
+    permGroupId: {
       required: true,
+      type: String,
+    },
+    refresh: {
+      required: true,
+      type: Boolean,
+    },
+  },
+  data() {
+    return {
+      zoneUsers: [] as ZoneSubuser[],
+    };
+  },
+  async fetch() {
+    this.zoneUsers = (
+      await this.$axios.$get(this.$apiUrl.userPermPermGroup(this.permGroupId))
+    ).userPermissions;
+  },
+  watch: {
+    refresh() {
+      if (this.refresh) this.$fetch();
     },
   },
 });

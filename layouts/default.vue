@@ -44,9 +44,6 @@
       <v-container class="main-container pt-8">
         <nuxt />
       </v-container>
-      <!-- <div class="custom-container">
-        <nuxt />
-      </div> -->
     </v-main>
   </v-app>
 </template>

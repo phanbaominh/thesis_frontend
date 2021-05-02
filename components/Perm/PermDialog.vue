@@ -75,7 +75,7 @@
         </v-col>
       </v-row>
       <v-card class="zone-user-card">
-        <PermDialogTable :zone-users="zoneUsers" />
+        <PermDialogTable :perm-group-id="permGroup._id" :refresh="dialog" />
       </v-card>
     </v-card>
   </v-dialog>
@@ -106,12 +106,6 @@ export default Vue.extend({
       tabItems: ['Media', 'User', 'Zone', 'Operation'],
       permTabItems: [] as PermissionTabItem[],
       permGroup: this.initPermGroup,
-      zoneUsers: [
-        {
-          zone: 'cool',
-          users: ['user1', 'user2'],
-        },
-      ],
     };
   },
   // watch: {

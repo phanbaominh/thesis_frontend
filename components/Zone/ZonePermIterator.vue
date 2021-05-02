@@ -7,9 +7,6 @@
       :items="userPerms"
       compact
     >
-      <template #toolbar>
-        <ZonePermDialog />
-      </template>
       <template #headers>
         <v-list-item>
           <v-list-item-content
@@ -25,15 +22,14 @@
         <v-divider></v-divider>
       </template>
       <template #default="{ item: userPerm }">
-        <v-col cols="3"> {{ userPerm.user }}</v-col>
+        <v-col cols="3"> {{ userPerm.user.username }}</v-col>
         <v-divider vertical></v-divider>
         <v-col cols="6">
-          {{ userPerm.perms.join(', ') }}
+          {{ listOfPermissionGroup(userPerm) }}
         </v-col>
       </template>
     </BaseDataIterator>
     <DataIterator v-else type="User-Perms" :init-items="userPerms" compact>
-      <ZonePermDialog />
       <template #main="{ items: displayedUserPerms }">
         <v-row class="mt-2">
           <v-col
@@ -46,11 +42,11 @@
           >
             <v-card>
               <v-card-title class="text-subtitle-1">
-                {{ userPerm.user }}
+                {{ userPerm.user.username }}
 
                 <v-spacer></v-spacer>
                 <div class="mr-2"></div>
-                <DialogDelete
+                <!-- <DialogDelete
                   v-slot="{ on, attrs }"
                   @delete="$emit('delete')"
                   @click.prevent
@@ -65,12 +61,12 @@
                   >
                     <v-icon>mdi-delete</v-icon>
                   </v-btn>
-                </DialogDelete>
+                </DialogDelete> -->
               </v-card-title>
 
               <v-divider></v-divider>
               <v-card-text>
-                Permissions: {{ userPerm.perms.join(', ') }}
+                Permissions: {{ listOfPermissionGroup(userPerm) }}
               </v-card-text>
             </v-card>
           </v-col>
@@ -81,21 +77,28 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
+import { SubuserPermissionGroup } from '~/types/types';
 export default Vue.extend({
+  props: {
+    zoneId: {
+      required: true,
+      type: String,
+    },
+  },
   data() {
     return {
-      userPerms: [
-        {
-          user: 'user1@mail.com',
-          perms: ['perm1', 'perm2'],
-        },
-      ],
+      userPerms: [] as SubuserPermissionGroup[],
     };
   },
   async fetch() {
-    await Promise.resolve();
+    this.userPerms = (
+      await this.$axios.$get(this.$apiUrl.userPermZone(this.zoneId))
+    ).userPermissions;
   },
   methods: {
+    listOfPermissionGroup(userPerm: SubuserPermissionGroup) {
+      return userPerm.permissionGroups.map((pg) => pg.name).join(', ');
+    },
     onAddUser() {},
   },
 });
