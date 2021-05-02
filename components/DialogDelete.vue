@@ -13,7 +13,7 @@
       </v-btn>
     </template>
     <v-card>
-      <v-card-title class="headline"> Delete this? </v-card-title>
+      <BaseDialogTitle @close="dialog = false"> Delete this? </BaseDialogTitle>
       <BaseDialogActions @close="dialog = false" @confirm="onYes">
         Yes
         <template #close> No </template>

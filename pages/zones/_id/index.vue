@@ -13,7 +13,13 @@
         />
 
         <v-spacer></v-spacer>
-        <v-dialog v-model="deviceDialog" width="1000" scrollable>
+        <v-dialog
+          v-model="deviceDialog"
+          width="1000"
+          scrollable
+          :fullscreen="$vuetify.breakpoint.smAndDown"
+          :hide-overlay="$vuetify.breakpoint.smAndDown"
+        >
           <template #activator="{ on, attrs }">
             <v-btn
               depressed
@@ -29,6 +35,9 @@
             </v-btn>
           </template>
           <v-card class="cards pa-4">
+            <BaseDialogTitle @close="deviceDialog = false">
+              Devices
+            </BaseDialogTitle>
             <v-card class="mb-4">
               <MediaAddDelete
                 :media-array="zone.deviceArray"

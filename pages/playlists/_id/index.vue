@@ -1,9 +1,14 @@
 <template>
   <v-card class="pa-4">
-    <EditableName
-      :init-name="playlist.name"
-      @updateName="playlist.name = $event"
-    />
+    <BaseDialogTitle @close="$emit('closeDialog')">
+      <div class="mr-2">{{ $truncate(playlist.name) }}</div>
+      <DialogName
+        :init-name="playlist.name"
+        title="Change playlist name:"
+        icon="pencil"
+        @updateName="playlist.name = $event"
+      />
+    </BaseDialogTitle>
     <v-card outlined class="mt-2">
       <BaseFetcher :fetch-state="$fetchState">
         <MediaAddDelete

@@ -1,5 +1,10 @@
 <template>
-  <v-dialog v-model="dialog" width="1000">
+  <v-dialog
+    v-model="dialog"
+    width="1000"
+    :fullscreen="$vuetify.breakpoint.smAndDown"
+    :hide-overlay="$vuetify.breakpoint.smAndDown"
+  >
     <template #activator="{ on, attrs }">
       <v-card outlined class="playlist_card" v-bind="attrs" v-on="on">
         <v-card-title class="subheading font-weight-bold">
@@ -15,10 +20,15 @@
       </v-card>
     </template>
     <v-card class="pa-4">
-      <EditableName
-        :init-name="playlist.name"
-        @updateName="updatePlaylistWithNewName"
-      />
+      <BaseDialogTitle @close="dialog = false">
+        <span class="mr-2">{{ $truncate(playlist.name) }}</span>
+        <DialogName
+          :init-name="playlist.name"
+          title="Change playlist name:"
+          icon="pencil"
+          @updateName="updatePlaylistWithNewName"
+        />
+      </BaseDialogTitle>
       <v-card outlined class="mt-2">
         <BaseFetcher :fetch-state="$fetchState">
           <MediaAddDelete

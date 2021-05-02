@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" :max-width="maxWidth" scrollable>
+  <v-dialog v-model="dialog" :max-width="maxWidth" scrollable persistent>
     <template #activator="{ on, attrs }">
       <slot name="activator" :on="on" :attrs="attrs">
         <v-btn
@@ -18,7 +18,9 @@
       </slot>
     </template>
     <v-card class="pt-2 px-4">
-      <v-card-title> {{ title }} </v-card-title>
+      <BaseDialogTitle @close="dialog = false">
+        {{ title }}
+      </BaseDialogTitle>
 
       <v-form
         ref="form"
@@ -57,7 +59,7 @@ export default Vue.extend({
       type: String,
     },
     maxWidth: {
-      default: 290,
+      default: 350,
       type: Number,
     },
   },

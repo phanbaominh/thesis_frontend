@@ -1,5 +1,10 @@
 <template>
-  <v-dialog v-model="isPlayDialog" width="600">
+  <v-dialog
+    v-model="isPlayDialog"
+    width="600"
+    :fullscreen="$vuetify.breakpoint.smAndDown"
+    :hide-overlay="$vuetify.breakpoint.smAndDown"
+  >
     <template #activator="{ on, attrs }">
       <v-btn
         :small="!$vuetify.breakpoint.xs"
@@ -14,13 +19,10 @@
       </v-btn>
     </template>
     <v-card>
-      <v-card-title>
+      <BaseDialogTitle @close="isPlayDialog = false">
         <span>{{ $truncate(media.name) }} </span>
-        <v-spacer></v-spacer>
-        <BaseButton color="white" @click="isPlayDialog = false">
-          <v-icon>mdi-close</v-icon>
-        </BaseButton>
-      </v-card-title>
+      </BaseDialogTitle>
+
       <video ref="video" controls width="600">
         <source :src="`http://${media.path}`" type="video/mp4" />
         Your browser does not support the video tag.

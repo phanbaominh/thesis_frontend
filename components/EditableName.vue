@@ -11,7 +11,9 @@
     </v-col>
 
     <template v-else>
-      <v-card-title> {{ $truncate(name) }}</v-card-title>
+      <BaseDialogTitle @close="$emit('closeDialog')">
+        {{ $truncate(name) }}
+      </BaseDialogTitle>
       <v-card-actions>
         <v-btn color="blue" dark fab small depressed @click="onChangeName">
           <v-icon> mdi-{{ isNameChanging ? 'check' : 'pencil' }}</v-icon>

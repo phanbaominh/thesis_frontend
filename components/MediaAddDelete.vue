@@ -3,12 +3,20 @@
     :media-array="mediaArray"
     :type="deleteType"
     :compact="compact"
+    :fullscreen="$vuetify.breakpoint.smAndDown"
+    :hide-overlay="$vuetify.breakpoint.smAndDown"
     @confirm="onConfirmDelete"
   >
     <template #actions="{ media }">
       <slot :media="media"></slot>
     </template>
-    <v-dialog v-model="isAddDialog" width="1000" scrollable>
+    <v-dialog
+      v-model="isAddDialog"
+      width="1000"
+      scrollable
+      :fullscreen="$vuetify.breakpoint.smAndDown"
+      :hide-overlay="$vuetify.breakpoint.smAndDown"
+    >
       <template #activator="{ on, attrs }">
         <v-btn
           depressed

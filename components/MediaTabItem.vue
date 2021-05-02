@@ -5,6 +5,8 @@
       :media-array="mediaArray"
       :type="'Videos'"
       :compact="false"
+      :fullscreen="$vuetify.breakpoint.smAndDown"
+      :hide-overlay="$vuetify.breakpoint.smAndDown"
       @confirm="onConfirmDelete"
     >
       <template #actions="{ media }">
@@ -29,6 +31,9 @@
         </template>
         <v-form v-model="valid" action="" @submit.prevent="onConfirmUpload">
           <v-card class="pa-4">
+            <BaseDialogTitle @close="isUploadDialog = false">
+              File Upload
+            </BaseDialogTitle>
             <v-file-input
               v-model="uploadedFile"
               label="Choose file to upload"

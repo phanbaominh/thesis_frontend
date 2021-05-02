@@ -1,5 +1,10 @@
 <template>
-  <v-dialog v-model="dialog" width="1000">
+  <v-dialog
+    v-model="dialog"
+    width="1000"
+    :fullscreen="$vuetify.breakpoint.smAndDown"
+    :hide-overlay="$vuetify.breakpoint.smAndDown"
+  >
     <template #activator="{ on, attrs }">
       <v-card v-bind="attrs" v-on="on">
         <v-card-title class="subheading font-weight-bold"

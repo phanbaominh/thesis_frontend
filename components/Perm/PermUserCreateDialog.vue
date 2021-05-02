@@ -1,5 +1,10 @@
 <template>
-  <v-dialog v-model="dialog" max-width="350">
+  <v-dialog
+    v-model="dialog"
+    max-width="350"
+    :fullscreen="$vuetify.breakpoint.smAndDown"
+    :hide-overlay="$vuetify.breakpoint.smAndDown"
+  >
     <template #activator="{ on, attrs }">
       <slot name="activator" :on="on" :attrs="attrs">
         <v-btn
@@ -19,7 +24,11 @@
     </template>
     <v-card>
       <UserForm @submit="onCreateUser">
-        <template #title><v-card-title>Create user</v-card-title></template>
+        <template #title
+          ><BaseDialogTitle @close="dialog = false">
+            Create User
+          </BaseDialogTitle>
+        </template>
         <template #append>
           <BaseSubmitActions @close="dialog = false">
             Confirm <template #close> Close </template>
