@@ -77,7 +77,7 @@ export default {
         },
       },
     },
-    plugins: ['~/plugins/socket.ts'],
+    plugins: ['~/plugins/socket.ts', '~/plugins/auth.ts'],
   },
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},

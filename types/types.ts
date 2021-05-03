@@ -97,6 +97,16 @@ export enum Permission {
   ReadMedia = 1,
   WriteMedia,
   DeleteMedia,
+  ReadDevice,
+  WriteDevice,
+  DeleteDevice,
+  ReadZone,
+  WriteZone,
+  DeleteZone,
+  ControlZone,
+  ReadPermission,
+  WritePermission,
+  DeletePermission,
 }
 export type PermissionName = keyof typeof Permission;
 export type PermissionTabItem = { [key in PermissionName]?: boolean };
@@ -112,6 +122,15 @@ export interface ZonePermissionGroup {
   permissionGroups: { _id: string; name: string; relationId: string }[];
 }
 
+export interface DetailedZonePermissionGroup {
+  zone: { _id: string; name: string };
+  permissionGroups: {
+    _id: string;
+    name: string;
+    relationId: string;
+    permissions: number[];
+  }[];
+}
 export interface ZoneSubuser {
   zone: { _id: string; name: string };
   users: { _id: string; username: string; relationId: string }[];
@@ -130,3 +149,28 @@ export interface PermissionRelation {
   user: string;
   adminId: string;
 }
+
+export const DevicePermissions = [
+  Permission.ReadDevice,
+  Permission.DeleteDevice,
+  Permission.ReadDevice,
+];
+
+export const ZonePermissions = [
+  Permission.WriteZone,
+  Permission.ReadZone,
+  Permission.DeleteZone,
+  Permission.ControlZone,
+];
+
+export const MediaPermissions = [
+  Permission.ReadMedia,
+  Permission.WriteMedia,
+  Permission.DeleteMedia,
+];
+
+export const PermPermissions = [
+  Permission.ReadPermission,
+  Permission.DeletePermission,
+  Permission.WritePermission,
+];

@@ -13,6 +13,7 @@
           v-for="(item, i) in navItems"
           :key="i"
           :to="item.to"
+          :disabled="item.disabled"
           nuxt
           dense
         >
@@ -58,26 +59,42 @@ export default Vue.extend({
           icon: 'mdi-home',
           title: 'Home',
           to: '/',
+          disabled: false,
         },
         {
           icon: 'mdi-cast',
           title: 'Devices',
           to: '/devices',
+          disabled: !this.$permission.check(
+            this.$permission.DevicePermissions,
+            {
+              isToasting: false,
+            }
+          ),
         },
         {
           icon: 'mdi-select-group',
           title: 'Zones',
           to: '/zones',
+          disabled: !this.$permission.check(this.$permission.ZonePermissions, {
+            isToasting: false,
+          }),
         },
         {
           icon: 'mdi-folder',
           title: 'Media',
           to: '/media',
+          disabled: !this.$permission.check(this.$permission.MediaPermissions, {
+            isToasting: false,
+          }),
         },
         {
           icon: 'mdi-account-key',
           title: 'Permissions',
           to: '/permissions',
+          disabled: !this.$permission.check(this.$permission.PermPermissions, {
+            isToasting: false,
+          }),
         },
       ],
       drawer: true,

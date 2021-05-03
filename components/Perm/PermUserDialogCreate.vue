@@ -81,6 +81,11 @@ export default Vue.extend({
     this.zones = (
       await this.$axios.$get(this.$apiUrl.zones)
     ).zones.map((z: Zone) => ({ text: z.name, value: z._id }));
+    if (this.$auth.user?.generalZoneId)
+      this.zones.push({
+        text: 'General',
+        value: this.$auth.user.generalZoneId as string,
+      });
   },
   computed: {
     allPermGroups(): Select[] {

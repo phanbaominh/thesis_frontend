@@ -103,7 +103,7 @@ export default Vue.extend({
     return {
       dialog: false,
       tab: 0,
-      tabItems: ['Media', 'User', 'Zone', 'Operation'],
+      tabItems: ['Media', 'Device', 'Zone', 'Permission'],
       permTabItems: [] as PermissionTabItem[],
       permGroup: this.initPermGroup,
     };
@@ -123,12 +123,36 @@ export default Vue.extend({
         WriteMedia: false,
         DeleteMedia: false,
       };
+      const devicePermTabItem: PermissionTabItem = {
+        ReadDevice: false,
+        WriteDevice: false,
+        DeleteDevice: false,
+      };
+      const zonePermTabItem: PermissionTabItem = {
+        ReadZone: false,
+        WriteZone: false,
+        DeleteZone: false,
+        ControlZone: false,
+      };
+      const permPermTabItem: PermissionTabItem = {
+        ReadPermission: false,
+        WritePermission: false,
+        DeletePermission: false,
+      };
       this.permGroup.permissions.forEach((perm) => {
         const permName = Permission[perm] as PermissionName;
         mediaPermTabItem[permName] = true;
+        devicePermTabItem[permName] = true;
+        zonePermTabItem[permName] = true;
+        permPermTabItem[permName] = true;
       });
       this.$accessor.SET_PERMS(this.permGroup.permissions);
-      this.permTabItems = [mediaPermTabItem];
+      this.permTabItems = [
+        mediaPermTabItem,
+        devicePermTabItem,
+        zonePermTabItem,
+        permPermTabItem,
+      ];
     },
     async onUpdatePermGroup(updatedPermGroup: PermissionGroup) {
       try {
