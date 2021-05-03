@@ -1,8 +1,13 @@
 <template>
   <BaseFetcher :fetch-state="$fetchState">
     <DataIterator type="Zones" :init-items="zones">
-      <DialogName init-name="" title="Create a zone:" @updateName="onNewZone">
-      </DialogName>
+      <lazy-DialogName
+        v-if="$permission.canGeneralWriteZone()"
+        init-name=""
+        title="Create a zone:"
+        @updateName="onNewZone"
+      >
+      </lazy-DialogName>
       <template #main="{ items: displayedZones }">
         <v-row>
           <v-col
@@ -23,6 +28,7 @@
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn> -->
                 <DialogDelete
+                  v-if="canGeneralDeleteZone()"
                   v-slot="{ on, attrs }"
                   @delete="onDeleteZone(zone)"
                 >
@@ -53,7 +59,7 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { Zone } from '~/types/types';
+import { Permission, Zone, ZonePermissionGroup } from '~/types/types';
 export default Vue.extend({
   data() {
     return {
@@ -62,6 +68,21 @@ export default Vue.extend({
   },
   async fetch() {
     this.zones = (await this.$axios.$get(this.$apiUrl.zones)).zones;
+    if (this.$auth.user?.adminId) {
+      const zoneIds = (this.$auth.user
+        ?.zonePermissionGroups as ZonePermissionGroup[]).map(
+        (zpg) => zpg.zone._id
+      );
+      this.zones = this.zones.filter(
+        (zone) =>
+          zoneIds.includes(zone._id) &&
+          zone._id !== this.$auth.user?.generalZoneId
+      );
+    } else {
+      this.zones = this.zones.filter(
+        (zone) => zone._id !== this.$auth.user?.generalZoneId
+      );
+    }
   },
   methods: {
     async onNewZone(name: string) {
@@ -82,6 +103,12 @@ export default Vue.extend({
       } catch {
         // DO NOTHING
       }
+    },
+
+    canGeneralDeleteZone() {
+      return this.$permission.check(Permission.DeleteZone, {
+        isToasting: false,
+      });
     },
   },
 });

@@ -11,6 +11,7 @@
           :x-small="$vuetify.breakpoint.xs"
           v-bind="attrs"
           dark
+          :disabled="disabled"
           v-on="on"
         >
           <v-icon>mdi-{{ icon }}</v-icon>
@@ -27,6 +28,7 @@
         v-model="valid"
         :action="action"
         method="post"
+        :disabled="disabled"
         @submit.prevent="onSubmit"
       >
         <slot></slot>
@@ -61,6 +63,10 @@ export default Vue.extend({
     maxWidth: {
       default: 350,
       type: Number,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {

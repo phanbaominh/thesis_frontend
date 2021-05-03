@@ -3,10 +3,13 @@
     v-if="$auth.user"
     is-update
     :init-user="$auth.user"
+    :disabled="disabled"
     @submit="onUpdate"
   >
     <template #append>
-      <BaseSubmitActions is-not-dialog> Update profile </BaseSubmitActions>
+      <BaseSubmitActions is-not-dialog :is-disabled="disabled">
+        Update profile
+      </BaseSubmitActions>
     </template>
 
     <template #title> <v-card-title>Profile</v-card-title> </template>
@@ -16,6 +19,12 @@
 import Vue from 'vue';
 import { User } from '~/types/types';
 export default Vue.extend({
+  props: {
+    disabled: {
+      default: false,
+      type: Boolean,
+    },
+  },
   methods: {
     async onUpdate(user: User) {
       // this.$accessor.SET_USER(

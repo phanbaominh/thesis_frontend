@@ -6,6 +6,7 @@
           {{ zone.name }}
         </v-card-title>
         <DialogName
+          v-if="$permission.canGeneralWriteZone()"
           :init-name="zone.name"
           title="Change zone name:"
           icon="pencil"
@@ -14,6 +15,7 @@
 
         <v-spacer></v-spacer>
         <v-dialog
+          v-if="canReadDevice"
           v-model="deviceDialog"
           width="1000"
           scrollable
@@ -64,10 +66,25 @@
         />
       </v-col>
       <v-spacer></v-spacer>
-      <v-col cols="12" lg="6">
+      <v-col v-if="canReadMedia" cols="12" lg="6">
         <v-card class="cards pa-4">
           <v-card outlined>
-            <ZoneMedia
+            <MediaAddDelete
+              v-slot="{ media }"
+              :media-array="zone.videoArray"
+              :all-media-array="nonZoneVideoArray"
+              type="Videos"
+              compact
+              @add="onAdd('video', $event)"
+              @delete="onDelete('video', $event)"
+            >
+              <v-list-item-action>
+                <BaseButton color="primary" dark @click="onPlayVideo(media)">
+                  <v-icon>mdi-play</v-icon>
+                </BaseButton>
+              </v-list-item-action>
+            </MediaAddDelete>
+            <!-- <ZoneMedia
               v-slot="{ media }"
               :media-array="zone.videoArray"
               :all-media-array="nonZoneVideoArray"
@@ -80,7 +97,7 @@
                   <v-icon>mdi-play</v-icon>
                 </BaseButton>
               </v-list-item-action>
-            </ZoneMedia>
+            </ZoneMedia> -->
           </v-card>
           <v-card outlined>
             <ZoneMedia
@@ -117,9 +134,22 @@ import {
   Zone,
   ZoneArrayable,
   ZoneArrayType,
+  ZonePermissionGroup,
 } from 'types/types';
 
 export default Vue.extend({
+  middleware({ route, $auth, redirect, $toast, $permission }) {
+    const hasPermissionOfZone = !!(
+      $auth.user &&
+      ($auth.user.zonePermissionGroups as ZonePermissionGroup[]).find(
+        (zpg) => zpg.zone._id === route.params.id
+      )
+    );
+    if (!(hasPermissionOfZone || $permission.canGeneralReadZone())) {
+      $toast.error("You don't have permission");
+      redirect('/');
+    }
+  },
   async asyncData({ route, $axios, $apiUrl }) {
     const zone = (await $axios.$get($apiUrl.zone(route.params.id))).zone;
     return { zone };
@@ -149,6 +179,28 @@ export default Vue.extend({
     this.updateNonZoneArray('video');
     this.updateNonZoneArray('playlist');
     this.updateNonZoneArray('device');
+  },
+  computed: {
+    canGeneralReadZone(): Boolean {
+      return this.$permission.canGeneralReadZone();
+    },
+    canReadDevice(): Boolean {
+      return (
+        this.canGeneralReadZone ||
+        this.$permission.check(this.$permission.DevicePermissions, {
+          zoneId: this.zone._id,
+        })
+      );
+    },
+    canReadMedia(): Boolean {
+      return (
+        this.canGeneralReadZone ||
+        this.$permission.check(this.$permission.MediaPermissions, {
+          zoneId: this.zone._id,
+          isLogging: true,
+        })
+      );
+    },
   },
   beforeDestroy() {
     this.$socket.off(`/receive/update/${this.zone._id}/infor-video`);

@@ -11,6 +11,7 @@
           >{{ permGroup.name }}
           <v-spacer></v-spacer>
           <DialogDelete
+            v-if="!isAdmin"
             v-slot="{ on: on2, attrs: attrs2 }"
             @delete="$emit('delete')"
             @click.prevent
@@ -47,6 +48,7 @@
           <v-card class="pa-4">
             <PermGroupUpdateForm
               :perm-group="permGroup"
+              :disabled="isAdmin"
               @submit="onUpdatePermGroup"
             />
           </v-card>
@@ -67,7 +69,10 @@
               </div>
               <v-tabs-items v-model="tab">
                 <v-tab-item v-for="(permTabItem, i) in permTabItems" :key="i">
-                  <PermTabItem :perm-tab-item="permTabItem" />
+                  <PermTabItem
+                    :perm-tab-item="permTabItem"
+                    :disabled="isAdmin"
+                  />
                 </v-tab-item>
               </v-tabs-items>
             </v-tabs>
@@ -75,7 +80,11 @@
         </v-col>
       </v-row>
       <v-card class="zone-user-card">
-        <PermDialogTable :perm-group-id="permGroup._id" :refresh="dialog" />
+        <PermDialogTable
+          v-if="!isAdmin"
+          :perm-group-id="permGroup._id"
+          :refresh="dialog"
+        />
       </v-card>
     </v-card>
   </v-dialog>
@@ -106,6 +115,7 @@ export default Vue.extend({
       tabItems: ['Media', 'Device', 'Zone', 'Permission'],
       permTabItems: [] as PermissionTabItem[],
       permGroup: this.initPermGroup,
+      isAdmin: this.initPermGroup.name === 'admin',
     };
   },
   // watch: {
@@ -117,6 +127,11 @@ export default Vue.extend({
     this.setMediaPermItems();
   },
   methods: {
+    addKeyToTabItem(key: PermissionName, tabItem: PermissionTabItem) {
+      if (key in tabItem) {
+        tabItem[key] = true;
+      }
+    },
     setMediaPermItems() {
       const mediaPermTabItem: PermissionTabItem = {
         ReadMedia: false,
@@ -141,10 +156,10 @@ export default Vue.extend({
       };
       this.permGroup.permissions.forEach((perm) => {
         const permName = Permission[perm] as PermissionName;
-        mediaPermTabItem[permName] = true;
-        devicePermTabItem[permName] = true;
-        zonePermTabItem[permName] = true;
-        permPermTabItem[permName] = true;
+        this.addKeyToTabItem(permName, mediaPermTabItem);
+        this.addKeyToTabItem(permName, devicePermTabItem);
+        this.addKeyToTabItem(permName, zonePermTabItem);
+        this.addKeyToTabItem(permName, permPermTabItem);
       });
       this.$accessor.SET_PERMS(this.permGroup.permissions);
       this.permTabItems = [

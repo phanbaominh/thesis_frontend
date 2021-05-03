@@ -189,7 +189,7 @@ export default Vue.extend({
           user: this.user._id,
         });
         const foundIndex = this.findIndexOfZone(deletedZone._id);
-        if (foundIndex) this.$delete(this.zonePermGroups, foundIndex);
+        if (foundIndex >= 0) this.$delete(this.zonePermGroups, foundIndex);
       } catch {}
     },
     findIndexOfZone(zoneId: string) {

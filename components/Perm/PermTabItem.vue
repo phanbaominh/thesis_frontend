@@ -5,6 +5,7 @@
       :key="permName"
       :enabled="enabled"
       :name="permName"
+      :disabled="disabled"
     />
   </v-list>
 </template>
@@ -17,6 +18,10 @@ export default Vue.extend({
       required: true,
       type: Object,
     } as Vue.PropOptions<PermissionTabItem>,
+    disabled: {
+      required: true,
+      type: Boolean,
+    },
   },
 });
 </script>

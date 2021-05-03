@@ -3,6 +3,7 @@
     ref="form"
     v-model="valid"
     class="d-flex justify-center"
+    :disabled="disabled"
     @submit.prevent="onSubmit"
   >
     <v-card class="pa-4" width="500px">
@@ -59,6 +60,10 @@ export default Vue.extend({
     } as PropOptions<User>,
     isNotDialog: {
       default: true,
+      type: Boolean,
+    },
+    disabled: {
+      default: false,
       type: Boolean,
     },
   },

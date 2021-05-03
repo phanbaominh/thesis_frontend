@@ -65,28 +65,18 @@ export default Vue.extend({
           icon: 'mdi-cast',
           title: 'Devices',
           to: '/devices',
-          disabled: !this.$permission.check(
-            this.$permission.DevicePermissions,
-            {
-              isToasting: false,
-            }
-          ),
+          disabled: !this.$permission.canGeneralReadDevice(),
         },
         {
           icon: 'mdi-select-group',
           title: 'Zones',
           to: '/zones',
-          disabled: !this.$permission.check(this.$permission.ZonePermissions, {
-            isToasting: false,
-          }),
         },
         {
           icon: 'mdi-folder',
           title: 'Media',
           to: '/media',
-          disabled: !this.$permission.check(this.$permission.MediaPermissions, {
-            isToasting: false,
-          }),
+          disabled: !this.$permission.canGeneralReadMedia(),
         },
         {
           icon: 'mdi-account-key',

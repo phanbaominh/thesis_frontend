@@ -28,15 +28,27 @@ const PermPermissions = [
 interface CheckPermission {
   (
     requiredPermissions: number | number[],
-    options?: { zoneId?: string; satisfyOne?: boolean; isToasting?: boolean }
+    options?: {
+      zoneId?: string;
+      satisfyOne?: boolean;
+      isToasting?: boolean;
+      isLogging?: boolean;
+    }
   ): boolean;
 }
+
+type canFunction = () => boolean;
 interface PermissionPlugin {
   check: CheckPermission;
   DevicePermissions: Permission[];
   ZonePermissions: Permission[];
   MediaPermissions: Permission[];
   PermPermissions: Permission[];
+  canGeneralReadDevice: canFunction;
+  canGeneralWriteZone: canFunction;
+  canGeneralReadZone: canFunction;
+  canGeneralReadMedia: canFunction;
+  isAdmin: canFunction;
 }
 declare module 'vue/types/vue' {
   interface Vue {
@@ -62,29 +74,43 @@ const socketPlugin: Plugin = ({ $toast, $auth }, inject) => {
   const toastError = (isToasting: boolean) => {
     if (isToasting) $toast.error("You don't have permission to do this");
   };
+  function logto(isLogging: boolean) {
+    return (...value: any) => {
+      if (isLogging) {
+        console.log(...value);
+      }
+      return true;
+    };
+  }
   const check: CheckPermission = (
     requiredPermissions: number | number[],
     options?: {
       zoneId?: string;
       satisfyOne?: boolean;
       isToasting?: boolean;
+      isLogging?: boolean;
     }
   ): boolean => {
     if ($auth.user && $auth.user.zonePermissionGroups) {
       // eslint-disable-next-line prefer-const
       const defaultOptions = {
         zoneId: $auth.user.generalZoneId as string,
-        satsifyOne: true,
-        isToasting: true,
+        satisfyOne: true,
+        isToasting: false,
+        isLogging: false,
       };
       const finalOptions = { ...defaultOptions, ...options };
-      const { zoneId, satisfyOne, isToasting } = finalOptions;
+
+      const { zoneId, satisfyOne, isToasting, isLogging } = finalOptions;
+      const logto2 = logto(isLogging);
+      logto2('');
       if (!$auth.user.adminId) return true;
       const zonePermissionGroups = $auth.user
         .zonePermissionGroups as DetailedZonePermissionGroup[];
       const foundZonePermGroup = zonePermissionGroups.find(
         (zpg) => zpg.zone._id === zoneId
       );
+
       if (!foundZonePermGroup) {
         toastError(isToasting);
         return false;
@@ -95,7 +121,7 @@ const socketPlugin: Plugin = ({ $toast, $auth }, inject) => {
           (pg) => pg.permissions
         );
         for (const perm of requiredPermissions) {
-          if (possessedPerms.find((ps) => ps.includes(perm))) {
+          if (possessedPerms.find((ps) => ps.find((ele) => ele === perm))) {
             if (satisfyOne) return true;
           } else if (!satisfyOne) {
             toastError(isToasting);
@@ -110,12 +136,38 @@ const socketPlugin: Plugin = ({ $toast, $auth }, inject) => {
     }
     return false;
   };
+
+  const canGeneralReadDevice = () => {
+    return check(DevicePermissions);
+  };
+
+  const canGeneralWriteZone = () => {
+    return check(Permission.WriteZone);
+  };
+
+  const canGeneralReadZone = () => {
+    return check(ZonePermissions);
+  };
+
+  const canGeneralReadMedia = () => {
+    return check(MediaPermissions);
+  };
+
+  const isAdmin = () => {
+    console.log(!$auth.user?.adminId);
+    return !$auth.user?.adminId;
+  };
   inject('permission', {
     check,
     DevicePermissions,
     PermPermissions,
     MediaPermissions,
     ZonePermissions,
+    canGeneralReadDevice,
+    canGeneralReadZone,
+    canGeneralWriteZone,
+    canGeneralReadMedia,
+    isAdmin,
   } as PermissionPlugin);
 };
 export default socketPlugin;

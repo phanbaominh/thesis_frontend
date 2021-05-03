@@ -4,6 +4,7 @@
     :title="title"
     :icon="icon"
     :control-dialog="dialog"
+    :disabled="disabled"
     @submit="onChangeName"
   >
     <template #activator="{ on, attrs }">
@@ -33,6 +34,10 @@ export default Vue.extend({
     icon: {
       type: String,
       default: 'plus',
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {

@@ -149,28 +149,3 @@ export interface PermissionRelation {
   user: string;
   adminId: string;
 }
-
-export const DevicePermissions = [
-  Permission.ReadDevice,
-  Permission.DeleteDevice,
-  Permission.ReadDevice,
-];
-
-export const ZonePermissions = [
-  Permission.WriteZone,
-  Permission.ReadZone,
-  Permission.DeleteZone,
-  Permission.ControlZone,
-];
-
-export const MediaPermissions = [
-  Permission.ReadMedia,
-  Permission.WriteMedia,
-  Permission.DeleteMedia,
-];
-
-export const PermPermissions = [
-  Permission.ReadPermission,
-  Permission.DeletePermission,
-  Permission.WritePermission,
-];

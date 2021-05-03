@@ -1,9 +1,11 @@
 <template>
   <v-container>
     <v-row class="mb-4">
-      <v-col cols="12" lg="6"> <UserProfile /></v-col>
       <v-col cols="12" lg="6">
-        <v-card class="pb-4">
+        <UserProfile :disabled="!!($auth.user && $auth.user.adminId)"
+      /></v-col>
+      <v-col cols="12" lg="6">
+        <v-card v-if="$permission.canGeneralReadDevice()" class="pb-4">
           <v-card-title>Device report: {{ devices.length }} total</v-card-title>
           <DashboardChart
             :key="updateChart"
@@ -13,7 +15,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-card>
+    <v-card v-if="$permission.canGeneralReadDevice()">
       <v-card-title>Device report</v-card-title>
       <BaseFetcher :fetch-state="$fetchState">
         <v-data-table
@@ -41,7 +43,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import UserProfile from '~/components/UserProfile.vue';
-import { Device, ZoneDeviceLog } from '~/types/types';
+import { Device, Permission, ZoneDeviceLog } from '~/types/types';
 export default Vue.extend({
   components: { UserProfile },
   data() {
