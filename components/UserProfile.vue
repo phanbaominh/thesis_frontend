@@ -1,5 +1,10 @@
 <template>
-  <UserForm is-update :init-user="$auth.user" @submit="onUpdate">
+  <UserForm
+    v-if="$auth.user"
+    is-update
+    :init-user="$auth.user"
+    @submit="onUpdate"
+  >
     <template #append>
       <BaseSubmitActions is-not-dialog> Update profile </BaseSubmitActions>
     </template>

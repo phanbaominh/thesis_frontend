@@ -82,6 +82,7 @@ export default Vue.extend({
     onConfirm() {
       this.changeSelect();
       this.$emit('confirm', this.selectedMediaArray);
+      this.selectedMediaArray = [];
     },
     changeSelect() {
       if (this.isAdd === false) this.isSelecting = !this.isSelecting;

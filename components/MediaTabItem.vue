@@ -140,6 +140,7 @@ export default Vue.extend({
           ).data;
           this.$accessor.ADD_MEDIA_TO_ARRAY(newVideo);
           this.isUploadDialog = false;
+          this.uploadedFile = null;
         } catch {
           // DO NOTHING
         }

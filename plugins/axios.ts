@@ -27,7 +27,17 @@ const axiosPlugin: Plugin = ({ $axios, error: nuxtError, $toast }) => {
 
   // $axios.onRequest((config) => {
   //   if (store.state.auth && store.state.auth.user) {
-  //     config.headers.Authorization = `Bearer ${store.state.auth.user.token}`;
+  //     const zonePermissionGroups = store.state.auth.user.zonePermissionGroups;
+  //     if (config.method === 'get') {
+  //       if (config.params) {
+  //         config.params.userPermissions = zonePermissionGroups;
+  //       } else {
+  //         config.params = { userPermissions: zonePermissionGroups };
+  //       }
+  //     } else {
+  //       config.data.userPermissions = zonePermissionGroups;
+  //     }
+  //     console.log(config.method, config.params, config.data);
   //   }
   // });
 };

@@ -86,6 +86,7 @@ export interface User {
   username: string;
   email: string;
   password: string;
+  adminId?: string;
 }
 
 export interface Subuser extends User {

@@ -80,7 +80,7 @@ export default Vue.extend({
     },
   },
   created() {
-    console.log((this.$auth.strategy as any).token.get());
+    console.log(this.$auth.user);
     this.$socket.on('/receive/update/socket/disconnect', (device) => {
       this.replaceDevice(device);
     });
