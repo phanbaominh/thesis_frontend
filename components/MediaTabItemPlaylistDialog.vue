@@ -13,7 +13,11 @@
             {{ playlist.name }}
           </a>
           <v-spacer></v-spacer>
-          <DialogDelete color="error" @delete="$emit('delete')">
+          <DialogDelete
+            v-if="$permission.canGeneralDeleteMedia()"
+            color="error"
+            @delete="$emit('delete')"
+          >
             <v-icon>mdi-delete</v-icon>
           </DialogDelete>
         </v-card-title>
@@ -23,6 +27,7 @@
       <BaseDialogTitle @close="dialog = false">
         <span class="mr-2">{{ $truncate(playlist.name) }}</span>
         <DialogName
+          v-if="canGeneralWriteMedia"
           :init-name="playlist.name"
           title="Change playlist name:"
           icon="pencil"
@@ -35,6 +40,8 @@
             :media-array="playlistMediaArray"
             :all-media-array="nonPlaylistMediaArray"
             type="Media"
+            :add-perm="canGeneralWriteMedia"
+            :delete-perm="canGeneralWriteMedia"
             @add="onConfirmAdd"
             @delete="onConfirmDelete"
           />
@@ -72,6 +79,9 @@ export default Vue.extend({
   computed: {
     allMediaArray() {
       return this.$accessor.allMediaArray;
+    },
+    canGeneralWriteMedia() {
+      return this.$permission.canGeneralWriteMedia();
     },
   },
   watch: {

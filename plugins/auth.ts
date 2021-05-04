@@ -48,6 +48,8 @@ interface PermissionPlugin {
   canGeneralWriteZone: canFunction;
   canGeneralReadZone: canFunction;
   canGeneralReadMedia: canFunction;
+  canGeneralWriteMedia: canFunction;
+  canGeneralDeleteMedia: canFunction;
   isAdmin: canFunction;
 }
 declare module 'vue/types/vue' {
@@ -153,10 +155,14 @@ const socketPlugin: Plugin = ({ $toast, $auth }, inject) => {
     return check(MediaPermissions);
   };
 
-  const isAdmin = () => {
-    console.log(!$auth.user?.adminId);
-    return !$auth.user?.adminId;
+  const canGeneralWriteMedia = () => {
+    return check(MediaPermissions);
   };
+
+  const canGeneralDeleteMedia = () => {
+    return check(MediaPermissions);
+  };
+
   inject('permission', {
     check,
     DevicePermissions,
@@ -167,7 +173,8 @@ const socketPlugin: Plugin = ({ $toast, $auth }, inject) => {
     canGeneralReadZone,
     canGeneralWriteZone,
     canGeneralReadMedia,
-    isAdmin,
+    canGeneralWriteMedia,
+    canGeneralDeleteMedia,
   } as PermissionPlugin);
 };
 export default socketPlugin;

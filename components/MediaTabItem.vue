@@ -7,6 +7,7 @@
       :compact="false"
       :fullscreen="$vuetify.breakpoint.smAndDown"
       :hide-overlay="$vuetify.breakpoint.smAndDown"
+      :delete-perm="$permission.canGeneralDeleteMedia()"
       @confirm="onConfirmDelete"
     >
       <template #actions="{ media }">
@@ -14,7 +15,12 @@
           <MediaTabItemPlayDialog :media="media" />
         </v-list-item-action>
       </template>
-      <v-dialog v-model="isUploadDialog" width="500" scrollable>
+      <v-dialog
+        v-if="$permission.canGeneralWriteMedia()"
+        v-model="isUploadDialog"
+        width="500"
+        scrollable
+      >
         <template #activator="{ on, attrs }">
           <v-btn
             depressed

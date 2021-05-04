@@ -17,6 +17,7 @@
     <template v-else>
       <slot></slot>
       <BaseButtonToolbar
+        v-if="deletePerm"
         color="error"
         icon="delete"
         @click="onSwitchSelecting"
@@ -66,6 +67,10 @@ export default Vue.extend({
     type: {
       required: true,
       type: String,
+    },
+    deletePerm: {
+      default: true,
+      type: Boolean,
     },
   },
   data() {

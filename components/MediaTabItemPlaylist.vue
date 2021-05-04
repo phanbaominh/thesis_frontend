@@ -3,6 +3,7 @@
     <template #pending> Fetching playlists... </template>
     <DataIterator :type="'Playlist'" :init-items="playlists" :compact="compact">
       <DialogName
+        v-if="$permission.canGeneralWriteMedia()"
         v-slot="{ on, attrs }"
         init-name=""
         title="Create a playlist:"

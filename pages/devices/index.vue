@@ -4,7 +4,10 @@
       <span> Fetching devices...</span>
     </template>
     <DataIterator type="Devices" :init-items="devices">
-      <DeviceCreateDialog @newDevice="onNewDevice" />
+      <DeviceCreateDialog
+        v-if="canGeneralWriteDevice"
+        @newDevice="onNewDevice"
+      />
       <template #main="{ items: displayedDevices }">
         <v-row>
           <v-col
@@ -20,6 +23,7 @@
                 {{ device.name }}
                 <v-spacer></v-spacer>
                 <DialogName
+                  v-if="canGeneralWriteDevice"
                   v-slot="{ on, attrs }"
                   :init-name="device.name"
                   title="Change device name:"
@@ -37,7 +41,11 @@
                     <v-icon>mdi-pencil</v-icon>
                   </v-btn>
                 </DialogName>
-                <DialogDelete v-slot="{ on, attrs }" @delete="onDelete(i)">
+                <DialogDelete
+                  v-if="canGeneralDeleteDevice"
+                  v-slot="{ on, attrs }"
+                  @delete="onDelete(i)"
+                >
                   <v-btn
                     color="error"
                     x-small
@@ -70,7 +78,7 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { Device } from 'types/types';
+import { Device, Permission } from '~/types/types';
 export default Vue.extend({
   middleware({ $permission, $auth, redirect }) {
     if ($auth.user) {
@@ -92,6 +100,12 @@ export default Vue.extend({
       return Object.keys(this.devices[0]).filter(
         (key) => key !== 'name' && key[0] !== '_'
       );
+    },
+    canGeneralWriteDevice(): boolean {
+      return this.$permission.check(Permission.WriteDevice);
+    },
+    canGeneralDeleteDevice(): boolean {
+      return this.$permission.check(Permission.DeleteDevice);
     },
   },
   methods: {

@@ -5,12 +5,14 @@
     :compact="compact"
     :fullscreen="$vuetify.breakpoint.smAndDown"
     :hide-overlay="$vuetify.breakpoint.smAndDown"
+    :delete-perm="deletePerm"
     @confirm="onConfirmDelete"
   >
     <template #actions="{ media }">
       <slot :media="media"></slot>
     </template>
     <v-dialog
+      v-if="addPerm"
       v-model="isAddDialog"
       width="1000"
       scrollable
@@ -69,6 +71,14 @@ export default Vue.extend({
         return this.type;
       },
       type: String,
+    },
+    deletePerm: {
+      default: true,
+      type: Boolean,
+    },
+    addPerm: {
+      default: true,
+      type: Boolean,
     },
   },
   data() {

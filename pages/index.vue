@@ -43,7 +43,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import UserProfile from '~/components/UserProfile.vue';
-import { Device, Permission, ZoneDeviceLog } from '~/types/types';
+import { Device, ZoneDeviceLog } from '~/types/types';
 export default Vue.extend({
   components: { UserProfile },
   data() {

@@ -20,14 +20,15 @@
       :max="zoneInfo.durationFull"
       :messages="timestamp"
       class="mt-n2 px-2"
+      :disabled="!controlPerm"
       @end="onProgress"
     ></v-slider>
     <v-row>
       <v-container class="d-flex justify-center mt-2">
-        <v-btn fab x-small depressed @click="onPause">
+        <v-btn fab x-small depressed :disabled="!controlPerm" @click="onPause">
           <v-icon> mdi-{{ zoneInfo.isPause ? 'play' : 'pause' }} </v-icon>
         </v-btn>
-        <v-btn fab x-small depressed @click="onLoop">
+        <v-btn fab x-small depressed :disabled="!controlPerm" @click="onLoop">
           <svg fill="none" height="24" viewBox="0 0 24 24" width="24">
             <path
               d="M7 7H17V10L21 6L17 2V5H5V11H7V7ZM17 17H7V14L3 18L7 22V19H19V13H17V17Z"
@@ -39,9 +40,16 @@
     </v-row>
     <v-divider class="mt-4"></v-divider>
     <v-card-text>
-      <v-slider v-model="volume" track-color="light-grey" @end="onVolume">
+      <v-slider
+        v-model="volume"
+        track-color="light-grey"
+        :disabled="!controlPerm"
+        @end="onVolume"
+      >
         <template #prepend>
-          <v-icon @click="onMute"> {{ volumeIcon }}</v-icon>
+          <v-icon :disabled="!controlPerm" @click="onMute">
+            {{ volumeIcon }}
+          </v-icon>
         </template>
       </v-slider>
     </v-card-text>
@@ -79,6 +87,10 @@ export default Vue.extend({
       type: Array,
       required: true,
     } as PropOptions<{ id: string; videos: Video[] }[]>,
+    controlPerm: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {

@@ -45,6 +45,8 @@
                 :media-array="zone.deviceArray"
                 :all-media-array="nonZoneDeviceArray"
                 type="Device"
+                :add-perm="canWriteDevice"
+                :delete-perm="canDeleteDevice"
                 @add="onAddDevice"
                 @delete="onDeleteDevice"
               />
@@ -54,7 +56,11 @@
             </v-card>
           </v-card>
         </v-dialog>
-        <BaseButtonToolbar icon="sync" @click="updateZone" />
+        <BaseButtonToolbar
+          v-if="canWriteZone"
+          icon="sync"
+          @click="updateZone"
+        />
       </v-row>
     </v-toolbar>
     <v-row class="mt-2">
@@ -63,6 +69,7 @@
           class="cards"
           :zone="zone"
           :playlist-videos="playlistVideos"
+          :control-perm="canControlZone"
         />
       </v-col>
       <v-spacer></v-spacer>
@@ -75,6 +82,8 @@
               :all-media-array="nonZoneVideoArray"
               type="Videos"
               compact
+              :add-perm="canWriteMedia"
+              :delete-perm="canDeleteMedia"
               @add="onAdd('video', $event)"
               @delete="onDelete('video', $event)"
             >
@@ -100,7 +109,29 @@
             </ZoneMedia> -->
           </v-card>
           <v-card outlined>
-            <ZoneMedia
+            <MediaAddDelete
+              v-slot="{ media }"
+              :media-array="zone.playlistArray"
+              :all-media-array="nonZonePlaylistArray"
+              type="Playlists"
+              compact
+              :add-perm="canWriteMedia"
+              :delete-perm="canDeleteMedia"
+              @add="onAdd('playlist', $event)"
+              @delete="onDelete('playlist', $event)"
+            >
+              <v-list-item-action>
+                <BaseButton
+                  v-if="canControlZone"
+                  color="primary"
+                  dark
+                  @click="onPlayPlaylist(media)"
+                >
+                  <v-icon>mdi-play</v-icon>
+                </BaseButton>
+              </v-list-item-action>
+            </MediaAddDelete>
+            <!-- <ZoneMedia
               v-slot="{ media }"
               :media-array="zone.playlistArray"
               :all-media-array="nonZonePlaylistArray"
@@ -113,7 +144,7 @@
                   <v-icon>mdi-play</v-icon>
                 </BaseButton>
               </v-list-item-action>
-            </ZoneMedia>
+            </ZoneMedia> -->
           </v-card>
         </v-card>
       </v-col>
@@ -129,13 +160,14 @@ import Vue from 'vue';
 import {
   Device,
   Nameable,
+  Permission,
   Playlist,
   Video,
   Zone,
   ZoneArrayable,
   ZoneArrayType,
   ZonePermissionGroup,
-} from 'types/types';
+} from '~/types/types';
 
 export default Vue.extend({
   middleware({ route, $auth, redirect, $toast, $permission }) {
@@ -184,6 +216,9 @@ export default Vue.extend({
     canGeneralReadZone(): Boolean {
       return this.$permission.canGeneralReadZone();
     },
+    canGeneralWriteZone(): Boolean {
+      return this.$permission.canGeneralWriteZone();
+    },
     canReadDevice(): Boolean {
       return (
         this.canGeneralReadZone ||
@@ -197,9 +232,43 @@ export default Vue.extend({
         this.canGeneralReadZone ||
         this.$permission.check(this.$permission.MediaPermissions, {
           zoneId: this.zone._id,
-          isLogging: true,
         })
       );
+    },
+    canWriteMedia(): Boolean {
+      return (
+        this.canGeneralWriteZone ||
+        this.$permission.check(Permission.WriteMedia, { zoneId: this.zone._id })
+      );
+    },
+    canDeleteMedia(): Boolean {
+      return this.$permission.check(Permission.DeleteMedia, {
+        zoneId: this.zone._id,
+      });
+    },
+    canWriteDevice(): Boolean {
+      return (
+        this.canGeneralWriteZone ||
+        this.$permission.check(Permission.WriteDevice, {
+          zoneId: this.zone._id,
+        })
+      );
+    },
+    canDeleteDevice(): Boolean {
+      return this.$permission.check(Permission.DeleteDevice, {
+        zoneId: this.zone._id,
+      });
+    },
+    canControlZone(): Boolean {
+      return (
+        this.$permission.check(Permission.ControlZone) ||
+        this.$permission.check(Permission.ControlZone, {
+          zoneId: this.zone._id,
+        })
+      );
+    },
+    canWriteZone(): Boolean {
+      return this.canGeneralWriteZone || this.canWriteMedia;
     },
   },
   beforeDestroy() {
