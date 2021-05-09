@@ -198,3 +198,12 @@ export interface Ad {
   buildingManagerId: string;
   status?: string;
 }
+
+export enum AnalyticsFrequency {
+  Daily = 'daily',
+  Monthly = 'monthly',
+}
+export enum AnalyticsValue {
+  Views = 'views',
+  RunTime = 'runTime',
+}

@@ -1,6 +1,13 @@
 import { getAccessorType } from 'typed-vuex';
 import { mutationTree, actionTree, getterTree } from 'nuxt-typed-vuex';
-import { Media, PermissionGroup, User } from '~/types/types';
+import dayjs from 'dayjs';
+import {
+  AnalyticsFrequency,
+  AnalyticsValue,
+  Media,
+  PermissionGroup,
+  User,
+} from '~/types/types';
 // Import all your submodules
 // import * as submodule from '~/store/submodule'
 
@@ -16,10 +23,10 @@ export const state = () => ({
   user: null as User | null,
   perms: [] as number[],
   analytics: {
-    value: 'viewer',
-    frequency: 'monthly',
-    timeStart: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
-    timeEnd: new Date(),
+    value: AnalyticsValue.Views,
+    frequency: AnalyticsFrequency.Daily,
+    timeStart: dayjs().subtract(365, 'day'),
+    timeEnd: dayjs(),
     filters: {},
   },
 });
@@ -77,8 +84,9 @@ export const mutations = mutationTree(state, {
   SET_ANALYTICS_FREQUENCY(state, payload) {
     state.analytics.frequency = payload;
   },
-  SET_ANALYTICS_PERIOD(state, payload) {
-    state.analytics.timeStart = payload;
+  SET_ANALYTICS_PERIOD(state, { start, end }) {
+    state.analytics.timeStart = start;
+    state.analytics.timeEnd = end;
   },
   SET_ANALYTICS_FILTER(state, payload) {
     state.analytics.filters = payload;

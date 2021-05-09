@@ -3,15 +3,15 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { AnalyticsValue, Select } from '~/types/types';
+import { AnalyticsFrequency, Select } from '~/types/types';
 export default Vue.extend({
   data() {
     return {
       items: [
-        { text: 'Views by video', value: AnalyticsValue.Views },
-        { text: 'Run times by video', value: AnalyticsValue.RunTime },
+        { text: 'Daily', value: AnalyticsFrequency.Daily },
+        { text: 'Monthly', value: AnalyticsFrequency.Monthly },
       ] as Select[],
-      selectedItem: AnalyticsValue.Views,
+      selectedItem: AnalyticsFrequency.Monthly,
     };
   },
   watch: {
