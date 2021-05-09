@@ -12,6 +12,9 @@
     >
       <template #actions="{ media }">
         <v-list-item-action>
+          <MediaTabItemUpdateDialog :media="media" />
+        </v-list-item-action>
+        <v-list-item-action>
           <MediaTabItemPlayDialog :media="media" />
         </v-list-item-action>
       </template>
@@ -35,29 +38,10 @@
             <v-icon>mdi-cloud-upload</v-icon>
           </v-btn>
         </template>
-        <v-form v-model="valid" action="" @submit.prevent="onConfirmUpload">
-          <v-card class="pa-4">
-            <BaseDialogTitle @close="isUploadDialog = false">
-              File Upload
-            </BaseDialogTitle>
-            <v-file-input
-              v-model="uploadedFile"
-              label="Choose file to upload"
-              accept="video/*"
-              name="file"
-              :rules="uploadFileRules"
-            >
-            </v-file-input>
-            <input style="display: none" />
-            <BaseSubmitActions
-              :is-disabled="!Boolean(duration && uploadedFile)"
-              @close="isUploadDialog = false"
-            >
-              Confirm
-              <template #close> Close </template>
-            </BaseSubmitActions>
-          </v-card>
-        </v-form>
+        <MediaTabItemUploadForm
+          @submit="isUploadDialog = false"
+          @close="isUploadDialog = false"
+        />
       </v-dialog>
     </MediaSelector>
   </BaseFetcher>
@@ -74,13 +58,12 @@ export default Vue.extend({
   },
   data() {
     return {
-      // mediaArray: (null as any) as Media[],
       isUploadDialog: false,
-      uploadedFile: null as File | null,
-      duration: 0,
-      valid: false,
-      tags: [],
-      uploadFileRules: [(v: any) => !!v || 'File is required'],
+      isUpdateDialog: false,
+      mediaAdset: {
+        ages: { value: [1, 2, 3], strict: true },
+        gender: { value: 10, strict: true },
+      },
     };
   },
   async fetch() {
@@ -89,22 +72,6 @@ export default Vue.extend({
   computed: {
     mediaArray() {
       return this.$accessor.allMediaArray;
-    },
-  },
-  watch: {
-    uploadedFile(newVal) {
-      if (newVal) {
-        const video = document.createElement('video');
-        video.preload = 'metadata';
-
-        video.onloadedmetadata = () => {
-          (window.URL || window.webkitURL).revokeObjectURL(video.src);
-          this.duration = video.duration;
-          video.remove();
-        };
-
-        video.src = URL.createObjectURL(newVal);
-      }
     },
   },
   methods: {
@@ -125,33 +92,6 @@ export default Vue.extend({
         this.$accessor.DELETE_MEDIA_FROM_ARRAY(deletedIds);
       } catch {
         // DO NOTHING
-      }
-    },
-    async onConfirmUpload(e: Event) {
-      e.preventDefault();
-      if (this.uploadedFile && this.valid) {
-        const bodyFormData = new FormData();
-        bodyFormData.append('video', this.uploadedFile!);
-        bodyFormData.append('duration', this.duration.toString());
-        bodyFormData.append('tags', this.tags.toString());
-
-        try {
-          const newVideo = (
-            await this.$axios({
-              method: 'post',
-              url: `${this.$apiUrl.videos}`,
-              data: bodyFormData,
-              headers: { 'Content-Type': 'multipart/form-data' },
-            })
-          ).data;
-          this.$accessor.ADD_MEDIA_TO_ARRAY(newVideo);
-          this.isUploadDialog = false;
-          this.uploadedFile = null;
-        } catch {
-          // DO NOTHING
-        }
-      } else {
-        this.isUploadDialog = false;
       }
     },
     // removeFile(index: number) {

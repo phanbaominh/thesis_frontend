@@ -43,9 +43,9 @@
     <v-divider></v-divider>
     <v-card-text>
       <v-list-item v-for="(value, key) in adsetDesc" :key="key">
-        {{ key }}:
+        <span class="font-weight-bold">{{ key + ':' }}</span>
 
-        {{ value || 'None' }}
+        {{ ` ${value || 'None'}` }}
       </v-list-item>
     </v-card-text>
   </v-card>
