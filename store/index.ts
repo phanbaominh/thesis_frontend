@@ -1,5 +1,5 @@
 import { getAccessorType } from 'typed-vuex';
-import { mutationTree, actionTree } from 'nuxt-typed-vuex';
+import { mutationTree, actionTree, getterTree } from 'nuxt-typed-vuex';
 import { Media, PermissionGroup, User } from '~/types/types';
 // Import all your submodules
 // import * as submodule from '~/store/submodule'
@@ -15,6 +15,13 @@ export const state = () => ({
   isSocketConnected: false,
   user: null as User | null,
   perms: [] as number[],
+  analytics: {
+    value: 'viewer',
+    frequency: 'monthly',
+    timeStart: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+    timeEnd: new Date(),
+    filters: {},
+  },
 });
 
 export const mutations = mutationTree(state, {
@@ -64,12 +71,31 @@ export const mutations = mutationTree(state, {
   DELETE_USER(state) {
     state.user = null;
   },
+  SET_ANALYTICS_VALUE(state, payload) {
+    state.analytics.value = payload;
+  },
+  SET_ANALYTICS_FREQUENCY(state, payload) {
+    state.analytics.frequency = payload;
+  },
+  SET_ANALYTICS_PERIOD(state, payload) {
+    state.analytics.timeStart = payload;
+  },
+  SET_ANALYTICS_FILTER(state, payload) {
+    state.analytics.filters = payload;
+  },
 });
 
-// export const getters = getterTree(state, {
-//   // Type-checked
-//   currentArticleD: (state) => state.currentArticle as Article,
-// });
+export const getters = getterTree(state, {
+  // Type-checked
+  analyticsQuery: ({
+    analytics: { frequency, filters, timeEnd, timeStart, value },
+  }) => {
+    const filterString = Object.entries(filters)
+      .map(([key, value]) => `&${key}=${value}`)
+      .join('');
+    return `?type=${value}&timestart=${timeStart.valueOf()}&timeend=${timeEnd.valueOf()}&frequency=${frequency}${filterString}`;
+  },
+});
 
 export const actions = actionTree(
   { state, mutations },
@@ -90,7 +116,7 @@ export const actions = actionTree(
 // This compiles to nothing and only serves to return the correct type of the accessor
 export const accessorType = getAccessorType({
   state,
-  //   getters,
+  getters,
   mutations,
   actions,
   //   modules: {
