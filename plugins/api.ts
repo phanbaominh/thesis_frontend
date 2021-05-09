@@ -32,6 +32,8 @@ interface ApiUrl {
   userPermPermGroup: IdToUrl;
   subusers: Url;
   subuser: IdToUrl;
+  adsets: Url;
+  adset: IdToUrl;
 }
 
 declare module 'vue/types/vue' {
@@ -64,6 +66,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
   const permGroupUrl = `${apiURL}/perm-groups`;
   const userPermUrl = `${apiURL}/user-perms`;
   const subusersUrl = `${apiURL}/users/subusers`;
+  const adsetsUrl = `${apiURL}/adsets`;
   inject('apiUrl', {
     zones: zonesUrl,
     zone: (id: string) => `${zonesUrl}/${id}`,
@@ -91,6 +94,8 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     userPermPermGroup: (id: string) => `${userPermUrl}/perm-groups/${id}`,
     subusers: subusersUrl,
     subuser: (id: string) => `${subusersUrl}/${id}`,
+    adsets: adsetsUrl,
+    adset: (id: string) => `${adsetsUrl}/${id}`,
   });
 };
 

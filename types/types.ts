@@ -140,7 +140,7 @@ export interface SubuserPermissionGroup {
   user: { _id: string; username: string };
   permissionGroups: { _id: string; name: string; relationId: string }[];
 }
-export type Select = { text: string; value: string };
+export type Select = { text: string; value: any };
 
 export interface PermissionRelation {
   _id: string;
@@ -149,3 +149,38 @@ export interface PermissionRelation {
   user: string;
   adminId: string;
 }
+export interface AdsetItem<T> {
+  value: T;
+  strict: boolean;
+}
+export interface Adset {
+  _id: string;
+  name: string;
+  ages: AdsetItem<number[]>;
+  gender: AdsetItem<number>;
+  dow: AdsetItem<number[]>;
+  hod: AdsetItem<number[]>;
+}
+export const AdsetConst = {
+  ranges: [
+    '0-2',
+    '3-9',
+    '10-19',
+    '20-29',
+    '30-39',
+    '40-49',
+    '50-59',
+    '60-69',
+    '70+',
+  ],
+  dows: [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ],
+  hods: [...Array(24).keys()],
+};

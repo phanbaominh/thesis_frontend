@@ -1,15 +1,15 @@
 <template>
   <v-dialog v-model="dialog" max-width="290">
-    <template #activator="{ on }">
+    <template #activator="{ on, attrs }">
       <v-btn
-        v-bind="$attrs"
+        v-bind="attrs"
         fab
         depressed
         :small="!$vuetify.breakpoint.xs"
         :x-small="$vuetify.breakpoint.xs"
         v-on="on"
       >
-        <slot></slot>
+        <slot :on="on" :attrs="attrs"></slot>
       </v-btn>
     </template>
     <v-card>
