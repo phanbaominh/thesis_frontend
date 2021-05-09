@@ -1,6 +1,6 @@
 <template>
   <BaseFetcher :fetch-state="$fetchState">
-    <template #pending> Fetching permission groups... </template>
+    <template #pending> Fetching adsets... </template>
     <DataIterator :type="'Adsets'" :init-items="adsets" :compact="false">
       <AdsetForm title="Create an adset:" :dialog="newDialog" @submit="onNew" />
       <template #main="{ items: displayedAdsets }">
@@ -54,8 +54,6 @@ export default Vue.extend({
         this.newDialog = !this.newDialog;
         this.adsets.push(adset);
       } catch (err) {}
-
-      // this.$emit('submit', { name: this.name, desc: this.desc });
     },
     onDelete(adset: Adset) {
       this.adsets = this.adsets.filter((a) => a._id !== adset._id);

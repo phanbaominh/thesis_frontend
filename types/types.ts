@@ -184,3 +184,17 @@ export const AdsetConst = {
   ],
   hods: [...Array(24).keys()],
 };
+export enum AdStatus {
+  Pending = 'pending',
+  Running = 'running',
+  Rejected = 'rejected',
+}
+export interface Ad {
+  _id: string;
+  name: string;
+  adsetId: string;
+  mediaId: string;
+  budget: number;
+  buildingManagerId: string;
+  status?: string;
+}

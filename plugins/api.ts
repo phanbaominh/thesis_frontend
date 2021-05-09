@@ -20,6 +20,7 @@ interface ApiUrl {
   devices: Url;
   device: IdToUrl;
   user: Url;
+  buildingManagers: Url;
   permGroups: Url;
   permGroup: IdToUrl;
   userPerms: Url;
@@ -34,6 +35,8 @@ interface ApiUrl {
   subuser: IdToUrl;
   adsets: Url;
   adset: IdToUrl;
+  ads: Url;
+  ad: IdToUrl;
 }
 
 declare module 'vue/types/vue' {
@@ -67,6 +70,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
   const userPermUrl = `${apiURL}/user-perms`;
   const subusersUrl = `${apiURL}/users/subusers`;
   const adsetsUrl = `${apiURL}/adsets`;
+  const adsUrl = `${apiURL}/ads`;
   inject('apiUrl', {
     zones: zonesUrl,
     zone: (id: string) => `${zonesUrl}/${id}`,
@@ -82,6 +86,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     devices: deviceUrl,
     device: (id: string) => `${deviceUrl}/${id}`,
     user: `${apiURL}/users`,
+    buildingManagers: `${apiURL}/users/building-managers`,
     permGroups: permGroupUrl,
     permGroup: (id: string) => `${permGroupUrl}/${id}`,
     userPerms: userPermUrl,
@@ -96,6 +101,8 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     subuser: (id: string) => `${subusersUrl}/${id}`,
     adsets: adsetsUrl,
     adset: (id: string) => `${adsetsUrl}/${id}`,
+    ads: adsUrl,
+    ad: (id: string) => `${adsUrl}/${id}`,
   });
 };
 
