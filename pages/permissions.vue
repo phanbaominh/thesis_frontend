@@ -1,17 +1,12 @@
 <template>
   <v-card>
     <v-tabs v-model="tab" grow class="mb-2">
-      <v-tab v-for="item in tabItems" :key="item">
-        {{ item }}
+      <v-tab v-for="item in tabItems" :key="item.text" nuxt :to="item.to">
+        {{ item.text }}
       </v-tab>
     </v-tabs>
     <v-tabs-items v-model="tab">
-      <v-tab-item>
-        <PermGroupIterator />
-      </v-tab-item>
-      <v-tab-item>
-        <PermUserIterator />
-      </v-tab-item>
+      <nuxt-child keep-alive />
     </v-tabs-items>
   </v-card>
 </template>
@@ -26,7 +21,10 @@ export default Vue.extend({
   data() {
     return {
       tab: this.$accessor.permTab,
-      tabItems: ['Permissions', 'Users'],
+      tabItems: [
+        { text: 'Permissions', to: 'groups' },
+        { text: 'Users', to: 'users' },
+      ],
     };
   },
   watch: {

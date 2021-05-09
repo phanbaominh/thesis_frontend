@@ -1,17 +1,12 @@
 <template>
   <v-card>
     <v-tabs v-model="tab" grow class="mb-2">
-      <v-tab v-for="item in tabItems" :key="item">
-        {{ item }}
+      <v-tab v-for="item in tabItems" :key="item.text" nuxt :to="item.to">
+        {{ item.text }}
       </v-tab>
     </v-tabs>
     <v-tabs-items v-model="tab">
-      <v-tab-item>
-        <MediaTabItem :type="'Videos'" />
-      </v-tab-item>
-      <v-tab-item>
-        <MediaTabItemPlaylist />
-      </v-tab-item>
+      <nuxt-child keep-alive />
     </v-tabs-items>
   </v-card>
 </template>
@@ -27,7 +22,10 @@ export default Vue.extend({
   data() {
     return {
       tab: this.$accessor.mediaTab,
-      tabItems: ['Videos', 'Playlists'],
+      tabItems: [
+        { text: 'Videos', to: 'videos' },
+        { text: 'Playlists', to: 'playlists' },
+      ],
     };
   },
   watch: {

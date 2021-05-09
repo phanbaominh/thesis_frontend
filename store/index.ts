@@ -10,8 +10,8 @@ import { Media, PermissionGroup, User } from '~/types/types';
 export const state = () => ({
   allMediaArray: [] as Media[],
   allPermGroups: [] as PermissionGroup[],
-  mediaTab: null as number | null,
-  permTab: null as number | null,
+  mediaTab: null as string | null,
+  permTab: null as string | null,
   isSocketConnected: false,
   user: null as User | null,
   perms: [] as number[],

@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" max-width="290">
     <template #activator="{ on, attrs }">
       <v-btn
-        v-bind="attrs"
+        v-bind="$attrs"
         fab
         depressed
         :small="!$vuetify.breakpoint.xs"

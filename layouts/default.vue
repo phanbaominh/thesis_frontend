@@ -54,7 +54,13 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      navItems: [
+      drawer: true,
+      miniVariant: false,
+    };
+  },
+  computed: {
+    navItems() {
+      return [
         {
           icon: 'mdi-home',
           title: 'Home',
@@ -75,21 +81,25 @@ export default Vue.extend({
         {
           icon: 'mdi-folder',
           title: 'Media',
-          to: '/media',
+          to:
+            this.$accessor.mediaTab === 'videos'
+              ? '/media/videos'
+              : '/media/playlists',
           disabled: !this.$permission.canGeneralReadMedia(),
         },
         {
           icon: 'mdi-account-key',
           title: 'Permissions',
-          to: '/permissions',
+          to:
+            this.$accessor.permTab === 'groups'
+              ? '/permissions/groups'
+              : '/permissions/users',
           disabled: !this.$permission.check(this.$permission.PermPermissions, {
             isToasting: false,
           }),
         },
-      ],
-      drawer: true,
-      miniVariant: false,
-    };
+      ];
+    },
   },
 });
 </script>

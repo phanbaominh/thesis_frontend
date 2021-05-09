@@ -1,6 +1,6 @@
 <template>
   <BaseFetcher :fetch-state="$fetchState">
-    <template #pending> Fetching {{ type }}... </template>
+    <template #pending> Fetching videos... </template>
     <MediaSelector
       :media-array="mediaArray"
       :type="'Videos'"
@@ -50,12 +50,6 @@
 import Vue from 'vue';
 import { Media } from '~/types/types';
 export default Vue.extend({
-  props: {
-    type: {
-      required: true,
-      type: String,
-    },
-  },
   data() {
     return {
       isUploadDialog: false,
