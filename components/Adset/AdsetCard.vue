@@ -73,10 +73,10 @@ export default Vue.extend({
       const ageLine = this.adset.ages.value
         .map((age) => AdsetConst.ranges[age])
         .join(', ');
-      const dowLine = this.adset.dow.value
+      const dowLine = this.adset.daysOfWeek.value
         .map((dow) => AdsetConst.dows[dow])
         .join(', ');
-      const hodLine = this.adset.hod.value
+      const hodLine = this.adset.hoursOfDay.value
         .map((hod) => AdsetConst.hods[hod])
         .join(', ');
       const genderLine = this.adset.gender.value === 10 ? 'Male' : 'Female';

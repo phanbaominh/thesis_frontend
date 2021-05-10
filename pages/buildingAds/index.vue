@@ -2,18 +2,17 @@
   <BaseFetcher :fetch-state="$fetchState">
     <template #pending> Fetching ads... </template>
     <DataIterator :type="'Ads'" :init-items="ads" :compact="false">
-      <AdForm title="Create an ad:" :dialog="newDialog" @submit="onNew" />
-      <template #main="{ items: displayedAdsets }">
+      <template #main="{ items: displayedAds }">
         <v-row class="mt-2">
           <v-col
-            v-for="ad in displayedAdsets"
+            v-for="ad in displayedAds"
             :key="ad._id"
             cols="12"
             sm="6"
             md="4"
             lg="3"
           >
-            <AdCard :init-ad="ad" @delete="onDelete(ad)" />
+            <BuildingAdCard :init-ad="ad" @delete="onDelete(ad)" />
           </v-col>
         </v-row>
       </template>
@@ -29,7 +28,7 @@ export default Vue.extend({
     return {
       ads: [
         {
-          _id: '123',
+          _id: 'testad',
           name: 'test',
           adsetId: '123',
           mediaId: '123',
@@ -46,13 +45,6 @@ export default Vue.extend({
     // this.ads = (await this.$axios.$get(this.$apiUrl.ads)).ads;
   },
   methods: {
-    async onNew(ad: Ad) {
-      try {
-        await this.$axios.$post(this.$apiUrl.ads, ad);
-        this.newDialog = !this.newDialog;
-        this.ads.push({ ...ad, status: AdStatus.Pending });
-      } catch (err) {}
-    },
     onDelete(ad: Ad) {
       this.ads = this.ads.filter((a) => a._id !== ad._id);
     },

@@ -158,8 +158,8 @@ export interface Adset {
   name: string;
   ages: AdsetItem<number[]>;
   gender: AdsetItem<number>;
-  dow: AdsetItem<number[]>;
-  hod: AdsetItem<number[]>;
+  daysOfWeek: AdsetItem<number[]>;
+  hoursOfDay: AdsetItem<number[]>;
 }
 export const AdsetConst = {
   ranges: [
@@ -199,6 +199,16 @@ export interface Ad {
   status?: string;
 }
 
+export interface DetailedAd {
+  _id: string;
+  name: string;
+  adset: Adset;
+  media: { _id: string; name: string; mediaArray: string[] };
+  budget: number;
+  buildingManagerId: string;
+  adManager: User;
+  status?: string;
+}
 export enum AnalyticsFrequency {
   Daily = 1,
   Monthly = 365,

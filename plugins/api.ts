@@ -37,6 +37,8 @@ interface ApiUrl {
   adset: IdToUrl;
   ads: Url;
   ad: IdToUrl;
+  adStatus: IdToUrl;
+  adDetailed: IdToUrl;
 }
 
 declare module 'vue/types/vue' {
@@ -103,6 +105,8 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     adset: (id: string) => `${adsetsUrl}/${id}`,
     ads: adsUrl,
     ad: (id: string) => `${adsUrl}/${id}`,
+    adDetailed: (id: string) => `${adsUrl}/detailed/${id}`,
+    adStatus: (id: string) => `${adsUrl}/${id}/change-status`,
   });
 };
 

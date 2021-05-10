@@ -48,7 +48,7 @@
       :menu-props="{ maxHeight: '400' }"
       hint="Limited ads to these days of the week"
       :rules="[(v) => v.length > 0 || 'Day of week required']"
-      v-bind.sync="adset.dow"
+      v-bind.sync="adset.daysOfWeek"
     >
     </AdsetSelectMultiple>
     <AdsetSelectMultiple
@@ -59,7 +59,7 @@
       :menu-props="{ maxHeight: '400' }"
       hint="Limited ads to these hours of day"
       :rules="[(v) => v.length > 0 || 'Hour of day is required']"
-      v-bind.sync="adset.hod"
+      v-bind.sync="adset.hoursOfDay"
     >
     </AdsetSelectMultiple>
   </BaseDialogForm>
@@ -82,8 +82,8 @@ export default Vue.extend({
     return {
       adset: {
         name: '',
-        dow: { value: [] as number[], strict: false },
-        hod: { value: [] as number[], strict: false },
+        daysOfWeek: { value: [] as number[], strict: false },
+        hoursOfDay: { value: [] as number[], strict: false },
         ages: { value: [] as number[], strict: false },
         gender: { value: 0, strict: false },
         ...this.initAdset,
