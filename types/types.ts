@@ -200,8 +200,8 @@ export interface Ad {
 }
 
 export enum AnalyticsFrequency {
-  Daily = 'daily',
-  Monthly = 'monthly',
+  Daily = 1,
+  Monthly = 365,
 }
 export enum AnalyticsValue {
   Views = 'views',
