@@ -51,6 +51,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { TypeUser } from '~/types/types';
 export default Vue.extend({
   data() {
     return {
@@ -59,7 +60,44 @@ export default Vue.extend({
     };
   },
   computed: {
-    navItems() {
+    adManagerNavItems(): { [key: string]: any }[] {
+      return [
+        {
+          icon: 'mdi-home',
+          title: 'Home',
+          to: '/',
+          disabled: false,
+        },
+        {
+          icon: 'mdi-home',
+          title: 'Adset',
+          to: '/adsets',
+          disabled: false,
+        },
+        {
+          icon: 'mdi-home',
+          title: 'Ad',
+          to: '/ads',
+          disabled: false,
+        },
+        {
+          icon: 'mdi-home',
+          title: 'Analytics',
+          to: '/analytics',
+          disabled: false,
+        },
+        {
+          icon: 'mdi-folder',
+          title: 'Ad Content',
+          to:
+            this.$accessor.mediaTab === 'videos'
+              ? '/media/videos'
+              : '/media/playlists',
+          disabled: !this.$permission.canGeneralReadMedia(),
+        },
+      ];
+    },
+    buildingManagerNavItems(): { [key: string]: any }[] {
       return [
         {
           icon: 'mdi-home',
@@ -79,13 +117,9 @@ export default Vue.extend({
           to: '/zones',
         },
         {
-          icon: 'mdi-folder',
-          title: 'Media',
-          to:
-            this.$accessor.mediaTab === 'videos'
-              ? '/media/videos'
-              : '/media/playlists',
-          disabled: !this.$permission.canGeneralReadMedia(),
+          icon: 'mdi-select-group',
+          title: 'Ads',
+          to: '/buildingads',
         },
         {
           icon: 'mdi-account-key',
@@ -99,6 +133,11 @@ export default Vue.extend({
           }),
         },
       ];
+    },
+    navItems(): { [key: string]: any }[] {
+      if (this.$auth.user && this.$auth.user.typeUser === TypeUser.AdManager) {
+        return this.adManagerNavItems;
+      } else return this.buildingManagerNavItems;
     },
   },
 });

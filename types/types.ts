@@ -42,51 +42,17 @@ export interface Device {
   zoneId: string | null;
   status: boolean;
 }
-export type ArrayElement<
-  ArrayType extends readonly unknown[]
-> = ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
-export type ZoneArrayable = 'video' | 'playlist' | 'device';
-export type ZoneArrayType = `${ZoneArrayable}Array`;
-export interface Zone {
-  _id: string;
-  name: string;
-  playlistArray: Playlist[];
-  videoArray: Video[];
-  deviceArray: Device[];
-  volumeVideo: number;
-  isMuteVideo: boolean;
-  isLoopOneVideo: boolean;
-  isLoopAllVideo: boolean;
+export enum TypeUser {
+  BuildingManager = 'buildingManager',
+  AdManager = 'adManager',
 }
-export interface ZoneInfo {
-  deviceId?: string;
-  durationFull: number;
-  isFinishInit: boolean;
-  isMute: boolean;
-  isPause: boolean;
-  isPlaylistRunning: boolean;
-  isVideoPlaying: boolean;
-  loopMode: number;
-  playlistVideoId?: string;
-  position: number;
-  videoId?: string;
-  volumeVideo: number;
-  zoneId: string;
-  isScheduleRunning: boolean;
-  scheduleId: string;
-}
-
-export interface ZoneDeviceLog {
-  name: string;
-  mediaName: string | null;
-}
-
 export interface User {
   _id: string;
   username: string;
   email: string;
   password: string;
   adminId?: string;
+  typeUser?: TypeUser;
 }
 
 export interface Subuser extends User {
@@ -209,6 +175,48 @@ export interface DetailedAd {
   adManager: User;
   status?: string;
 }
+export type ArrayElement<
+  ArrayType extends readonly unknown[]
+> = ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
+export type ZoneArrayable = 'device' | 'ad';
+export type ZoneArrayType = `${ZoneArrayable}Array`;
+
+export interface ZoneInfo {
+  deviceId?: string;
+  durationFull: number;
+  isFinishInit: boolean;
+  isMute: boolean;
+  isPause: boolean;
+  isPlaylistRunning: boolean;
+  isVideoPlaying: boolean;
+  loopMode: number;
+  playlistVideoId?: string;
+  position: number;
+  videoId?: string;
+  volumeVideo: number;
+  zoneId: string;
+  isScheduleRunning: boolean;
+  scheduleId: string;
+}
+
+export interface ZoneDeviceLog {
+  name: string;
+  mediaName: string | null;
+}
+
+export interface Zone {
+  _id: string;
+  name: string;
+  playlistArray: Playlist[];
+  videoArray: Video[];
+  adArray: Ad[];
+  deviceArray: Device[];
+  volumeVideo: number;
+  isMuteVideo: boolean;
+  isLoopOneVideo: boolean;
+  isLoopAllVideo: boolean;
+}
+
 export enum AnalyticsFrequency {
   Daily = 1,
   Monthly = 365,

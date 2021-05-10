@@ -74,23 +74,78 @@
       </v-col>
       <v-spacer></v-spacer>
       <v-col v-if="canReadMedia" cols="12" lg="6">
-        <v-card outlined>
-          <MediaAddDelete
-            :media-array="zone.adArray"
-            :all-media-array="nonZoneAdArray"
-            type="Videos"
-            compact
-            :add-perm="canWriteMedia"
-            :delete-perm="canDeleteMedia"
-            @add="onAdd"
-            @delete="onDelete"
-          >
-            <!-- <v-list-item-action>
-              <BaseButton color="primary" dark @click="onPlayVideo(media)">
-                <v-icon>mdi-play</v-icon>
-              </BaseButton>
-            </v-list-item-action> -->
-          </MediaAddDelete>
+        <v-card class="cards pa-4">
+          <v-card outlined>
+            <MediaAddDelete
+              v-slot="{ media }"
+              :media-array="zone.videoArray"
+              :all-media-array="nonZoneVideoArray"
+              type="Videos"
+              compact
+              :add-perm="canWriteMedia"
+              :delete-perm="canDeleteMedia"
+              @add="onAdd('video', $event)"
+              @delete="onDelete('video', $event)"
+            >
+              <v-list-item-action>
+                <BaseButton color="primary" dark @click="onPlayVideo(media)">
+                  <v-icon>mdi-play</v-icon>
+                </BaseButton>
+              </v-list-item-action>
+            </MediaAddDelete>
+            <!-- <ZoneMedia
+              v-slot="{ media }"
+              :media-array="zone.videoArray"
+              :all-media-array="nonZoneVideoArray"
+              type="Videos"
+              @add="onAdd('video', $event)"
+              @delete="onDelete('video', $event)"
+            >
+              <v-list-item-action>
+                <BaseButton color="primary" dark @click="onPlayVideo(media)">
+                  <v-icon>mdi-play</v-icon>
+                </BaseButton>
+              </v-list-item-action>
+            </ZoneMedia> -->
+          </v-card>
+          <v-card outlined>
+            <MediaAddDelete
+              v-slot="{ media }"
+              :media-array="zone.playlistArray"
+              :all-media-array="nonZonePlaylistArray"
+              type="Playlists"
+              compact
+              :add-perm="canWriteMedia"
+              :delete-perm="canDeleteMedia"
+              @add="onAdd('playlist', $event)"
+              @delete="onDelete('playlist', $event)"
+            >
+              <v-list-item-action>
+                <BaseButton
+                  v-if="canControlZone"
+                  color="primary"
+                  dark
+                  @click="onPlayPlaylist(media)"
+                >
+                  <v-icon>mdi-play</v-icon>
+                </BaseButton>
+              </v-list-item-action>
+            </MediaAddDelete>
+            <!-- <ZoneMedia
+              v-slot="{ media }"
+              :media-array="zone.playlistArray"
+              :all-media-array="nonZonePlaylistArray"
+              type="Playlists"
+              @add="onAdd('playlist', $event)"
+              @delete="onDelete('playlist', $event)"
+            >
+              <v-list-item-action>
+                <BaseButton color="primary" dark @click="onPlayPlaylist(media)">
+                  <v-icon>mdi-play</v-icon>
+                </BaseButton>
+              </v-list-item-action>
+            </ZoneMedia> -->
+          </v-card>
         </v-card>
       </v-col>
     </v-row>
@@ -103,8 +158,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import {
-  Ad,
   Device,
+  Nameable,
   Permission,
   Playlist,
   Video,
@@ -135,22 +190,27 @@ export default Vue.extend({
     return {
       deviceDialog: false,
       zone: (null as any) as Zone,
-
+      nonZoneVideoArray: [] as Video[],
+      nonZonePlaylistArray: [] as Playlist[],
       nonZoneDeviceArray: [] as Device[],
-      nonZoneAdArray: [] as Ad[],
-      allAdArray: [] as Ad[],
       allDeviceArray: [] as Device[],
-
+      allVideoArray: [] as Video[],
+      allPlaylistArray: [] as Playlist[],
       playlistVideos: [] as { id: string; videos: Video[] }[],
     };
   },
   async fetch() {
-    this.allAdArray = (await this.$axios.$get(this.$apiUrl.ads)).ads;
+    this.allVideoArray = (await this.$axios.$get(this.$apiUrl.videos)).videos;
+    this.allPlaylistArray = (
+      await this.$axios.$get(this.$apiUrl.playlists)
+    ).playlists;
     this.allDeviceArray = (
       await this.$axios.$get(this.$apiUrl.devices)
     ).devices.filter((device: Device) => device.zoneId === null);
 
-    this.updateNonZoneArray();
+    this.updateNonZoneArray('video');
+    this.updateNonZoneArray('playlist');
+    this.updateNonZoneArray('device');
   },
   computed: {
     canGeneralReadZone(): Boolean {
@@ -215,18 +275,26 @@ export default Vue.extend({
     this.$socket.off(`/receive/update/${this.zone._id}/infor-video`);
   },
   methods: {
-    onDelete(deletedArray: Ad[]) {
+    onDelete(type: ZoneArrayable, deletedArray: Nameable[]) {
+      if (!this.zone.videoArray) return;
       const deletedIds = deletedArray.map((media) => media._id);
+      const key = `${type}Array` as ZoneArrayType;
 
-      this.zone.adArray = this.zone.adArray.filter(
-        (ad) => !deletedIds.includes(ad._id)
+      this.zone[key] = (this.zone[key] as Array<any>).filter(
+        (media) => !deletedIds.includes(media._id)
       );
-      this.updateNonZoneArray();
+      if (type === 'playlist') {
+        this.playlistVideos = this.playlistVideos.filter(
+          (pl) => !deletedIds.includes(pl.id)
+        );
+      }
+      this.updateNonZoneArray(type);
     },
-    onAdd(addedAds: Ad[]) {
+    onAdd(type: ZoneArrayable, addedVideos: Nameable[]) {
       if (!this.zone.videoArray) this.zone.videoArray = [];
-      this.zone.adArray = this.zone.adArray.concat(addedAds);
-      this.updateNonZoneArray();
+      const key = `${type}Array` as ZoneArrayType;
+      this.zone[key] = (this.zone[key] as Array<any>).concat(addedVideos);
+      this.updateNonZoneArray(type);
     },
     async updateZone() {
       try {
@@ -248,12 +316,12 @@ export default Vue.extend({
         this.zone.name = oldName;
       }
     },
-    updateNonZoneArray(type = 'ad') {
+    updateNonZoneArray(type: ZoneArrayable) {
       const captializedType = type.charAt(0).toUpperCase() + type.slice(1);
       const nonZoneKey = `nonZone${captializedType}Array` as `nonZone${Capitalize<ZoneArrayable>}Array`;
       const allKey = `all${captializedType}Array` as `all${Capitalize<ZoneArrayable>}Array`;
       const zoneKey = `${type}Array` as ZoneArrayType;
-      const zoneIds = (this.zone[zoneKey] as any[]).map(
+      const zoneIds = (this.zone[zoneKey] as Array<any>).map(
         (elem: { _id: string }) => elem._id
       );
       this[nonZoneKey] = (this[allKey] as Array<any>).filter(

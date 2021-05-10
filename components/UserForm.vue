@@ -42,22 +42,32 @@
         dense
         :rules="repeatPassRules"
       ></v-text-field>
+      <v-select
+        v-if="!initUser"
+        v-model="user.typeUser"
+        name="typeUser"
+        label="User Type"
+        outlined
+        dense
+        :items="typeUsers"
+        :rules="[(v) => !!v || 'User type is required']"
+      ></v-select>
       <slot name="append"></slot>
     </v-card>
   </v-form>
 </template>
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
-import { User } from '~/types/types';
+import { Select, TypeUser, User } from '~/types/types';
 const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 export default Vue.extend({
   layout: 'auth',
   auth: false,
   props: {
     initUser: {
-      default: () => ({ _id: 'haha', username: '', email: '', password: '' }),
+      default: null,
       type: Object,
-    } as PropOptions<User>,
+    } as PropOptions<User | null>,
     isNotDialog: {
       default: true,
       type: Boolean,
@@ -69,9 +79,19 @@ export default Vue.extend({
   },
   data() {
     return {
-      user: { ...this.initUser },
+      user: {
+        typeUser: '',
+        username: '',
+        password: '',
+        email: '',
+        ...this.initUser,
+      } as User,
       repeatPass: '',
       valid: false,
+      typeUsers: [
+        { text: 'Building Manager', value: TypeUser.BuildingManager },
+        { text: 'Ad Manager', value: TypeUser.AdManager },
+      ] as Select[],
       emailRules: [
         (v: string) => !!v || 'Email is required',
         (v: string) =>
