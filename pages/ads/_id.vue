@@ -1,12 +1,5 @@
 <template>
-  <AdDetailed :init-ad="ad">
-    <template #append>
-      <BaseDialogActions v-if="ad.status" @close="onReject" @confirm="onAccept">
-        Accept
-        <template #close> Reject </template>
-      </BaseDialogActions>
-    </template>
-  </AdDetailed>
+  <AdDetailed :init-ad="ad" />
 </template>
 <script lang="ts">
 import Vue from 'vue';
@@ -53,20 +46,6 @@ export default Vue.extend({
     return {
       ad: (null as any) as DetailedAd,
     };
-  },
-  methods: {
-    async changeStatus(status: AdStatus) {
-      try {
-        await this.$axios.$put(this.$apiUrl.adStatus(this.ad._id), { status });
-        this.ad.status = status;
-      } catch (err) {}
-    },
-    async onAccept() {
-      await this.changeStatus(AdStatus.Running);
-    },
-    async onReject() {
-      await this.changeStatus(AdStatus.Rejected);
-    },
   },
 });
 </script>

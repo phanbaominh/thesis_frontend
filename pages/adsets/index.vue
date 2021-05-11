@@ -33,7 +33,7 @@ export default Vue.extend({
           _id: '123',
           name: 'test',
           ages: { value: [1, 2, 3], strict: true },
-          gender: { value: 10, strict: true },
+          genders: { value: [10], strict: true },
           daysOfWeek: { value: [1, 2], strict: true },
           hoursOfDay: {
             value: [1, 2],

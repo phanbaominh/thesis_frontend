@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
-import { Adset, AdsetConst } from '~/types/types';
+import { Adset, AdsetConst, AdsetGender } from '~/types/types';
 export default Vue.extend({
   props: {
     initAdset: {
@@ -79,7 +79,9 @@ export default Vue.extend({
       const hodLine = this.adset.hoursOfDay.value
         .map((hod) => AdsetConst.hods[hod])
         .join(', ');
-      const genderLine = this.adset.gender.value === 10 ? 'Male' : 'Female';
+      const genderLine = this.adset.genders.value
+        .map((g) => (g === AdsetGender.Male ? 'Male' : 'Female'))
+        .join(',');
       return {
         Ages: ageLine,
         Gender: genderLine,

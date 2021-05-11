@@ -123,7 +123,7 @@ export interface Adset {
   _id: string;
   name: string;
   ages: AdsetItem<number[]>;
-  gender: AdsetItem<number>;
+  genders: AdsetItem<number[]>;
   daysOfWeek: AdsetItem<number[]>;
   hoursOfDay: AdsetItem<number[]>;
 }
@@ -150,6 +150,10 @@ export const AdsetConst = {
   ],
   hods: [...Array(24).keys()],
 };
+export enum AdsetGender {
+  Male = 10,
+  Female = 11,
+}
 export enum AdStatus {
   Pending = 'pending',
   Running = 'running',
@@ -171,7 +175,7 @@ export interface DetailedAd {
   adset: Adset;
   media: { _id: string; name: string; mediaArray: string[] };
   budget: number;
-  buildingManagerId: string;
+  buildingManager: User;
   adManager: User;
   status?: string;
 }

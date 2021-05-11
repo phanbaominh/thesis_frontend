@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card nuxt :to="`/ads/${ad._id}`">
     <v-card-title class="subheading font-weight-bold"
       >{{ ad.name }} <AdCardStatus :status="ad.status" class="ml-2" />
       <v-spacer></v-spacer>

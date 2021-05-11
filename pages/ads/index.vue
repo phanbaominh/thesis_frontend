@@ -24,7 +24,6 @@
 import Vue from 'vue';
 import { Ad, AdStatus } from '~/types/types';
 export default Vue.extend({
-  middleware: 'checkUserIsAdManager',
   auth: false,
   data() {
     return {

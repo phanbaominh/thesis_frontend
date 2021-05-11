@@ -15,6 +15,7 @@
     <v-col>
       <v-checkbox
         v-model="selectedStrict"
+        :disabled="requiredStrict"
         class="select-box"
         :label="`Strict`"
       ></v-checkbox>
@@ -31,6 +32,10 @@ export default Vue.extend({
     },
     strict: {
       required: true,
+      type: Boolean,
+    },
+    requiredStrict: {
+      default: false,
       type: Boolean,
     },
   },

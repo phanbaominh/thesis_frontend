@@ -36,7 +36,7 @@
       :menu-props="{ maxHeight: '400' }"
       hint="Limited ads to these genders"
       :rules="[(v) => v.length > 0 || 'Gender is required']"
-      v-bind.sync="adset.gender"
+      v-bind.sync="adset.genders"
       :multiple="null"
     >
     </AdsetSelectMultiple>
@@ -46,6 +46,7 @@
       :items="dows"
       :disabled="isUpdateForm"
       :menu-props="{ maxHeight: '400' }"
+      required-strict
       hint="Limited ads to these days of the week"
       :rules="[(v) => v.length > 0 || 'Day of week required']"
       v-bind.sync="adset.daysOfWeek"
@@ -82,10 +83,10 @@ export default Vue.extend({
     return {
       adset: {
         name: '',
-        daysOfWeek: { value: [] as number[], strict: false },
+        daysOfWeek: { value: [] as number[], strict: true },
         hoursOfDay: { value: [] as number[], strict: false },
         ages: { value: [] as number[], strict: false },
-        gender: { value: 0, strict: false },
+        genders: { value: [] as number[], strict: false },
         ...this.initAdset,
       } as Omit<Adset, '_id'>,
       ages: [] as Select[],
