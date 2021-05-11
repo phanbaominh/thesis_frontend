@@ -61,6 +61,7 @@
 import Vue from 'vue';
 import { Permission, Zone, ZonePermissionGroup } from '~/types/types';
 export default Vue.extend({
+  middleware: 'checkUserIsBuildingManager',
   data() {
     return {
       zones: [] as Zone[],

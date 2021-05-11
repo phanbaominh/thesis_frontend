@@ -25,14 +25,13 @@
         </template>
       </AdForm> -->
 
-      <DialogDelete
-        v-slot="{ on: on2, attrs: attrs2 }"
-        @delete="onDelete"
-        @click.prevent
-      >
-        <v-btn color="error" x-small fab depressed v-bind="attrs2" v-on="on2">
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
+      <DialogDelete @delete="onDelete" @click.prevent>
+        <template #title>Do you want to cancel this?</template>
+        <template #default="{ on: on2, attrs: attrs2 }">
+          <v-btn color="error" x-small fab depressed v-bind="attrs2" v-on="on2">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </template>
       </DialogDelete>
     </v-card-title>
     <!-- <v-card-subtitle><AdCardStatus :status="ad.status" /></v-card-subtitle> -->

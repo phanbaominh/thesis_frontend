@@ -20,6 +20,7 @@
 import Vue from 'vue';
 export default Vue.extend({
   layout: 'analytics',
+  middleware: 'checkUserIsAdManager',
   auth: false,
   data() {
     return {

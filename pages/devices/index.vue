@@ -80,12 +80,15 @@
 import Vue from 'vue';
 import { Device, Permission } from '~/types/types';
 export default Vue.extend({
-  middleware({ $permission, $auth, redirect }) {
-    if ($auth.user) {
-      if (!$permission.check($permission.DevicePermissions))
-        return redirect('/');
-    }
-  },
+  middleware: [
+    'checkUserIsBuildingManager',
+    ({ $permission, $auth, redirect }) => {
+      if ($auth.user) {
+        if (!$permission.check($permission.DevicePermissions))
+          return redirect('/');
+      }
+    },
+  ],
   data() {
     return {
       devices: [] as Device[],

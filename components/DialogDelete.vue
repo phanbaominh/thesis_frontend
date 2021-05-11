@@ -13,7 +13,9 @@
       </v-btn>
     </template>
     <v-card>
-      <BaseDialogTitle @close="dialog = false"> Delete this? </BaseDialogTitle>
+      <BaseDialogTitle @close="dialog = false">
+        <slot name="title"></slot>
+      </BaseDialogTitle>
       <BaseDialogActions @close="dialog = false" @confirm="onYes">
         Yes
         <template #close> No </template>

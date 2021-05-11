@@ -13,11 +13,15 @@
 <script lang="ts">
 import Vue from 'vue';
 export default Vue.extend({
-  middleware({ $permission, $auth, redirect }) {
-    if ($auth.user) {
-      if (!$permission.check($permission.PermPermissions)) return redirect('/');
-    }
-  },
+  middleware: [
+    'checkUserIsBuildingManager',
+    ({ $permission, $auth, redirect }) => {
+      if ($auth.user) {
+        if (!$permission.check($permission.PermPermissions))
+          return redirect('/');
+      }
+    },
+  ],
   data() {
     return {
       tab: this.$accessor.permTab,

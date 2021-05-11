@@ -13,12 +13,15 @@
 <script lang="ts">
 import Vue from 'vue';
 export default Vue.extend({
-  middleware({ $permission, $auth, redirect }) {
-    if ($auth.user) {
-      if (!$permission.check($permission.MediaPermissions))
-        return redirect('/');
-    }
-  },
+  middleware: [
+    'checkUserIsAdManager',
+    ({ $permission, $auth, redirect }) => {
+      if ($auth.user) {
+        if (!$permission.check($permission.MediaPermissions))
+          return redirect('/');
+      }
+    },
+  ],
   data() {
     return {
       tab: this.$accessor.mediaTab,
