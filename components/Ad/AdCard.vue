@@ -1,5 +1,5 @@
 <template>
-  <v-card nuxt :to="`/ads/${ad._id}`">
+  <v-card>
     <v-card-title class="subheading font-weight-bold"
       >{{ ad.name }} <AdCardStatus :status="ad.status" class="ml-2" />
       <v-spacer></v-spacer>
@@ -25,7 +25,7 @@
         </template>
       </AdForm> -->
 
-      <DialogDelete @delete="onDelete" @click.prevent>
+      <DialogDelete @delete="onDelete">
         <template #title>Do you want to cancel this?</template>
         <template #default="{ on: on2, attrs: attrs2 }">
           <v-btn color="error" x-small fab depressed v-bind="attrs2" v-on="on2">
@@ -49,7 +49,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
-import { Ad } from '~/types/types';
+import { Ad, AdStatus } from '~/types/types';
 export default Vue.extend({
   props: {
     initAd: {
@@ -70,10 +70,11 @@ export default Vue.extend({
     },
   },
   methods: {
-    async onDelete(ad: Ad) {
+    async onDelete() {
       try {
-        await this.$axios.$delete(this.$apiUrl.ad(ad._id));
-        this.$emit('delete', ad);
+        await this.$axios.$put(this.$apiUrl.adStatusCancel(this.ad._id));
+        this.ad.status = AdStatus.Canceled;
+        this.$emit('delete', this.ad);
         this.dialog = false;
       } catch {}
     },

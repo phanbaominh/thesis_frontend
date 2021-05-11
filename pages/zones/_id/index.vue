@@ -78,7 +78,7 @@
           <MediaAddDelete
             :media-array="zone.adArray"
             :all-media-array="nonZoneAdArray"
-            type="Videos"
+            type="Ads"
             compact
             :add-perm="canWriteMedia"
             :delete-perm="canDeleteMedia"
@@ -145,7 +145,9 @@ export default Vue.extend({
     };
   },
   async fetch() {
-    this.allAdArray = (await this.$axios.$get(this.$apiUrl.ads)).ads;
+    this.allAdArray = (
+      await this.$axios.$get(this.$apiUrl.adsBdManager)
+    ).adOffers;
     this.allDeviceArray = (
       await this.$axios.$get(this.$apiUrl.devices)
     ).devices.filter((device: Device) => device.zoneId === null);

@@ -33,16 +33,17 @@
         :menu-props="{ maxHeight: '400' }"
         hint="Limited video to these genders"
         :rules="[(v) => v.length > 0 || 'Gender is required']"
-        v-bind.sync="adset.gender"
+        v-bind.sync="adset.genders"
         :multiple="null"
       >
       </AdsetSelectMultiple>
 
       <BaseSubmitActions
-        :is-disabled="!Boolean(duration && uploadedFile) && !isUpdateForm"
+        :is-disabled="isSubmitDisabled"
         @close="$emit('close')"
       >
-        Confirm
+        <span v-if="!isUploading">Confirm</span>
+        <span v-else>Uploading ... <LoadingSpinner /></span>
         <template #close> Close </template>
       </BaseSubmitActions>
     </v-card>
@@ -50,24 +51,25 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { AdsetConst, Select } from '~/types/types';
+import { AdsetConst, Select, Media } from '~/types/types';
 export default Vue.extend({
   props: {
     media: {
-      required: true,
+      default: null,
       type: Object,
-    },
+    } as Vue.PropOptions<Media | null>,
   },
   data() {
     return {
       uploadedFile: null as File | null,
+      isUploading: false,
       duration: 0,
       valid: false,
       uploadFileRules: [(v: any) => !!v || 'File is required'],
       adset: {
         ages: { value: [], strict: false },
-        gender: { value: 0, strict: false },
-        ...this.media.adset,
+        genders: { value: 0, strict: false },
+        ...this.media?.adSetId,
       },
       ages: AdsetConst.ranges.map((range, i) => ({
         value: i,
@@ -82,6 +84,12 @@ export default Vue.extend({
   computed: {
     isUpdateForm() {
       return !!this.media;
+    },
+    isSubmitDisabled(): boolean {
+      return (
+        (!(this.duration && this.uploadedFile) && !this.isUpdateForm) ||
+        this.isUploading
+      );
     },
   },
   watch: {
@@ -113,6 +121,7 @@ export default Vue.extend({
         bodyFormData.append('duration', this.duration.toString());
         bodyFormData.append('adset', JSON.stringify(this.adset));
         try {
+          this.isUploading = true;
           const newVideo = (
             await this.$axios({
               method: 'post',
@@ -124,16 +133,27 @@ export default Vue.extend({
           this.$accessor.ADD_MEDIA_TO_ARRAY(newVideo);
           this.$emit('submit');
           this.uploadedFile = null;
-        } catch {
+          this.refresh();
+        } catch (err) {
+          console.log(err);
           // DO NOTHING
+          this.isUploading = false;
         }
       }
     },
     async onUpdate() {
       try {
+        if (!this.media) return;
         await this.$axios.$put(this.$apiUrl.video(this.media._id), this.adset);
         this.$emit('submit');
       } catch {}
+    },
+    refresh() {
+      this.adset = {
+        ages: { value: [], strict: false },
+        genders: { value: 0, strict: false },
+      };
+      this.isUploading = false;
     },
   },
 });

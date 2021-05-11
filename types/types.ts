@@ -1,3 +1,7 @@
+export interface AdsetItem<T> {
+  value: T;
+  strict: boolean;
+}
 export interface Nameable {
   _id: string;
   name: string;
@@ -6,6 +10,10 @@ export interface Media {
   _id: string;
   name: string;
   path: string;
+  adSetId: {
+    ages: AdsetItem<number[]>;
+    genders: AdsetItem<number[]>;
+  };
 }
 
 export interface FetchState {
@@ -43,7 +51,7 @@ export interface Device {
   status: boolean;
 }
 export enum TypeUser {
-  BuildingManager = 'buildingManager',
+  BuildingManager = 'bdManager',
   AdManager = 'adManager',
 }
 export interface User {
@@ -115,10 +123,7 @@ export interface PermissionRelation {
   user: string;
   adminId: string;
 }
-export interface AdsetItem<T> {
-  value: T;
-  strict: boolean;
-}
+
 export interface Adset {
   _id: string;
   name: string;
@@ -158,25 +163,26 @@ export enum AdStatus {
   Pending = 'pending',
   Running = 'running',
   Rejected = 'rejected',
+  Canceled = 'canceled',
 }
 export interface Ad {
   _id: string;
   name: string;
-  adsetId: string;
-  mediaId: string;
+  adSetId: string;
+  contentId: string;
   budget: number;
-  buildingManagerId: string;
+  bdManagerId: string;
   status?: string;
 }
 
 export interface DetailedAd {
   _id: string;
   name: string;
-  adset: Adset;
-  media: { _id: string; name: string; mediaArray: string[] };
+  adSetId: Adset;
+  contentId: { _id: string; name: string; mediaArray: string[] };
   budget: number;
-  buildingManager: User;
-  adManager: User;
+  bdManagerId: User;
+  adManagerId: User;
   status?: string;
 }
 export type ArrayElement<

@@ -22,39 +22,39 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { Ad, AdStatus } from '~/types/types';
+import { Ad } from '~/types/types';
 export default Vue.extend({
   auth: false,
   data() {
     return {
       ads: [
-        {
-          _id: '123',
-          name: 'test',
-          adsetId: '123',
-          mediaId: '123',
-          budget: 500,
-          buildingManagerId: '234',
-          status: AdStatus.Pending,
-        },
+        // {
+        //   _id: '123',
+        //   name: 'test',
+        //   adsetId: '123',
+        //   mediaId: '123',
+        //   budget: 500,
+        //   buildingManagerId: '234',
+        //   status: AdStatus.Pending,
+        // },
       ] as Ad[],
       newDialog: false,
     };
   },
   async fetch() {
-    await Promise.resolve();
-    // this.ads = (await this.$axios.$get(this.$apiUrl.ads)).ads;
+    // await Promise.resolve();
+    this.ads = (await this.$axios.$get(this.$apiUrl.adsAdManager)).adOffers;
   },
   methods: {
     async onNew(ad: Ad) {
       try {
-        await this.$axios.$post(this.$apiUrl.ads, ad);
+        const newAd = (await this.$axios.$post(this.$apiUrl.ads, ad)).adOffer;
         this.newDialog = !this.newDialog;
-        this.ads.push({ ...ad, status: AdStatus.Pending });
+        this.ads.push(newAd);
       } catch (err) {}
     },
-    onDelete(ad: Ad) {
-      this.ads = this.ads.filter((a) => a._id !== ad._id);
+    onDelete() {
+      // this.ads = this.ads.filter((a) => a._id !== ad._id);
     },
   },
 });

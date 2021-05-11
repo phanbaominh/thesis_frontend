@@ -20,6 +20,7 @@ interface ApiUrl {
   devices: Url;
   device: IdToUrl;
   user: Url;
+  userTypeUser: Url;
   buildingManagers: Url;
   permGroups: Url;
   permGroup: IdToUrl;
@@ -36,8 +37,11 @@ interface ApiUrl {
   adsets: Url;
   adset: IdToUrl;
   ads: Url;
+  adsAdManager: Url;
+  adsBdManager: Url;
   ad: IdToUrl;
   adStatus: IdToUrl;
+  adStatusCancel: IdToUrl;
   adDetailed: IdToUrl;
 }
 
@@ -72,7 +76,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
   const userPermUrl = `${apiURL}/user-perms`;
   const subusersUrl = `${apiURL}/users/subusers`;
   const adsetsUrl = `${apiURL}/adsets`;
-  const adsUrl = `${apiURL}/ads`;
+  const adsUrl = `${apiURL}/adoffers`;
   inject('apiUrl', {
     zones: zonesUrl,
     zone: (id: string) => `${zonesUrl}/${id}`,
@@ -88,7 +92,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     devices: deviceUrl,
     device: (id: string) => `${deviceUrl}/${id}`,
     user: `${apiURL}/users`,
-    buildingManagers: `${apiURL}/users/building-managers`,
+    userTypeUser: `${apiURL}/users/type-user`,
     permGroups: permGroupUrl,
     permGroup: (id: string) => `${permGroupUrl}/${id}`,
     userPerms: userPermUrl,
@@ -104,9 +108,13 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     adsets: adsetsUrl,
     adset: (id: string) => `${adsetsUrl}/${id}`,
     ads: adsUrl,
+    adsAdManager: `${adsUrl}/ad-manager`,
+
+    adsBdManager: `${adsUrl}/bd-manager`,
     ad: (id: string) => `${adsUrl}/${id}`,
-    adDetailed: (id: string) => `${adsUrl}/detailed/${id}`,
-    adStatus: (id: string) => `${adsUrl}/${id}/change-status`,
+    adDetailed: (id: string) => `${adsUrl}/full-infor/${id}`,
+    adStatus: (id: string) => `${adsUrl}/status/${id}`,
+    adStatusCancel: (id: string) => `${adsUrl}/status-cancel/${id}`,
   });
 };
 

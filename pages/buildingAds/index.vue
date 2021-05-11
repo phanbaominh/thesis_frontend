@@ -21,28 +21,28 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { Ad, AdStatus } from '~/types/types';
+import { Ad } from '~/types/types';
 export default Vue.extend({
   auth: false,
   data() {
     return {
       ads: [
-        {
-          _id: 'testad',
-          name: 'test',
-          adsetId: '123',
-          mediaId: '123',
-          budget: 500,
-          buildingManagerId: '234',
-          status: AdStatus.Pending,
-        },
+        // {
+        //   _id: 'testad',
+        //   name: 'test',
+        //   adsetId: '123',
+        //   mediaId: '123',
+        //   budget: 500,
+        //   buildingManagerId: '234',
+        //   status: AdStatus.Pending,
+        // },
       ] as Ad[],
       newDialog: false,
     };
   },
   async fetch() {
-    await Promise.resolve();
-    // this.ads = (await this.$axios.$get(this.$apiUrl.ads)).ads;
+    // await Promise.resolve();
+    this.ads = (await this.$axios.$get(this.$apiUrl.adsBdManager)).adOffers;
   },
   methods: {
     onDelete(ad: Ad) {

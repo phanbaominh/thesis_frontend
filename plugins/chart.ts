@@ -9,11 +9,12 @@ Vue.component('DonutChart', {
   },
 });
 
+// eslint-disable-next-line vue/one-component-per-file
 Vue.component('LineChart', {
   extends: Line,
   mixins: [reactiveProp],
   props: ['options'],
   mounted() {
-    (this as any).renderChart(this.chartData, this.options);
+    (this as any).renderChart((this as any).chartData, this.options);
   },
 });

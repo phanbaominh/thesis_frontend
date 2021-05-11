@@ -17,8 +17,10 @@ export default Vue.extend({
         return 'blue';
       } else if (this.status === AdStatus.Running) {
         return 'green';
-      } else {
+      } else if (this.status === AdStatus.Rejected) {
         return 'red';
+      } else {
+        return 'gray';
       }
     },
   },

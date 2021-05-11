@@ -21,7 +21,7 @@
       >
       </v-text-field>
       <v-select
-        v-model="ad.adsetId"
+        v-model="ad.adSetId"
         name="adset"
         label="Adset"
         outlined
@@ -33,7 +33,7 @@
       >
       </v-select>
       <v-select
-        v-model="ad.mediaId"
+        v-model="ad.contentId"
         name="playlist"
         label="Playlist"
         outlined
@@ -45,7 +45,7 @@
       >
       </v-select>
       <v-select
-        v-model="ad.buildingManagerId"
+        v-model="ad.bdManagerId"
         name="buildingManager"
         label="Building Manager"
         outlined
@@ -75,7 +75,7 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { Ad, Adset, Playlist, Select, User } from '~/types/types';
+import { Ad, Adset, Playlist, Select, TypeUser, User } from '~/types/types';
 
 export default Vue.extend({
   props: {
@@ -92,9 +92,9 @@ export default Vue.extend({
     return {
       ad: {
         name: '',
-        buildingManagerId: '',
-        adsetId: '',
-        mediaId: '',
+        bdManagerId: '',
+        adSetId: '',
+        contentId: '',
         budget: 0,
       } as Omit<Ad, '_id'>,
       mediaArray: [] as Select[],
@@ -103,18 +103,20 @@ export default Vue.extend({
     };
   },
   async fetch() {
-    // this.adsets = (
-    //   await this.$axios.$get(this.$apiUrl.adsets)
-    // ).adsets.map((ad: Adset) => ({ text: ad.name, value: ad._id }));
+    this.adsets = (
+      await this.$axios.$get(this.$apiUrl.adsets)
+    ).adsets.map((ad: Adset) => ({ text: ad.name, value: ad._id }));
     this.mediaArray = (
       await this.$axios.$get(this.$apiUrl.playlists)
     ).playlists.map((pl: Playlist) => ({ text: pl.name, value: pl._id }));
-    // this.buildingManagers = (
-    //   await this.$axios.$get(this.$apiUrl.buildingManagers)
-    // ).buildingManagers.map((bm: User) => ({
-    //   text: bm.username,
-    //   value: bm._id,
-    // }));
+    this.buildingManagers = (
+      await this.$axios.$get(this.$apiUrl.userTypeUser, {
+        params: { typeUser: TypeUser.BuildingManager },
+      })
+    ).users.map((bm: User) => ({
+      text: bm.username,
+      value: bm._id,
+    }));
   },
   methods: {
     onSubmit() {

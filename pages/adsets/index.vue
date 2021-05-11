@@ -29,24 +29,23 @@ export default Vue.extend({
   data() {
     return {
       adsets: [
-        {
-          _id: '123',
-          name: 'test',
-          ages: { value: [1, 2, 3], strict: true },
-          genders: { value: [10], strict: true },
-          daysOfWeek: { value: [1, 2], strict: true },
-          hoursOfDay: {
-            value: [1, 2],
-            strict: false,
-          },
-        },
+        // {
+        //   _id: '123',
+        //   name: 'test',
+        //   ages: { value: [1, 2, 3], strict: true },
+        //   genders: { value: [10], strict: true },
+        //   daysOfWeek: { value: [1, 2], strict: true },
+        //   hoursOfDay: {
+        //     value: [1, 2],
+        //     strict: false,
+        //   },
+        // },
       ] as Adset[],
       newDialog: false,
     };
   },
   async fetch() {
-    await Promise.resolve();
-    // this.adsets = (await this.$axios.$get(this.$apiUrl.adsets)).adsets;
+    this.adsets = (await this.$axios.$get(this.$apiUrl.adsets)).adsets;
   },
   methods: {
     async onNew(adset: Adset) {

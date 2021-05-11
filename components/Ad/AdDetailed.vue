@@ -10,8 +10,8 @@
       </v-list-item>
       <v-list-item>
         <span class="font-weight-bold mr-2"> Content: </span>
-        {{ ad.media.mediaArray.length }} videos
-        <BuildingAdContentPreview :content="ad.media" />
+        {{ ad.contentId.mediaArray.length }} videos
+        <BuildingAdContentPreview :content="ad.contentId" />
       </v-list-item>
     </v-card-text>
     <v-divider></v-divider>
@@ -32,25 +32,22 @@ import Vue from 'vue';
 import { AdStatus, DetailedAd, AdsetConst, AdsetGender } from '~/types/types';
 export default Vue.extend({
   props: {
-    initAd: {
+    ad: {
       type: Object,
       required: true,
     } as Vue.PropOptions<DetailedAd>,
-  },
-  data() {
-    return { ad: this.initAd };
   },
   computed: {
     overviewDesc(): { [key: string]: string } {
       return {
         Name: `${this.ad.name}`,
         Budget: `${this.ad.budget}`,
-        AdManager: `${this.ad.adManager.email}`,
-        BuildingManager: `${this.ad.buildingManager.email}`,
+        AdManager: `${this.ad.adManagerId.email}`,
+        BuildingManager: `${this.ad.bdManagerId.email}`,
       };
     },
     adsetDesc(): { [key: string]: string } {
-      const adset = this.ad.adset;
+      const adset = this.ad.adSetId;
       const ageLine = adset.ages.value
         .map((age) => AdsetConst.ranges[age])
         .join(', ');
