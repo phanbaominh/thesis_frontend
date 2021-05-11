@@ -1,10 +1,11 @@
 <template>
   <v-card>
     <v-row>
-      <v-col>
+      <v-col cols="2">
         <AnalyticsValueSelect />
       </v-col>
-      <v-col>
+      <v-spacer></v-spacer>
+      <v-col cols="2">
         <AnalyticsFrequencySelect />
       </v-col>
     </v-row>
@@ -13,10 +14,14 @@
       <LineChart
         v-if="!$fetchState.pending && !$fetchState.error"
         class="custom-chart"
-        :data="chartData"
+        :chart-data="chartData"
         :options="options"
       />
-      <AnalyticsDataTable :headers="headers" :data="tableData" />
+      <AnalyticsDataTable
+        :headers="headers"
+        :data="tableData"
+        @select="onSelect"
+      />
     </BaseFetcher>
   </v-card>
 </template>
@@ -66,6 +71,8 @@ export default Vue.extend({
       } as Chart.ChartOptions,
       updateChart: false,
       tableData: [] as any[],
+      colors: [] as string[],
+      labels: [] as string[],
     };
   },
   async fetch() {
@@ -81,15 +88,15 @@ export default Vue.extend({
     const timeEnd = this.$accessor.analytics.timeEnd;
     const diffday = timeEnd.diff(timeStart, 'day');
 
-    const { labels, colors } = this.getLabelsColors(freq, timeStart, diffday);
+    this.setLabelsColors(freq, timeStart, diffday);
     const datasets = result.map((d, i) => ({
       label: d.name,
       data: d.data,
       fill: false,
-      borderColor: colors[i],
+      borderColor: this.colors[i],
     }));
     this.chartData = {
-      labels,
+      labels: this.labels,
       datasets,
     };
     this.updateChart = !this.updateChart;
@@ -111,7 +118,7 @@ export default Vue.extend({
       const s = 255;
       return 'rgb(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ')';
     },
-    getLabelsColors(step: number, timeStart: dayjs.Dayjs, diffday: number) {
+    setLabelsColors(step: number, timeStart: dayjs.Dayjs, diffday: number) {
       const labels = [];
 
       const colors = [];
@@ -119,14 +126,29 @@ export default Vue.extend({
         labels.push(timeStart.add(i, 'day').format('YYYY/MM/DD'));
         colors.push(this.random_rgba());
       }
-      return { labels, colors };
+      this.colors = colors;
+      this.labels = labels;
     },
     getFakeData() {
       return {
         name: `dataset${Math.round(Math.random() * 100)}`,
         views: Math.random() * 1000,
         runTime: Math.random() * 50,
-        data: [...Array(365).keys()].map((val) => val + Math.random() * 100),
+        data: [...Array(365).keys()].map(
+          (val) => val + Math.round(Math.random() * 100)
+        ),
+      };
+    },
+    onSelect(datasets: any[]) {
+      console.log(datasets);
+      this.chartData = {
+        labels: this.labels,
+        datasets: datasets.map((d, i) => ({
+          label: d.name,
+          data: d.data,
+          fill: false,
+          borderColor: this.colors[i],
+        })),
       };
     },
   },

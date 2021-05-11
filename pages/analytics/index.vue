@@ -6,7 +6,7 @@
         <AnalyticsDatePicker />
       </v-col>
     </v-row>
-    <v-tabs v-model="tab">
+    <v-tabs v-model="tab" class="mb-2">
       <v-tab v-for="item in tabItems" :key="item.text">
         {{ item.text }}
       </v-tab>

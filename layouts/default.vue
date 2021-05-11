@@ -69,31 +69,31 @@ export default Vue.extend({
           disabled: false,
         },
         {
-          icon: 'mdi-home',
+          icon: 'mdi-cog',
           title: 'Adset',
           to: '/adsets',
           disabled: false,
         },
         {
-          icon: 'mdi-home',
-          title: 'Ad',
-          to: '/ads',
-          disabled: false,
-        },
-        {
-          icon: 'mdi-home',
-          title: 'Analytics',
-          to: '/analytics',
-          disabled: false,
-        },
-        {
-          icon: 'mdi-folder',
+          icon: 'mdi-folder-multiple-image',
           title: 'Ad Content',
           to:
             this.$accessor.mediaTab === 'videos'
               ? '/media/videos'
               : '/media/playlists',
           disabled: !this.$permission.canGeneralReadMedia(),
+        },
+        {
+          icon: 'mdi-billboard',
+          title: 'Ad',
+          to: '/ads',
+          disabled: false,
+        },
+        {
+          icon: 'mdi-chart-line',
+          title: 'Analytics',
+          to: '/analytics',
+          disabled: false,
         },
       ];
     },

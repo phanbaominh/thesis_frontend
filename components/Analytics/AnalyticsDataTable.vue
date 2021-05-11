@@ -27,5 +27,10 @@ export default Vue.extend({
       selected: [],
     };
   },
+  watch: {
+    selected() {
+      this.$emit('select', this.selected);
+    },
+  },
 });
 </script>
