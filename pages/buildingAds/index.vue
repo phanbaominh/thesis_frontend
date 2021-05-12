@@ -12,7 +12,11 @@
             md="4"
             lg="3"
           >
-            <BuildingAdCard :init-ad="ad" @delete="onDelete(ad)" />
+            <AdCard
+              :init-ad="ad"
+              :to="`buildingads/${ad._id}`"
+              @delete="onDelete(ad)"
+            />
           </v-col>
         </v-row>
       </template>
@@ -23,7 +27,6 @@
 import Vue from 'vue';
 import { Ad } from '~/types/types';
 export default Vue.extend({
-  auth: false,
   data() {
     return {
       ads: [

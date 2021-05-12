@@ -25,7 +25,6 @@ import Vue from 'vue';
 import { Adset } from '~/types/types';
 export default Vue.extend({
   middleware: 'checkUserIsAdManager',
-  auth: false,
   data() {
     return {
       adsets: [

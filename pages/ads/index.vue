@@ -13,7 +13,7 @@
             md="4"
             lg="3"
           >
-            <AdCard :init-ad="ad" @delete="onDelete(ad)" />
+            <AdCard :init-ad="ad" :to="`ads/${ad._id}`" @delete="onDelete" />
           </v-col>
         </v-row>
       </template>
@@ -24,7 +24,6 @@
 import Vue from 'vue';
 import { Ad } from '~/types/types';
 export default Vue.extend({
-  auth: false,
   data() {
     return {
       ads: [
@@ -47,14 +46,19 @@ export default Vue.extend({
   },
   methods: {
     async onNew(ad: Ad) {
-      try {
+      await this.$handleErrors(async () => {
         const newAd = (await this.$axios.$post(this.$apiUrl.ads, ad)).adOffer;
         this.newDialog = !this.newDialog;
         this.ads.push(newAd);
-      } catch (err) {}
+      });
+      // try {
+      //   const newAd = (await this.$axios.$post(this.$apiUrl.ads, ad)).adOffer;
+      //   this.newDialog = !this.newDialog;
+      //   this.ads.push(newAd);
+      // } catch (err) {}
     },
-    onDelete() {
-      // this.ads = this.ads.filter((a) => a._id !== ad._id);
+    onDelete(ad: Ad) {
+      this.ads = this.ads.filter((a) => a._id !== ad._id);
     },
   },
 });

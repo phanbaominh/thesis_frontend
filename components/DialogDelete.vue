@@ -1,20 +1,21 @@
 <template>
   <v-dialog v-model="dialog" max-width="350">
     <template #activator="{ on, attrs }">
-      <v-btn
-        v-bind="$attrs"
-        fab
-        depressed
-        :small="!$vuetify.breakpoint.xs"
-        :x-small="$vuetify.breakpoint.xs"
-        v-on="on"
-      >
-        <slot :on="on" :attrs="attrs"></slot>
-      </v-btn>
+      <slot :on="on" :attrs="attrs">
+        <v-btn
+          v-bind="$attrs"
+          fab
+          depressed
+          :small="!$vuetify.breakpoint.xs"
+          :x-small="$vuetify.breakpoint.xs"
+          v-on="on"
+        >
+        </v-btn>
+      </slot>
     </template>
     <v-card>
       <BaseDialogTitle @close="dialog = false">
-        <slot name="title"></slot>
+        <slot name="title">Do you want to delete this?</slot>
       </BaseDialogTitle>
       <BaseDialogActions @close="dialog = false" @confirm="onYes">
         Yes

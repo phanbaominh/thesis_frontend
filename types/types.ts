@@ -173,6 +173,9 @@ export interface Ad {
   budget: number;
   bdManagerId: string;
   status?: string;
+  timeDeploy?: Date;
+  timeStatus?: Date;
+  remainingBudget?: number;
 }
 
 export interface DetailedAd {

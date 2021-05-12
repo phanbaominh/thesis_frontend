@@ -22,7 +22,7 @@ const axiosPlugin: Plugin = ({ $axios, error: nuxtError, $toast }) => {
         message: error.message,
       });
     }
-    // return Promise.resolve(false);
+    return Promise.reject(error);
   });
 
   // $axios.onRequest((config) => {

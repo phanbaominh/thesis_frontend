@@ -39,7 +39,6 @@ export default Vue.extend({
     //   },
     //   status: AdStatus.Pending,
     // } as DetailedAd;
-    console.log(ad);
     return { ad };
   },
   data() {

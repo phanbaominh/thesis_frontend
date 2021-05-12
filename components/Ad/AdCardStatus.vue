@@ -20,7 +20,7 @@ export default Vue.extend({
       } else if (this.status === AdStatus.Rejected) {
         return 'red';
       } else {
-        return 'gray';
+        return 'grey lighten-1';
       }
     },
   },
