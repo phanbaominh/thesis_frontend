@@ -170,7 +170,7 @@ export default Vue.extend({
       ];
     },
     async onUpdatePermGroup(updatedPermGroup: PermissionGroup) {
-      try {
+      await this.$handleErrors(async () => {
         this.permGroup = (
           await this.$axios.$put(
             this.$apiUrl.permGroup(this.permGroup._id),
@@ -178,9 +178,7 @@ export default Vue.extend({
           )
         ).permGroup;
         this.$toasted.success('Successfully updated permission group!');
-      } catch {
-        // Do nothing
-      }
+      });
     },
   },
 });

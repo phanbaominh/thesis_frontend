@@ -114,23 +114,19 @@ export default Vue.extend({
   methods: {
     async onChangeName(i: number, newName: string) {
       // this.isNameDialogOpened[i] = false;
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$put(this.$apiUrl.device(this.devices[i]._id), {
           ...this.devices[i],
           name: newName,
         });
         this.devices[i].name = newName;
-      } catch {
-        // DO NOTHING
-      }
+      });
     },
     async onDelete(i: number) {
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$delete(this.$apiUrl.device(this.devices[i]._id));
         this.devices = this.devices.filter((_, index) => index !== i);
-      } catch {
-        // DO NOTHING
-      }
+      });
     },
     onNewDevice(newDevice: Device) {
       this.devices.push(newDevice);

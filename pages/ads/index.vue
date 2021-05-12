@@ -51,11 +51,6 @@ export default Vue.extend({
         this.newDialog = !this.newDialog;
         this.ads.push(newAd);
       });
-      // try {
-      //   const newAd = (await this.$axios.$post(this.$apiUrl.ads, ad)).adOffer;
-      //   this.newDialog = !this.newDialog;
-      //   this.ads.push(newAd);
-      // } catch (err) {}
     },
     onDelete(ad: Ad) {
       this.ads = this.ads.filter((a) => a._id !== ad._id);

@@ -50,14 +50,14 @@ export default Vue.extend({
   },
   methods: {
     async onDelete(ad: Ad) {
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$delete(this.$apiUrl.ad(ad._id));
         this.$emit('delete', ad);
         this.dialog = false;
-      } catch {}
+      });
     },
     // async onUpdate(adset: Adset) {
-    //   try {
+    //   await this.$handleErrors(async () => {
     //     await this.$axios.$put(this.$apiUrl.adset(this.adset._id), adset);
     //     this.updateDialog = !this.updateDialog;
     //     this.adset = adset;

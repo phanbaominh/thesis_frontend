@@ -47,23 +47,19 @@ export default Vue.extend({
   },
   methods: {
     async onNew({ name, desc }: { name: string; desc: string }) {
-      try {
+      await this.$handleErrors(async () => {
         const newPermGroup = (
           await this.$axios.$post(this.$apiUrl.permGroups, { name, desc })
         ).permGroup;
 
         this.$accessor.ADD_TO_PERM_GROUPS(newPermGroup);
-      } catch {
-        // do nothing
-      }
+      });
     },
     async onDelete(permGroup: PermissionGroup) {
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$delete(this.$apiUrl.permGroup(permGroup._id));
         this.$accessor.DELETE_FROM_PERM_GROUPS([permGroup._id]);
-      } catch {
-        // do nothing
-      }
+      });
     },
   },
 });

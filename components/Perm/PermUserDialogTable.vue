@@ -109,7 +109,7 @@ export default Vue.extend({
       zone: Select;
       permGroups: Select[];
     }) {
-      try {
+      await this.$handleErrors(async () => {
         const newPermissionRelations = (
           await this.$axios.$post(this.$apiUrl.userPermInsertMany, {
             zone: zone.value,
@@ -139,9 +139,7 @@ export default Vue.extend({
 
         // if (found) found.permissionGroups ;
         this.controlDialog = !this.controlDialog;
-      } catch (err) {
-        console.log(err);
-      }
+      });
     },
     async onUpdateZonePermissions({
       zone,
@@ -152,7 +150,7 @@ export default Vue.extend({
       newPermGroups: Select[];
       deletedPermGroups: Select[];
     }) {
-      try {
+      await this.$handleErrors(async () => {
         if (deletedPermGroups.length > 0) {
           await this.$axios.$post(this.$apiUrl.userPermDeleteMany, {
             user: this.user._id,
@@ -178,19 +176,17 @@ export default Vue.extend({
         } else {
           this.controlDialog = !this.controlDialog;
         }
-      } catch (err) {
-        console.log(err);
-      }
+      });
     },
     async onDeleteZone(deletedZone: Zone) {
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$post(this.$apiUrl.userPermDeleteZone, {
           zone: deletedZone._id,
           user: this.user._id,
         });
         const foundIndex = this.findIndexOfZone(deletedZone._id);
         if (foundIndex >= 0) this.$delete(this.zonePermGroups, foundIndex);
-      } catch {}
+      });
     },
     findIndexOfZone(zoneId: string) {
       const foundIndex = this.zonePermGroups.findIndex((zpg) => {

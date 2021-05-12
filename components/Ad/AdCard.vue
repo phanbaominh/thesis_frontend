@@ -113,25 +113,25 @@ export default Vue.extend({
   },
   methods: {
     async onCancel() {
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$put(this.$apiUrl.adStatusCancel(this.ad._id));
         this.ad.status = AdStatus.Canceled;
         this.$emit('cancel', this.ad);
         this.dialog = false;
-      } catch {}
+      });
     },
     async onDelete() {
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$delete(this.$apiUrl.ad(this.ad._id));
         this.$emit('delete', this.ad);
         this.dialog = false;
-      } catch {}
+      });
     },
     onClickCard() {
       this.$router.push({ path: this.to });
     },
     // async onUpdate(adset: Adset) {
-    //   try {
+    //   await this.$handleErrors(async () => {
     //     await this.$axios.$put(this.$apiUrl.adset(this.adset._id), adset);
     //     this.updateDialog = !this.updateDialog;
     //     this.adset = adset;

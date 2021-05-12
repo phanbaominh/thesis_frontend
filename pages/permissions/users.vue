@@ -37,12 +37,10 @@ export default Vue.extend({
       this.users.push(user);
     },
     async onDelete(user: Subuser) {
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$delete(this.$apiUrl.subuser(user._id));
         this.users = this.users.filter((u) => u._id !== user._id);
-      } catch {
-        // do nothing
-      }
+      });
     },
   },
 });

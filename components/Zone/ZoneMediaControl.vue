@@ -227,13 +227,11 @@ export default Vue.extend({
     //   }
     // },
     getInfo() {
-      try {
+      this.$handleErrors(() => {
         this.$axios.$post(this.$apiUrl.videoInfo, {
           zoneId: this.zone._id,
         });
-      } catch {
-        // DO NOTHING
-      }
+      });
     },
     setProgressInterval() {
       this.prevProgressInterval = setInterval(() => {
@@ -256,7 +254,7 @@ export default Vue.extend({
       eventName: string,
       payload?: { [key: string]: any }
     ) {
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$post(this.$apiUrl.videoControl, {
           eventName,
           payload: {
@@ -264,9 +262,7 @@ export default Vue.extend({
             ...payload,
           },
         });
-      } catch {
-        // DO NOTHING
-      }
+      });
     },
     async onVolume(endVolume: number) {
       await this.videoControlRequest('volume-video', {

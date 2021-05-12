@@ -39,7 +39,7 @@ export default Vue.extend({
   },
   methods: {
     async onCreateDevice() {
-      try {
+      await this.$handleErrors(async () => {
         const newDevice = (
           await this.$axios.$post(this.$apiUrl.devices, {
             name: this.name,
@@ -49,9 +49,7 @@ export default Vue.extend({
         ).device;
         this.$emit('newDevice', newDevice);
         this.dialog = !this.dialog;
-      } catch {
-        // DO NOTHING
-      }
+      });
     },
   },
 });

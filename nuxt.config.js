@@ -25,6 +25,7 @@ export default {
     '~/plugins/filters.ts',
     '~/plugins/axios.ts',
     '~/plugins/chart.ts',
+    '~/plugins/handleErrors.ts',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

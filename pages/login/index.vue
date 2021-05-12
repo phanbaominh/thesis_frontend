@@ -63,7 +63,7 @@ export default Vue.extend({
       //   this.$router.push('/');
       // }
       if (!(this.$refs.form as any).validate()) return;
-      try {
+      await this.$handleErrors(async () => {
         await this.$auth.loginWith('local', {
           data: this.login,
         });
@@ -71,9 +71,7 @@ export default Vue.extend({
           token: (this.$auth.strategy as any).token.get().split(' ')[1],
         });
         this.$router.push('/');
-      } catch {
-        // Do Nothing
-      }
+      });
     },
   },
 });

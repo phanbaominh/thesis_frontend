@@ -17,15 +17,13 @@ export default Vue.extend({
   layout: 'auth',
   methods: {
     async onSignUp(user: User) {
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$post(`${this.$apiUrl.user}/sign-up`, {
           ...user,
         });
         await this.$auth.loginWith('local', { data: { ...user } });
         this.$router.push('/');
-      } catch {
-        // do nothing
-      }
+      });
     },
   },
 });

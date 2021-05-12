@@ -92,18 +92,18 @@ export default Vue.extend({
   },
   methods: {
     async onDelete(adset: Adset) {
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$delete(this.$apiUrl.adset(adset._id));
         this.$emit('delete', adset);
         this.dialog = false;
-      } catch {}
+      });
     },
     async onUpdate(adset: Adset) {
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$put(this.$apiUrl.adset(this.adset._id), adset);
         this.updateDialog = !this.updateDialog;
         this.adset = adset;
-      } catch (err) {}
+      });
 
       // this.$emit('submit', { name: this.name, desc: this.desc });
     },

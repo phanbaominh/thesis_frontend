@@ -70,23 +70,19 @@ export default Vue.extend({
   },
   methods: {
     async onDelete(media: Media) {
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$delete(this.$apiUrl.video(media._id));
         this.mediaArray = this.mediaArray.filter((m) => m._id !== media._id);
-      } catch {
-        // DO NOTHING
-      }
+      });
     },
     async onConfirmDelete(deletedArray: Media[]) {
       const deletedIds = deletedArray.map((media) => media._id);
-      try {
+      await this.$handleErrors(async () => {
         for (const id of deletedIds) {
           await this.$axios.$delete(this.$apiUrl.video(id));
         }
         this.$accessor.DELETE_MEDIA_FROM_ARRAY(deletedIds);
-      } catch {
-        // DO NOTHING
-      }
+      });
     },
     // removeFile(index: number) {
     //   this.uploadedFiles = this.uploadedFiles.filter((_, i) => i !== index);

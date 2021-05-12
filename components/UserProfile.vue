@@ -30,13 +30,11 @@ export default Vue.extend({
       // this.$accessor.SET_USER(
       //   (await this.$axios.$put(this.$apiUrl.user, { user: this.user })).user
       // );
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$put(this.$apiUrl.user, { user });
         await this.$auth.fetchUser();
         this.$toast.success('Successfully update your profile');
-      } catch {
-        // DO NOTHING
-      }
+      });
     },
   },
 });

@@ -231,24 +231,23 @@ export default Vue.extend({
       this.updateNonZoneArray();
     },
     async updateZone() {
-      try {
+      await this.$handleErrors(async () => {
         this.zone = (
           await this.$axios.$put(this.$apiUrl.zone(this.zone._id), this.zone)
         ).zone;
         this.$toast.success('Sucessfully updated Zone');
-      } catch {
-        // DO NOTHING
-      }
+      });
     },
     async onUpdateName(newName: string) {
       if (newName === this.zone.name) return;
       const oldName = this.zone.name;
       this.zone.name = newName;
-      try {
-        await this.$axios.$put(this.$apiUrl.zone(this.zone._id), this.zone);
-      } catch {
-        this.zone.name = oldName;
-      }
+      await this.$handleErrors(
+        async () => {
+          await this.$axios.$put(this.$apiUrl.zone(this.zone._id), this.zone);
+        },
+        (_err) => (this.zone.name = oldName)
+      );
     },
     updateNonZoneArray(type = 'ad') {
       const captializedType = type.charAt(0).toUpperCase() + type.slice(1);
@@ -264,21 +263,19 @@ export default Vue.extend({
     },
     async onAddDevice(devices: Device[]) {
       for (const device of devices) {
-        try {
+        await this.$handleErrors(async () => {
           await this.$axios.$post(this.$apiUrl.zoneAddDevice, {
             zoneId: this.zone._id,
             deviceId: device._id,
           });
           this.zone.deviceArray.push(device);
-        } catch {
-          // DO NOTHING
-        }
+        });
       }
       this.updateNonZoneArray('device');
     },
     async onDeleteDevice(devices: Device[]) {
       for (const device of devices) {
-        try {
+        await this.$handleErrors(async () => {
           await this.$axios.$post(this.$apiUrl.zoneDeleteDevice, {
             zoneId: this.zone._id,
             deviceId: device._id,
@@ -286,9 +283,7 @@ export default Vue.extend({
           this.zone.deviceArray = this.zone.deviceArray.filter(
             (d) => d._id !== device._id
           );
-        } catch {
-          // DO NOTHING
-        }
+        });
       }
       this.updateNonZoneArray('device');
       this.$axios.$post(this.$apiUrl.videoInfo, {
@@ -297,7 +292,7 @@ export default Vue.extend({
     },
     async onPlayVideo(video: Video) {
       this.warn();
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$post(this.$apiUrl.videoControl, {
           eventName: 'play-video',
           payload: {
@@ -305,9 +300,7 @@ export default Vue.extend({
             videoId: video._id,
           },
         });
-      } catch {
-        // DO NOTHING
-      }
+      });
     },
     warn() {
       if (!this.$accessor.isSocketConnected) {
@@ -318,7 +311,7 @@ export default Vue.extend({
     },
     async onPlayPlaylist(playlist: Playlist) {
       this.warn();
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$post(this.$apiUrl.videoControl, {
           eventName: 'play-playlist-video',
           payload: {
@@ -336,9 +329,7 @@ export default Vue.extend({
             })
           ).video,
         });
-      } catch {
-        // DO NOTHING
-      }
+      });
     },
   },
 });

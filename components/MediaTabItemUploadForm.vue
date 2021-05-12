@@ -120,33 +120,32 @@ export default Vue.extend({
         bodyFormData.append('video', this.uploadedFile!);
         bodyFormData.append('duration', this.duration.toString());
         bodyFormData.append('adset', JSON.stringify(this.adset));
-        try {
-          this.isUploading = true;
-          const newVideo = (
-            await this.$axios({
-              method: 'post',
-              url: `${this.$apiUrl.videos}`,
-              data: bodyFormData,
-              headers: { 'Content-Type': 'multipart/form-data' },
-            })
-          ).data;
-          this.$accessor.ADD_MEDIA_TO_ARRAY(newVideo);
-          this.$emit('submit');
-          this.uploadedFile = null;
-          this.refresh();
-        } catch (err) {
-          console.log(err);
-          // DO NOTHING
-          this.isUploading = false;
-        }
+        await this.$handleErrors(
+          async () => {
+            this.isUploading = true;
+            const newVideo = (
+              await this.$axios({
+                method: 'post',
+                url: `${this.$apiUrl.videos}`,
+                data: bodyFormData,
+                headers: { 'Content-Type': 'multipart/form-data' },
+              })
+            ).data;
+            this.$accessor.ADD_MEDIA_TO_ARRAY(newVideo);
+            this.$emit('submit');
+            this.uploadedFile = null;
+            this.refresh();
+          },
+          (_err) => (this.isUploading = false)
+        );
       }
     },
     async onUpdate() {
-      try {
+      await this.$handleErrors(async () => {
         if (!this.media) return;
         await this.$axios.$put(this.$apiUrl.video(this.media._id), this.adset);
         this.$emit('submit');
-      } catch {}
+      });
     },
     refresh() {
       this.adset = {

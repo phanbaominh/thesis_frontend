@@ -111,7 +111,7 @@ export default Vue.extend({
       addedMediaArray.forEach((media) => this.playlistMediaArray.push(media));
     },
     async updatePlaylistWithNewMediaArray(newMediaArray: string[]) {
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$put(this.$apiUrl.playlist(this.playlist._id), {
           ...this.playlist,
           mediaArray: newMediaArray,
@@ -119,21 +119,17 @@ export default Vue.extend({
         this.playlist.mediaArray = newMediaArray;
         this.$emit('update:playlist', this.playlist);
         this.updateNonPlaylistMediaArray();
-      } catch {
-        // DO NOTHING
-      }
+      });
     },
     async updatePlaylistWithNewName(newName: string) {
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$put(this.$apiUrl.playlist(this.playlist._id), {
           ...this.playlist,
           name: newName,
         });
         this.playlist.name = newName;
         this.$emit('update:playlist', this.playlist);
-      } catch {
-        // DO NOTHING
-      }
+      });
     },
     updateNonPlaylistMediaArray() {
       this.nonPlaylistMediaArray = this.allMediaArray.filter(

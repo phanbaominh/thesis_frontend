@@ -59,10 +59,10 @@ export default Vue.extend({
   },
   methods: {
     async changeStatus(status: AdStatus) {
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$put(this.$apiUrl.adStatus(this.ad._id), { status });
         this.ad.status = status;
-      } catch (err) {}
+      });
     },
     async onAccept() {
       await this.changeStatus(AdStatus.Running);

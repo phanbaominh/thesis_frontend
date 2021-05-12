@@ -76,7 +76,7 @@ export default Vue.extend({
   },
   methods: {
     async onNew(name: string) {
-      try {
+      await this.$handleErrors(async () => {
         const newPlaylist = (
           await this.$axios.$post(this.$apiUrl.playlists, {
             name,
@@ -85,17 +85,13 @@ export default Vue.extend({
           })
         ).playlist;
         this.playlists.push(newPlaylist);
-      } catch {
-        // DO NOTHING
-      }
+      });
     },
     async onDelete(playlist: Playlist) {
-      try {
+      await this.$handleErrors(async () => {
         await this.$axios.$delete(this.$apiUrl.playlist(playlist._id));
         this.playlists = this.playlists.filter((m) => m._id !== playlist._id);
-      } catch {
-        // DO NOTHING
-      }
+      });
     },
     updatePlaylist(newPlaylist: Playlist) {
       this.playlists = this.playlists.map((playlist) =>

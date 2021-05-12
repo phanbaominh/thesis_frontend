@@ -49,7 +49,7 @@ export default Vue.extend({
   },
   methods: {
     async onCreateUser(user: User) {
-      try {
+      await this.$handleErrors(async () => {
         if (!this.$auth.user) return;
         const newSubuser = {
           ...user,
@@ -61,7 +61,7 @@ export default Vue.extend({
         this.dialog = false;
         this.$toasted.success('Successfully created new user');
         this.$emit('newUser', newUser);
-      } catch (err) {}
+      });
     },
   },
 });
