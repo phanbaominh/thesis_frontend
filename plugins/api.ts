@@ -43,6 +43,7 @@ interface ApiUrl {
   adStatus: IdToUrl;
   adStatusCancel: IdToUrl;
   adDetailed: IdToUrl;
+  analyticsAdOffer: Url;
 }
 
 declare module 'vue/types/vue' {
@@ -77,6 +78,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
   const subusersUrl = `${apiURL}/users/subusers`;
   const adsetsUrl = `${apiURL}/adsets`;
   const adsUrl = `${apiURL}/adoffers`;
+  const analyticsUrl = `${apiURL}/analytics`;
   inject('apiUrl', {
     zones: zonesUrl,
     zone: (id: string) => `${zonesUrl}/${id}`,
@@ -109,12 +111,12 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     adset: (id: string) => `${adsetsUrl}/${id}`,
     ads: adsUrl,
     adsAdManager: `${adsUrl}/ad-manager`,
-
     adsBdManager: `${adsUrl}/bd-manager`,
     ad: (id: string) => `${adsUrl}/${id}`,
     adDetailed: (id: string) => `${adsUrl}/full-infor/${id}`,
     adStatus: (id: string) => `${adsUrl}/status/${id}`,
     adStatusCancel: (id: string) => `${adsUrl}/status-cancel/${id}`,
+    analyticsAdOffer: `${analyticsUrl}/adOffer`,
   });
 };
 

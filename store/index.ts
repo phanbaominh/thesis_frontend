@@ -101,7 +101,7 @@ export const getters = getterTree(state, {
     const filterString = Object.entries(filters)
       .map(([key, value]) => `&${key}=${value}`)
       .join('');
-    return `?type=${value}&timestart=${timeStart.valueOf()}&timeend=${timeEnd.valueOf()}&frequency=${frequency}${filterString}`;
+    return `?type=${value}&timestart=${timeStart.unix()}&timeend=${timeEnd.unix()}&frequency=${frequency}${filterString}`;
   },
 });
 

@@ -1,5 +1,6 @@
 import { Plugin } from '@nuxt/types';
 import io, { Socket } from 'socket.io-client';
+
 declare module 'vue/types/vue' {
   interface Vue {
     $socket: Socket;
@@ -20,6 +21,7 @@ declare module '@nuxt/types' {
 //     $apiUrl: ApiUrl;
 //   }
 // }
+
 const socketPlugin: Plugin = (
   { $config: { WS_URL }, $toast, store, $auth },
   inject
