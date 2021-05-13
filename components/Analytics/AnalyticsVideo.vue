@@ -1,5 +1,5 @@
 <template>
-  <AnalyticsChartAndTable :headers="headers" url="#" />
+  <AnalyticsChartAndTable :headers="headers" :url="$apiUrl.analyticsAdOffer" />
 </template>
 <script lang="ts">
 import Vue from 'vue';

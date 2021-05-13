@@ -3,6 +3,7 @@ import { mutationTree, actionTree, getterTree } from 'nuxt-typed-vuex';
 import dayjs from 'dayjs';
 import {
   AnalyticsFrequency,
+  AnalyticsQueryObject,
   AnalyticsValue,
   Media,
   PermissionGroup,
@@ -25,7 +26,7 @@ export const state = () => ({
   analytics: {
     value: AnalyticsValue.Views,
     frequency: AnalyticsFrequency.Daily,
-    timeStart: dayjs().subtract(365, 'day'),
+    timeStart: dayjs().subtract(6, 'day'),
     timeEnd: dayjs(),
     filters: {},
   },
@@ -78,6 +79,9 @@ export const mutations = mutationTree(state, {
   DELETE_USER(state) {
     state.user = null;
   },
+  SET_ANALYTICS(state, analytics) {
+    state.analytics = analytics;
+  },
   SET_ANALYTICS_VALUE(state, payload) {
     state.analytics.value = payload;
   },
@@ -97,11 +101,18 @@ export const getters = getterTree(state, {
   // Type-checked
   analyticsQuery: ({
     analytics: { frequency, filters, timeEnd, timeStart, value },
-  }) => {
-    const filterString = Object.entries(filters)
-      .map(([key, value]) => `&${key}=${value}`)
-      .join('');
-    return `?type=${value}&timestart=${timeStart.unix()}&timeend=${timeEnd.unix()}&frequency=${frequency}${filterString}`;
+  }): AnalyticsQueryObject => {
+    // const filterString = Object.entries(filters)
+    //   .map(([key, value]) => `&${key}=${value}`)
+    //   .join('');
+
+    return {
+      value,
+      timeStart: timeStart.unix(),
+      frequency,
+      timeEnd: timeEnd.unix(),
+      ...filters,
+    };
   },
 });
 

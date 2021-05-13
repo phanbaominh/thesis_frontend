@@ -1,5 +1,6 @@
 <template>
   <div>
+    <BaseTest />
     <v-btn @click="onTest">Query</v-btn>
     <v-btn @click="onNewData">New Data</v-btn>
   </div>
@@ -37,7 +38,7 @@ function getFakeData() {
     ]),
     timeStamp:
       faker.date
-        .between(dayjs().subtract(30, 'd').toDate(), new Date())
+        .between(dayjs().subtract(30, 'd').toDate(), dayjs().hour(23).toDate())
         .valueOf() / 1000,
     snapshots: new Array(faker.datatype.number({ min: 1, max: 10 }))
       .fill(0)
@@ -62,7 +63,11 @@ export default Vue.extend({
     onNewData() {
       this.$socket.emit(
         'test',
-        new Array(1000).fill(0).map(() => getFakeData())
+        new Array(1000).fill(0).map(() => {
+          const fake = getFakeData();
+
+          return fake;
+        })
       );
     },
   },

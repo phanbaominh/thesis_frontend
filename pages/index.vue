@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import dayjs from 'dayjs';
+
 import UserProfile from '~/components/UserProfile.vue';
 import { Device, ZoneDeviceLog } from '~/types/types';
 export default Vue.extend({
@@ -83,7 +83,6 @@ export default Vue.extend({
     },
   },
   created() {
-    console.log(this.$auth.user);
     this.$socket.on('/receive/update/socket/disconnect', (device) => {
       this.replaceDevice(device);
     });

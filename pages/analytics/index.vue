@@ -18,10 +18,10 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
+import dayjs from 'dayjs';
 export default Vue.extend({
   layout: 'analytics',
   middleware: 'checkUserIsAdManager',
-  auth: false,
   data() {
     return {
       tab: null,
@@ -30,6 +30,17 @@ export default Vue.extend({
         { text: 'Playlists', to: 'playlists' },
       ],
     };
+  },
+  created() {
+    const { timeStart: qTimeStart, timeEnd: qTimeEnd } = this.$route.query;
+    const timeStart = dayjs(
+      Number(qTimeStart || 0) || dayjs().subtract(6, 'day')
+    );
+    const timeEnd = dayjs(Number(qTimeEnd || 0) || dayjs());
+    this.$accessor.SET_ANALYTICS_PERIOD({
+      start: timeStart,
+      end: timeEnd,
+    });
   },
 });
 </script>

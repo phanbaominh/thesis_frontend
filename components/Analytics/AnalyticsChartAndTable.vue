@@ -29,6 +29,12 @@
 import Chart from 'chart.js';
 import dayjs from 'dayjs';
 import Vue from 'vue';
+import {
+  AnalyticsData,
+  AnalyticsFrequency,
+  AnalyticsQueryObject,
+  AnalyticsValue,
+} from '~/types/types';
 
 export default Vue.extend({
   props: {
@@ -76,19 +82,19 @@ export default Vue.extend({
     };
   },
   async fetch() {
-    await Promise.resolve();
-    // const result = (await this.$axios.$get(this.url)).data;
-    const result = [this.getFakeData(), this.getFakeData()] as {
-      data: any[];
-      name: string;
-    }[];
+    const result = (
+      await this.$axios.$get(this.url, {
+        params: this.query,
+      })
+    ).data as AnalyticsData[];
     this.tableData = result;
     const freq = this.$accessor.analytics.frequency;
     const timeStart = this.$accessor.analytics.timeStart;
     const timeEnd = this.$accessor.analytics.timeEnd;
     const diffday = timeEnd.diff(timeStart, 'day');
 
-    this.setLabelsColors(freq, timeStart, diffday);
+    this.setLabels(freq, timeStart, diffday);
+    this.setColors(result.length);
     const datasets = result.map((d, i) => ({
       label: d.name,
       data: d.data,
@@ -102,14 +108,24 @@ export default Vue.extend({
     this.updateChart = !this.updateChart;
   },
   computed: {
-    query(): string {
+    query(): AnalyticsQueryObject {
       return this.$accessor.analyticsQuery;
     },
   },
   watch: {
     query() {
+      this.$router.replace({ query: this.query });
       this.$fetch();
     },
+  },
+  created() {
+    const {
+      value = AnalyticsValue.Views,
+      frequency: qFreq,
+    } = this.$route.query;
+    const frequency = qFreq ? Number(qFreq) : AnalyticsFrequency.Daily;
+    this.$accessor.SET_ANALYTICS_VALUE(value);
+    this.$accessor.SET_ANALYTICS_FREQUENCY(frequency);
   },
   methods: {
     random_rgba() {
@@ -118,29 +134,23 @@ export default Vue.extend({
       const s = 255;
       return 'rgb(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ')';
     },
-    setLabelsColors(step: number, timeStart: dayjs.Dayjs, diffday: number) {
+    setLabels(step: number, timeStart: dayjs.Dayjs, diffday: number) {
       const labels = [];
 
-      const colors = [];
       for (let i = 0; i <= diffday; i += step) {
         labels.push(timeStart.add(i, 'day').format('YYYY/MM/DD'));
+      }
+      this.labels = labels;
+    },
+    setColors(noDataset: number) {
+      if (noDataset === this.colors.length) return;
+      const colors = [];
+      for (let i = 0; i < noDataset; i++) {
         colors.push(this.random_rgba());
       }
       this.colors = colors;
-      this.labels = labels;
-    },
-    getFakeData() {
-      return {
-        name: `dataset${Math.round(Math.random() * 100)}`,
-        views: Math.random() * 1000,
-        runTime: Math.random() * 50,
-        data: [...Array(365).keys()].map(
-          (val) => val + Math.round(Math.random() * 100)
-        ),
-      };
     },
     onSelect(datasets: any[]) {
-      console.log(datasets);
       this.chartData = {
         labels: this.labels,
         datasets: datasets.map((d, i) => ({

@@ -20,7 +20,7 @@ export default Vue.extend({
   methods: {
     setDate(dist: number) {
       const end = dayjs();
-      const start = end.subtract(dist, 'day');
+      const start = end.subtract(dist - 1, 'day');
       this.$accessor.SET_ANALYTICS_PERIOD({ start, end });
       this.$emit('selected', { text: this.text });
     },

@@ -12,13 +12,10 @@
       </template>
       <v-list>
         <AnalyticsDatePickerMenuItem
-          text="Last 28 days"
-          :value="28"
-          @selected="onSelected"
-        />
-        <AnalyticsDatePickerMenuItem
-          text="Last 365 days"
-          :value="365"
+          v-for="(text, value) in diffToText"
+          :key="value"
+          :text="text"
+          :value="Number(value)"
           @selected="onSelected"
         />
         <v-list-item v-if="!isCustom" @click="isCustom = true">
@@ -42,7 +39,12 @@ export default Vue.extend({
   data() {
     return {
       dates: [] as string[],
-      selectedText: 'Last 365 days',
+      diffToText: {
+        7: 'Last 7 days',
+        28: 'Last 28 days',
+        365: 'Last 365 days',
+      } as { [key: number]: string },
+      selectedText: 'Last 7 days',
       isCustom: false,
       showMenu: false,
     };
@@ -51,6 +53,11 @@ export default Vue.extend({
     showMenu() {
       if (!this.showMenu) this.isCustom = false;
     },
+  },
+  created() {
+    const { timeStart, timeEnd } = this.$accessor.analytics;
+    const diffday = timeEnd.diff(timeStart, 'd');
+    this.selectedText = this.diffToText[diffday + 1] || 'Custom';
   },
   methods: {
     onApplyCustom() {

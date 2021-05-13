@@ -232,9 +232,24 @@ export interface Zone {
 
 export enum AnalyticsFrequency {
   Daily = 1,
-  Monthly = 365,
+  Monthly = 30,
 }
 export enum AnalyticsValue {
   Views = 'views',
   RunTime = 'runTime',
+}
+
+export interface AnalyticsData {
+  name: string;
+  views: number;
+  runTime?: number;
+  data: number[];
+}
+
+export interface AnalyticsQueryObject {
+  [key: string]: any;
+  value: AnalyticsValue;
+  timeStart: number;
+  frequency: AnalyticsFrequency;
+  timeEnd: number;
 }

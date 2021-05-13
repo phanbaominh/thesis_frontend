@@ -11,7 +11,7 @@ export default Vue.extend({
         { text: 'Views by video', value: AnalyticsValue.Views },
         { text: 'Run times by video', value: AnalyticsValue.RunTime },
       ] as Select[],
-      selectedItem: AnalyticsValue.Views,
+      selectedItem: this.$accessor.analytics.value,
     };
   },
   watch: {

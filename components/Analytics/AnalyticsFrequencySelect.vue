@@ -11,12 +11,12 @@ export default Vue.extend({
         { text: 'Daily', value: AnalyticsFrequency.Daily },
         { text: 'Monthly', value: AnalyticsFrequency.Monthly },
       ] as Select[],
-      selectedItem: AnalyticsFrequency.Monthly,
+      selectedItem: this.$accessor.analytics.frequency,
     };
   },
   watch: {
     selectedItem() {
-      this.$accessor.SET_ANALYTICS_VALUE(this.selectedItem);
+      this.$accessor.SET_ANALYTICS_FREQUENCY(this.selectedItem);
     },
   },
 });
