@@ -2,6 +2,10 @@
   <v-card>
     <v-card-title
       >Overview <AdCardStatus :status="ad.status" class="ml-2" />
+      <v-spacer></v-spacer>
+      <v-btn color="primary" nuxt :to="`/analytics/ad?adOffer=${ad._id}`">
+        <v-icon>mdi-chart-line</v-icon>Analytics
+      </v-btn>
     </v-card-title>
     <v-card-text>
       <v-list-item v-for="(value, key) in overviewDesc" :key="key">

@@ -2,7 +2,7 @@
 import Vue from 'vue';
 export default Vue.extend({
   middleware({ redirect }) {
-    redirect('analytics/ad');
+    redirect('/analytics/ad');
   },
 });
 </script>

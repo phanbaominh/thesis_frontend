@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="pa-2">
     <v-row>
       <v-col cols="2">
         <AnalyticsValueSelect :items="valueSelectItems" />
@@ -82,6 +82,7 @@ export default Vue.extend({
         },
         legend: {
           position: 'bottom',
+          onClick: () => {},
         },
       } as Chart.ChartOptions,
       updateChart: false,

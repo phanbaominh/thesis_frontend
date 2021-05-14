@@ -73,6 +73,8 @@ export default Vue.extend({
   },
   async fetch() {
     this.playlists = (await this.$axios.$get(this.$apiUrl.playlists)).playlists;
+    if (this.$accessor.allMediaArray.length === 0)
+      await this.$accessor.setAllMediaArray();
   },
   methods: {
     async onNew(name: string) {

@@ -1,5 +1,6 @@
 <template>
-  <v-select v-model="selectedItem" outlined dense :items="items"> </v-select>
+  <v-select v-model="selectedItem" outlined dense :items="items" label="Metric">
+  </v-select>
 </template>
 <script lang="ts">
 import Vue from 'vue';
