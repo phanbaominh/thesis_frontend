@@ -7,7 +7,7 @@ export default Vue.extend({
   data() {
     return {
       headers: [
-        { text: 'Video', value: 'name' },
+        { text: 'Ad', value: 'name' },
         { text: 'Views', value: 'views' },
         { text: 'Run time', value: 'runTime' },
       ],

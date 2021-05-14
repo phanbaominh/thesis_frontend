@@ -44,6 +44,9 @@ interface ApiUrl {
   adStatusCancel: IdToUrl;
   adDetailed: IdToUrl;
   analyticsAdOffer: Url;
+  analyticsBdManager: Url;
+  analyticsAge: Url;
+  analyticsGender: Url;
 }
 
 declare module 'vue/types/vue' {
@@ -117,6 +120,9 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     adStatus: (id: string) => `${adsUrl}/status/${id}`,
     adStatusCancel: (id: string) => `${adsUrl}/status-cancel/${id}`,
     analyticsAdOffer: `${analyticsUrl}/adOffer`,
+    analyticsBdManager: `${analyticsUrl}/bdManager`,
+    analyticsAge: `${analyticsUrl}/age`,
+    analyticsGender: `${analyticsUrl}/gender`,
   });
 };
 

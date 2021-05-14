@@ -2,7 +2,7 @@
   <v-card>
     <v-row>
       <v-col cols="2">
-        <AnalyticsValueSelect />
+        <AnalyticsValueSelect :items="valueSelectItems" />
       </v-col>
       <v-spacer></v-spacer>
       <v-col cols="2">
@@ -34,6 +34,7 @@ import {
   AnalyticsFrequency,
   AnalyticsQueryObject,
   AnalyticsValue,
+  Select,
 } from '~/types/types';
 
 export default Vue.extend({
@@ -45,6 +46,14 @@ export default Vue.extend({
     url: {
       type: String,
       required: true,
+    },
+    valueSelectItems: {
+      default: () =>
+        [
+          { text: 'Views by video', value: AnalyticsValue.Views },
+          { text: 'Run times by video', value: AnalyticsValue.RunTime },
+        ] as Select[],
+      type: Array,
     },
   },
   data() {
@@ -106,6 +115,8 @@ export default Vue.extend({
       datasets,
     };
     this.updateChart = !this.updateChart;
+
+    this.$router.replace({ query: this.query }).catch((_err) => {});
   },
   computed: {
     query(): AnalyticsQueryObject {
@@ -114,7 +125,6 @@ export default Vue.extend({
   },
   watch: {
     query() {
-      this.$router.replace({ query: this.query });
       this.$fetch();
     },
   },

@@ -42,7 +42,7 @@
       <UserMenu />
     </v-app-bar>
     <v-main class="blue lighten-5">
-      <v-container class="main-container pt-8">
+      <v-container fluid class="main-container pt-8">
         <nuxt />
       </v-container>
     </v-main>

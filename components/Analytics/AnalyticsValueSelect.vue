@@ -3,14 +3,16 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { AnalyticsValue, Select } from '~/types/types';
+import { Select } from '~/types/types';
 export default Vue.extend({
+  props: {
+    items: {
+      required: true,
+      type: Array,
+    } as Vue.PropOptions<Select[]>,
+  },
   data() {
     return {
-      items: [
-        { text: 'Views by video', value: AnalyticsValue.Views },
-        { text: 'Run times by video', value: AnalyticsValue.RunTime },
-      ] as Select[],
       selectedItem: this.$accessor.analytics.value,
     };
   },
