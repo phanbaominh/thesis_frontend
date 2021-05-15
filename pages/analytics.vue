@@ -38,6 +38,9 @@ export default Vue.extend({
       key: 'cool',
     };
   },
+  head: {
+    meta: [{ hid: 'viewport', name: 'viewport', content: 'width=1080' }],
+  },
   mounted() {
     this.key += this.key;
     this.$nextTick(() => this.$forceUpdate());

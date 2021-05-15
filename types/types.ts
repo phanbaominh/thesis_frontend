@@ -246,6 +246,7 @@ export interface AnalyticsData {
   data: number[];
 }
 
+export type AnalyticsDataHeader = Exclude<keyof AnalyticsData, 'name' | 'data'>;
 export interface AnalyticsQueryObject {
   [key: string]: any;
   value: AnalyticsValue;
