@@ -9,6 +9,20 @@
 import Vue from 'vue';
 import dayjs from 'dayjs';
 import faker from 'faker';
+import testData from '~/test';
+// zoneId: faker.helpers.randomize([
+//       '609a730836443d14a2362202',
+//       '609a758036443d14a236220a',
+//     ]),
+//     videoId: faker.helpers.randomize([
+//       '609a755836443d14a2362208',
+//       '609b66ec3fbba93e9e0cce7f',
+//     ]),
+//     adOfferId: faker.helpers.randomize([
+//       '609b67033fbba93e9e0cce81',
+//       '609b6212a24d2734798b6508',
+//       '609b5d76a24d2734798b6507',
+//     ]),
 function getFakeSnapshot() {
   const nof = faker.datatype.number({ max: 10, min: 3 });
   return {
@@ -23,19 +37,9 @@ function getFakeSnapshot() {
 }
 function getFakeData() {
   return {
-    zoneId: faker.helpers.randomize([
-      '609a730836443d14a2362202',
-      '609a758036443d14a236220a',
-    ]),
-    videoId: faker.helpers.randomize([
-      '609a755836443d14a2362208',
-      '609b66ec3fbba93e9e0cce7f',
-    ]),
-    adOfferId: faker.helpers.randomize([
-      '609b67033fbba93e9e0cce81',
-      '609b6212a24d2734798b6508',
-      '609b5d76a24d2734798b6507',
-    ]),
+    zoneId: faker.helpers.randomize(testData.zoneIds),
+    videoId: faker.helpers.randomize(testData.videoIds),
+    adOfferId: faker.helpers.randomize(testData.adOfferIds),
     timeStamp:
       faker.date
         .between(dayjs().subtract(30, 'd').toDate(), dayjs().hour(23).toDate())

@@ -58,7 +58,7 @@ typings/
 
 # dotenv environment variables file
 .env
-
+.env1
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 
@@ -88,3 +88,4 @@ sw.*
 
 # Vim swap files
 *.swp
+test.json
