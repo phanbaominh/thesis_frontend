@@ -104,6 +104,7 @@
 import Vue from 'vue';
 import {
   Ad,
+  AdStatus,
   Device,
   Permission,
   Playlist,
@@ -145,9 +146,8 @@ export default Vue.extend({
     };
   },
   async fetch() {
-    this.allAdArray = (
-      await this.$axios.$get(this.$apiUrl.adsBdManager)
-    ).adOffers;
+    this.allAdArray = ((await this.$axios.$get(this.$apiUrl.adsBdManager))
+      .adOffers as Ad[]).filter((ad) => ad.status === AdStatus.Running);
     this.allDeviceArray = (
       await this.$axios.$get(this.$apiUrl.devices)
     ).devices.filter((device: Device) => device.zoneId === null);
