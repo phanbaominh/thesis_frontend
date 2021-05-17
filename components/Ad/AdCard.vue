@@ -26,7 +26,7 @@
         </template>
       </AdForm> -->
 
-      <DialogDelete v-if="!isDeletable" @delete="onCancel">
+      <DialogDelete v-if="!isDeletable && !isBd" @delete="onCancel">
         <template #title>Do you want to cancel this?</template>
         <template #default="{ on: on2, attrs: attrs2 }">
           <v-btn
@@ -42,7 +42,7 @@
           </v-btn>
         </template>
       </DialogDelete>
-      <DialogDelete v-else @delete="onDelete">
+      <DialogDelete v-else-if="isDeletable" @delete="onDelete">
         <template #default="{ on: on2, attrs: attrs2 }">
           <v-btn
             color="error"
@@ -84,6 +84,10 @@ export default Vue.extend({
     to: {
       required: true,
       type: String,
+    },
+    isBd: {
+      default: false,
+      type: Boolean,
     },
   },
   data() {

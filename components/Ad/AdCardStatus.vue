@@ -15,7 +15,7 @@ export default Vue.extend({
     color() {
       if (this.status === AdStatus.Pending) {
         return 'blue';
-      } else if (this.status === AdStatus.Running) {
+      } else if (this.status === AdStatus.Deployed) {
         return 'green';
       } else if (this.status === AdStatus.Rejected) {
         return 'red';

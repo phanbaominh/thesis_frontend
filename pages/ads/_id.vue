@@ -1,5 +1,11 @@
 <template>
-  <AdDetailed :ad="ad" />
+  <AdDetailed :ad="ad">
+    <template #top-right>
+      <v-btn color="primary" nuxt :to="`/analytics/ad?adOffer=${ad._id}`">
+        <v-icon>mdi-chart-line</v-icon>Analytics
+      </v-btn>
+    </template>
+  </AdDetailed>
 </template>
 <script lang="ts">
 import Vue from 'vue';

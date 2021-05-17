@@ -161,7 +161,7 @@ export enum AdsetGender {
 }
 export enum AdStatus {
   Pending = 'pending',
-  Running = 'running',
+  Deployed = 'deployed',
   Rejected = 'rejected',
   Canceled = 'canceled',
 }
@@ -253,4 +253,18 @@ export interface AnalyticsQueryObject {
   timeStart: number;
   frequency: AnalyticsFrequency;
   timeEnd: number;
+}
+
+export enum NotiType {
+  Info = 'info',
+  Success = 'success',
+  Warn = 'warn',
+}
+export interface AppNotification {
+  _id: string;
+  text: string;
+  type: NotiType;
+  isRead: boolean;
+  cTime: Date;
+  link: string;
 }

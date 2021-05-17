@@ -65,7 +65,7 @@ export default Vue.extend({
       });
     },
     async onAccept() {
-      await this.changeStatus(AdStatus.Running);
+      await this.changeStatus(AdStatus.Deployed);
     },
     async onReject() {
       await this.changeStatus(AdStatus.Rejected);

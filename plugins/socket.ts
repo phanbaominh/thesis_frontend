@@ -40,7 +40,7 @@ const socketPlugin: Plugin = (
         token: ($auth.strategy as any).token.get().split(' ')[1],
       });
     }
-    $toast.success('Socket connection to server has been established');
+    // $toast.success('Socket connection to server has been established');
   });
   socket.on('disconnect', () => {
     store.commit('CHANGE_SOCKET_STATUS', false);

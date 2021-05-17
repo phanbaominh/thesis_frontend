@@ -39,7 +39,8 @@
       </v-btn>
       <v-toolbar-title class="text-h5">Project Name</v-toolbar-title>
       <v-spacer></v-spacer>
-      <UserMenu />
+      <UserMenu class="mr-2" />
+      <NotificationMenu />
     </v-app-bar>
     <v-main class="blue lighten-5">
       <v-container fluid class="main-container pt-8">

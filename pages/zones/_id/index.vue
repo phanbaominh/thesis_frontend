@@ -147,7 +147,7 @@ export default Vue.extend({
   },
   async fetch() {
     this.allAdArray = ((await this.$axios.$get(this.$apiUrl.adsBdManager))
-      .adOffers as Ad[]).filter((ad) => ad.status === AdStatus.Running);
+      .adOffers as Ad[]).filter((ad) => ad.status === AdStatus.Deployed);
     this.allDeviceArray = (
       await this.$axios.$get(this.$apiUrl.devices)
     ).devices.filter((device: Device) => device.zoneId === null);

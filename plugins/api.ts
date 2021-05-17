@@ -21,6 +21,7 @@ interface ApiUrl {
   device: IdToUrl;
   user: Url;
   userTypeUser: Url;
+  userNotification: Url;
   buildingManagers: Url;
   permGroups: Url;
   permGroup: IdToUrl;
@@ -79,7 +80,8 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
   const deviceUrl = `${apiURL}/devices`;
   const permGroupUrl = `${apiURL}/perm-groups`;
   const userPermUrl = `${apiURL}/user-perms`;
-  const subusersUrl = `${apiURL}/users/subusers`;
+  const usersUrl = `${apiURL}/users`;
+  const subusersUrl = `${usersUrl}/subusers`;
   const adsetsUrl = `${apiURL}/adsets`;
   const adsUrl = `${apiURL}/adoffers`;
   const analyticsUrl = `${apiURL}/analytics`;
@@ -97,8 +99,9 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     videoArray: `${videoUrl}/get-many`,
     devices: deviceUrl,
     device: (id: string) => `${deviceUrl}/${id}`,
-    user: `${apiURL}/users`,
-    userTypeUser: `${apiURL}/users/type-user`,
+    user: `${usersUrl}`,
+    userTypeUser: `${usersUrl}/type-user`,
+    userNotification: `${usersUrl}/notifications`,
     permGroups: permGroupUrl,
     permGroup: (id: string) => `${permGroupUrl}/${id}`,
     userPerms: userPermUrl,
