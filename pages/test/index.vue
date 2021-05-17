@@ -3,6 +3,8 @@
     <BaseTest />
     <v-btn @click="onTest">Query</v-btn>
     <v-btn @click="onNewData">New Data</v-btn>
+    <input v-model="text" type="text" />
+    <v-btn @click="onNewNoti">New noti</v-btn>
   </div>
 </template>
 <script lang="ts">
@@ -50,6 +52,11 @@ function getFakeData() {
   };
 }
 export default Vue.extend({
+  data() {
+    return {
+      text: 'Testing Noti',
+    };
+  },
   methods: {
     async onTest() {
       const result = (
@@ -73,6 +80,11 @@ export default Vue.extend({
           return fake;
         })
       );
+    },
+    async onNewNoti() {
+      await this.$axios.$post(this.$apiUrl.userNotification, {
+        text: this.text,
+      });
     },
   },
 });

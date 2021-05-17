@@ -13,6 +13,7 @@
             lg="3"
           >
             <AdCard
+              is-bd
               :init-ad="ad"
               :to="`buildingads/${ad._id}`"
               @delete="onDelete(ad)"

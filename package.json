@@ -22,7 +22,8 @@
     "nuxt": "^2.14.12",
     "nuxt-typed-vuex": "^0.1.22",
     "socket.io-client": "^4.0.1",
-    "vue-chartjs": "^3.5.1"
+    "vue-chartjs": "^3.5.1",
+    "vue-markdown": "^2.2.4"
   },
   "devDependencies": {
     "@nuxt/types": "^2.14.12",
@@ -32,6 +33,7 @@
     "@nuxtjs/stylelint-module": "^4.0.0",
     "@nuxtjs/vuetify": "^1.11.3",
     "@types/faker": "^5.5.5",
+    "@types/vue-markdown": "^2.2.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.18.0",
     "eslint-config-prettier": "^7.2.0",

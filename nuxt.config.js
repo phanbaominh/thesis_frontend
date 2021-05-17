@@ -126,4 +126,8 @@ export default {
   router: {
     middleware: ['auth'],
   },
+  loading: {
+    color: 'royalblue',
+    height: '3px',
+  },
 };

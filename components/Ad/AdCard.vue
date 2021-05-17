@@ -26,7 +26,10 @@
         </template>
       </AdForm> -->
 
-      <DialogDelete v-if="!isDeletable && !isBd" @delete="onCancel">
+      <DialogDelete
+        v-if="isDeployed || (!isDeletable && !isBd)"
+        @delete="onCancel"
+      >
         <template #title>Do you want to cancel this?</template>
         <template #default="{ on: on2, attrs: attrs2 }">
           <v-btn
@@ -103,6 +106,9 @@ export default Vue.extend({
         this.ad.status === AdStatus.Canceled ||
         this.ad.status === AdStatus.Rejected
       );
+    },
+    isDeployed(): boolean {
+      return this.ad.status === AdStatus.Deployed;
     },
     adDesc(): { [key: string]: any } {
       const statusKey = `Time when ${this.ad.status}`;

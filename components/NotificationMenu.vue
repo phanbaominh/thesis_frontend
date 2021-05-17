@@ -25,7 +25,21 @@
       <v-list class="noti-list">
         <div v-for="(noti, i) in notifications" :key="noti._id">
           <v-card class="pa-2" flat nuxt :to="noti.link" :tabindex="i + 2">
-            <div class="text-subtitle-1">{{ noti.text }}</div>
+            <v-row no-gutters>
+              <v-col class="mr-2">
+                <v-icon :color="getNotiColor(noti.type)" small>
+                  mdi-circle</v-icon
+                >
+              </v-col>
+              <v-col>
+                <VueMarkdown
+                  :title="noti.text"
+                  :source="getTruncatedNotiText(noti.text)"
+                  class="noti-content"
+                >
+                </VueMarkdown>
+              </v-col>
+            </v-row>
             <span class="text-caption">{{ getDateSubtitle(noti.cTime) }}</span>
           </v-card>
           <v-divider></v-divider>
@@ -38,9 +52,12 @@
 import Vue from 'vue';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { AppNotification } from '~/types/types';
+import VueMarkdownx from 'vue-markdown/src/VueMarkdown';
+import { AppNotification, NotiType } from '~/types/types';
+const VueMarkdown = VueMarkdownx as any;
 dayjs.extend(relativeTime);
 export default Vue.extend({
+  components: { VueMarkdown },
   data() {
     return {
       notifications: [] as AppNotification[],
@@ -56,16 +73,38 @@ export default Vue.extend({
       (noti) => !noti.isRead
     ).length;
   },
+  created() {
+    this.$socket.on('notification', (newNoti) => {
+      this.notifications.unshift(newNoti);
+      this.notReadCount += 1;
+    });
+  },
+  beforeDestroy() {
+    this.$socket.off('notification');
+  },
   methods: {
+    getTruncatedNotiText(text: string) {
+      return this.$truncate(text, 70);
+    },
     async onMenu() {
       if (this.notReadCount === 0) return;
       await this.$handleErrors(async () => {
         await this.$axios.$put(this.$apiUrl.userNotification, { isRead: true });
         this.notReadCount = 0;
+        this.$nuxt.$loading.finish();
       });
     },
     getDateSubtitle(date: Date) {
       return dayjs(date).fromNow();
+    },
+    getNotiColor(type: NotiType) {
+      if (type === NotiType.Info) {
+        return 'blue';
+      } else if (type === NotiType.Warn) {
+        return 'red';
+      } else if (type === NotiType.Success) {
+        return 'green';
+      }
     },
   },
 });
@@ -75,5 +114,10 @@ export default Vue.extend({
   height: 600px;
   overflow-y: auto;
   overflow-x: hidden;
+}
+.noti-content {
+  width: 300px;
+  display: inline-block;
+  word-wrap: break-word;
 }
 </style>
