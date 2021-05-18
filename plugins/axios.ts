@@ -7,7 +7,6 @@ const axiosPlugin: Plugin = ({ $axios, error: nuxtError, $toast }) => {
   //   else isAuthRequest = false;
   // });
   $axios.onError((error) => {
-    console.log('error:', { ...error });
     $toast.error(
       'Error: ' +
         (error.response?.data.message?.message ||

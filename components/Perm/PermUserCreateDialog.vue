@@ -23,7 +23,7 @@
       </slot>
     </template>
     <v-card>
-      <UserForm @submit="onCreateUser">
+      <UserForm :default-user-type="defaultUserType" @submit="onCreateUser">
         <template #title
           ><BaseDialogTitle @close="dialog = false">
             Create User
@@ -40,11 +40,12 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { User } from '~/types/types';
+import { TypeUser, User } from '~/types/types';
 export default Vue.extend({
   data() {
     return {
       dialog: false,
+      defaultUserType: TypeUser.BuildingManager,
     };
   },
   methods: {

@@ -25,6 +25,7 @@
         :rules="emailRules"
       ></v-text-field>
       <v-text-field
+        v-if="!initUser"
         v-model="user.password"
         name="password"
         label="Password"
@@ -34,6 +35,7 @@
         :rules="passRules"
       ></v-text-field>
       <v-text-field
+        v-if="!initUser"
         v-model="repeatPass"
         name="Repeat password"
         label="Repeat password"
@@ -50,6 +52,7 @@
         outlined
         dense
         :items="typeUsers"
+        :disabled="!!defaultUserType"
         :rules="[(v) => !!v || 'User type is required']"
       ></v-select>
       <slot name="append"></slot>
@@ -76,11 +79,15 @@ export default Vue.extend({
       default: false,
       type: Boolean,
     },
+    defaultUserType: {
+      default: null,
+      type: String,
+    } as PropOptions<string | null>,
   },
   data() {
     return {
       user: {
-        typeUser: '',
+        typeUser: this.defaultUserType ? this.defaultUserType : '',
         username: '',
         password: '',
         email: '',

@@ -112,7 +112,7 @@ export default Vue.extend({
     return {
       dialog: false,
       tab: 0,
-      tabItems: ['Media', 'Device', 'Zone', 'Permission'],
+      tabItems: ['Ad', 'Device', 'Zone', 'Permission'],
       permTabItems: [] as PermissionTabItem[],
       permGroup: this.initPermGroup,
       isAdmin: this.initPermGroup.name === 'admin',
@@ -133,10 +133,10 @@ export default Vue.extend({
       }
     },
     setMediaPermItems() {
-      const mediaPermTabItem: PermissionTabItem = {
-        ReadMedia: false,
-        WriteMedia: false,
-        DeleteMedia: false,
+      const adPermTabItem: PermissionTabItem = {
+        ReadAd: false,
+        WriteAd: false,
+        DeleteAd: false,
       };
       const devicePermTabItem: PermissionTabItem = {
         ReadDevice: false,
@@ -156,14 +156,14 @@ export default Vue.extend({
       };
       this.permGroup.permissions.forEach((perm) => {
         const permName = Permission[perm] as PermissionName;
-        this.addKeyToTabItem(permName, mediaPermTabItem);
+        this.addKeyToTabItem(permName, adPermTabItem);
         this.addKeyToTabItem(permName, devicePermTabItem);
         this.addKeyToTabItem(permName, zonePermTabItem);
         this.addKeyToTabItem(permName, permPermTabItem);
       });
       this.$accessor.SET_PERMS(this.permGroup.permissions);
       this.permTabItems = [
-        mediaPermTabItem,
+        adPermTabItem,
         devicePermTabItem,
         zonePermTabItem,
         permPermTabItem,

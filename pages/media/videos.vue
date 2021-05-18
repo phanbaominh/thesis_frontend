@@ -7,7 +7,7 @@
       :compact="false"
       :fullscreen="$vuetify.breakpoint.smAndDown"
       :hide-overlay="$vuetify.breakpoint.smAndDown"
-      :delete-perm="$permission.canGeneralDeleteMedia()"
+      :delete-perm="$permission.canGeneralDeleteAd()"
       @confirm="onConfirmDelete"
     >
       <template #actions="{ media }">
@@ -19,7 +19,7 @@
         </v-list-item-action>
       </template>
       <v-dialog
-        v-if="$permission.canGeneralWriteMedia()"
+        v-if="$permission.canGeneralWriteAd()"
         v-model="isUploadDialog"
         width="500"
         scrollable

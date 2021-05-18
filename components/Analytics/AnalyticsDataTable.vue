@@ -48,7 +48,7 @@ export default Vue.extend({
   },
   methods: {
     getTotals(key: AnalyticsDataHeader) {
-      return this.data.map((d) => d[key]!).reduce((acc, ele) => acc + ele);
+      return this.data.map((d) => d[key]!).reduce((acc, ele) => acc + ele, 0);
     },
   },
 });

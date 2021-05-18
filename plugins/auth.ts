@@ -14,9 +14,9 @@ const ZonePermissions = [
 ];
 
 const MediaPermissions = [
-  Permission.ReadMedia,
-  Permission.WriteMedia,
-  Permission.DeleteMedia,
+  Permission.ReadAd,
+  Permission.WriteAd,
+  Permission.DeleteAd,
 ];
 
 const PermPermissions = [
@@ -47,9 +47,9 @@ interface PermissionPlugin {
   canGeneralReadDevice: canFunction;
   canGeneralWriteZone: canFunction;
   canGeneralReadZone: canFunction;
-  canGeneralReadMedia: canFunction;
-  canGeneralWriteMedia: canFunction;
-  canGeneralDeleteMedia: canFunction;
+  canGeneralReadAd: canFunction;
+  canGeneralWriteAd: canFunction;
+  canGeneralDeleteAd: canFunction;
   isAdmin: canFunction;
 }
 declare module 'vue/types/vue' {
@@ -151,15 +151,15 @@ const socketPlugin: Plugin = ({ $toast, $auth }, inject) => {
     return check(ZonePermissions);
   };
 
-  const canGeneralReadMedia = () => {
+  const canGeneralReadAd = () => {
     return check(MediaPermissions);
   };
 
-  const canGeneralWriteMedia = () => {
+  const canGeneralWriteAd = () => {
     return check(MediaPermissions);
   };
 
-  const canGeneralDeleteMedia = () => {
+  const canGeneralDeleteAd = () => {
     return check(MediaPermissions);
   };
 
@@ -172,9 +172,9 @@ const socketPlugin: Plugin = ({ $toast, $auth }, inject) => {
     canGeneralReadDevice,
     canGeneralReadZone,
     canGeneralWriteZone,
-    canGeneralReadMedia,
-    canGeneralWriteMedia,
-    canGeneralDeleteMedia,
+    canGeneralReadAd,
+    canGeneralWriteAd,
+    canGeneralDeleteAd,
   } as PermissionPlugin);
 };
 export default socketPlugin;

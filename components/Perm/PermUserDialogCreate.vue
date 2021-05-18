@@ -89,10 +89,12 @@ export default Vue.extend({
   },
   computed: {
     allPermGroups(): Select[] {
-      return this.$accessor.allPermGroups.map((pg: PermissionGroup) => ({
-        text: pg.name,
-        value: pg._id,
-      }));
+      return this.$accessor.allPermGroups
+        .map((pg: PermissionGroup) => ({
+          text: pg.name,
+          value: pg._id,
+        }))
+        .filter((pg) => pg.text !== 'admin');
     },
   },
   watch: {

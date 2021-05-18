@@ -73,15 +73,15 @@
         />
       </v-col>
       <v-spacer></v-spacer>
-      <v-col v-if="canReadMedia" cols="12" lg="6">
+      <v-col v-if="canReadAd" cols="12" lg="6">
         <v-card outlined>
           <MediaAddDelete
             :media-array="zone.adArray"
             :all-media-array="nonZoneAdArray"
             type="Ads"
             compact
-            :add-perm="canWriteMedia"
-            :delete-perm="canDeleteMedia"
+            :add-perm="canWriteAd"
+            :delete-perm="canDeleteAd"
             @add="onAdd"
             @delete="onDelete"
           >
@@ -169,7 +169,7 @@ export default Vue.extend({
         })
       );
     },
-    canReadMedia(): Boolean {
+    canReadAd(): Boolean {
       return (
         this.canGeneralReadZone ||
         this.$permission.check(this.$permission.MediaPermissions, {
@@ -177,14 +177,14 @@ export default Vue.extend({
         })
       );
     },
-    canWriteMedia(): Boolean {
+    canWriteAd(): Boolean {
       return (
         this.canGeneralWriteZone ||
-        this.$permission.check(Permission.WriteMedia, { zoneId: this.zone._id })
+        this.$permission.check(Permission.WriteAd, { zoneId: this.zone._id })
       );
     },
-    canDeleteMedia(): Boolean {
-      return this.$permission.check(Permission.DeleteMedia, {
+    canDeleteAd(): Boolean {
+      return this.$permission.check(Permission.DeleteAd, {
         zoneId: this.zone._id,
       });
     },
@@ -210,7 +210,7 @@ export default Vue.extend({
       );
     },
     canWriteZone(): Boolean {
-      return this.canGeneralWriteZone || this.canWriteMedia;
+      return this.canGeneralWriteZone || this.canWriteAd;
     },
   },
   beforeDestroy() {

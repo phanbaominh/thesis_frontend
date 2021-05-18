@@ -44,7 +44,7 @@ const socketPlugin: Plugin = (
   });
   socket.on('disconnect', () => {
     store.commit('CHANGE_SOCKET_STATUS', false);
-    $toast.error('Socket connection to server has terminated');
+    console.warn('Socket connection to server has terminated');
   });
 
   socket.on('/receive/update/socket/disconnect', (device) => {

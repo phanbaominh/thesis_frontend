@@ -68,9 +68,9 @@ export interface Subuser extends User {
 }
 
 export enum Permission {
-  ReadMedia = 1,
-  WriteMedia,
-  DeleteMedia,
+  ReadAd = 1,
+  WriteAd,
+  DeleteAd,
   ReadDevice,
   WriteDevice,
   DeleteDevice,

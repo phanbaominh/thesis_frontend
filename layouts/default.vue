@@ -37,7 +37,7 @@
       >
         <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
       </v-btn>
-      <v-toolbar-title class="text-h5">Project Name</v-toolbar-title>
+      <v-toolbar-title class="text-h5">TVC Manager</v-toolbar-title>
       <v-spacer></v-spacer>
       <UserMenu class="mr-2" />
       <NotificationMenu />
@@ -79,10 +79,10 @@ export default Vue.extend({
           icon: 'mdi-folder-multiple-image',
           title: 'Ad Content',
           to:
-            this.$accessor.mediaTab === 'videos'
-              ? '/media/videos'
-              : '/media/playlists',
-          disabled: !this.$permission.canGeneralReadMedia(),
+            this.$accessor.mediaTab === 'playlists'
+              ? '/media/playlists'
+              : '/media/videos',
+          disabled: false,
         },
         {
           icon: 'mdi-billboard',
@@ -121,14 +121,15 @@ export default Vue.extend({
           icon: 'mdi-select-group',
           title: 'Ads',
           to: '/buildingads',
+          disabled: !this.$permission.canGeneralReadAd(),
         },
         {
           icon: 'mdi-account-key',
           title: 'Permissions',
           to:
-            this.$accessor.permTab === 'groups'
-              ? '/permissions/groups'
-              : '/permissions/users',
+            this.$accessor.permTab === 'users'
+              ? '/permissions/users'
+              : '/permissions/groups',
           disabled: !this.$permission.check(this.$permission.PermPermissions, {
             isToasting: false,
           }),

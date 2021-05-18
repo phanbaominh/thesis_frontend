@@ -30,6 +30,7 @@ export default Vue.extend({
     };
   },
   async fetch() {
+    await this.$accessor.setAllPermGroups();
     this.users = (await this.$axios.$get(this.$apiUrl.subusers)).subusers;
   },
   methods: {

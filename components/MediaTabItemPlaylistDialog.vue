@@ -14,7 +14,7 @@
           </a>
           <v-spacer></v-spacer>
           <DialogDelete
-            v-if="$permission.canGeneralDeleteMedia()"
+            v-if="$permission.canGeneralDeleteAd()"
             color="error"
             @delete="$emit('delete')"
           >
@@ -27,7 +27,7 @@
       <BaseDialogTitle @close="dialog = false">
         <span class="mr-2">{{ $truncate(playlist.name) }}</span>
         <DialogName
-          v-if="canGeneralWriteMedia"
+          v-if="canGeneralWriteAd"
           :init-name="playlist.name"
           title="Change playlist name:"
           icon="pencil"
@@ -40,8 +40,8 @@
             :media-array="playlistMediaArray"
             :all-media-array="nonPlaylistMediaArray"
             type="Media"
-            :add-perm="canGeneralWriteMedia"
-            :delete-perm="canGeneralWriteMedia"
+            :add-perm="canGeneralWriteAd"
+            :delete-perm="canGeneralWriteAd"
             @add="onConfirmAdd"
             @delete="onConfirmDelete"
           />
@@ -80,8 +80,8 @@ export default Vue.extend({
     allMediaArray() {
       return this.$accessor.allMediaArray;
     },
-    canGeneralWriteMedia() {
-      return this.$permission.canGeneralWriteMedia();
+    canGeneralWriteAd() {
+      return this.$permission.canGeneralWriteAd();
     },
   },
   watch: {
