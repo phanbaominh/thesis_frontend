@@ -15,7 +15,7 @@ import { TypeUser } from '~/types/types';
 export default Vue.extend({
   head() {
     return {
-      meta: this.isAdManager
+      meta: (this as any).isAdManager
         ? [{ hid: 'viewport', name: 'viewport', content: 'width=1080' }]
         : [],
     };
