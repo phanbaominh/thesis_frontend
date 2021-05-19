@@ -71,7 +71,7 @@ export default Vue.extend({
         genders: { value: 0, strict: false },
         ...this.media?.adSetId,
       },
-      ages: AdsetConst.ranges.map((range, i) => ({
+      ages: AdsetConst.ages.map((range, i) => ({
         value: i,
         text: range,
       })) as Select[],

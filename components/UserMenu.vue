@@ -12,6 +12,16 @@
         </div>
       </template>
       <v-list>
+        <v-list-item v-if="$vuetify.breakpoint.xs" dense>
+          <!-- <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon> -->
+          <v-list-item-content>
+            <v-list-item-title class="font-weight-regular">
+              Username: {{ $auth.user ? $auth.user.username : 'None' }}
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
         <v-list-item to="/" nuxt dense>
           <!-- <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>

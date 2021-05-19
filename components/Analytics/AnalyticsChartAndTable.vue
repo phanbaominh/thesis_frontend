@@ -50,8 +50,8 @@ export default Vue.extend({
     valueSelectItems: {
       default: () =>
         [
-          { text: 'Views by video', value: AnalyticsValue.Views },
-          { text: 'Run times by video', value: AnalyticsValue.RunTime },
+          { text: 'Views by ad', value: AnalyticsValue.Views },
+          { text: 'Run times by ad', value: AnalyticsValue.RunTime },
         ] as Select[],
       type: Array,
     },

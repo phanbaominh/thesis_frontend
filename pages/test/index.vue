@@ -46,7 +46,7 @@ function getFakeData() {
       faker.date
         .between(dayjs().subtract(30, 'd').toDate(), dayjs().hour(23).toDate())
         .valueOf() / 1000,
-    snapshots: new Array(faker.datatype.number({ min: 1, max: 10 }))
+    snapshots: new Array(faker.datatype.number({ min: 1, max: 20 }))
       .fill(0)
       .map(() => getFakeSnapshot()),
   };

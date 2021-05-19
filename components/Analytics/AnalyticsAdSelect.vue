@@ -7,7 +7,7 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { Ad, Select } from '~/types/types';
+import { Ad, AdStatus, Select } from '~/types/types';
 export default Vue.extend({
   data() {
     return {
@@ -16,8 +16,8 @@ export default Vue.extend({
     };
   },
   async fetch() {
-    const ads = (await this.$axios.$get(this.$apiUrl.adsAdManager))
-      .adOffers as Ad[];
+    const ads = ((await this.$axios.$get(this.$apiUrl.adsAdManager))
+      .adOffers as Ad[]).filter((ad) => ad.status === AdStatus.Deployed);
     this.items.push({ text: 'All', value: 'all' });
     ads.forEach((ad) => this.items.push({ text: ad.name, value: ad._id }));
   },

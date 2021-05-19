@@ -133,7 +133,7 @@ export interface Adset {
   hoursOfDay: AdsetItem<number[]>;
 }
 export const AdsetConst = {
-  ranges: [
+  ages: [
     '0-2',
     '3-9',
     '10-19',

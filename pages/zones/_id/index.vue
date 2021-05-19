@@ -12,7 +12,17 @@
           icon="pencil"
           @updateName="onUpdateName"
         />
-
+        <v-btn
+          depressed
+          fab
+          color="blue"
+          class="align-self-center mr-2"
+          :small="!$vuetify.breakpoint.xs"
+          :x-small="$vuetify.breakpoint.xs"
+          @click="onPlayZone"
+        >
+          <v-icon> mdi-play </v-icon>
+        </v-btn>
         <v-spacer></v-spacer>
         <v-dialog
           v-if="canReadDevice"
@@ -328,6 +338,16 @@ export default Vue.extend({
               },
             })
           ).video,
+        });
+      });
+    },
+    async onPlayZone() {
+      await this.$handleErrors(async () => {
+        await this.$axios.$post(this.$apiUrl.videoControl, {
+          eventName: 'play-video-auto',
+          payload: {
+            zoneId: this.zone._id,
+          },
         });
       });
     },

@@ -37,7 +37,7 @@
       >
         <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
       </v-btn>
-      <v-toolbar-title class="text-h5">TVC Manager</v-toolbar-title>
+      <v-toolbar-title class="text-h5--sm">TVC Manager</v-toolbar-title>
       <v-spacer></v-spacer>
       <UserMenu class="mr-2" />
       <NotificationMenu />

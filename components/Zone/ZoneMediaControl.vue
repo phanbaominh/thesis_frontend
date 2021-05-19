@@ -28,14 +28,14 @@
         <v-btn fab x-small depressed :disabled="!controlPerm" @click="onPause">
           <v-icon> mdi-{{ zoneInfo.isPause ? 'play' : 'pause' }} </v-icon>
         </v-btn>
-        <v-btn fab x-small depressed :disabled="!controlPerm" @click="onLoop">
+        <!-- <v-btn fab x-small depressed :disabled="!controlPerm" @click="onLoop">
           <svg fill="none" height="24" viewBox="0 0 24 24" width="24">
             <path
               d="M7 7H17V10L21 6L17 2V5H5V11H7V7ZM17 17H7V14L3 18L7 22V19H19V13H17V17Z"
               :fill="loopColor"
             ></path>
           </svg>
-        </v-btn>
+        </v-btn> -->
       </v-container>
     </v-row>
     <v-divider class="mt-4"></v-divider>
@@ -116,8 +116,10 @@ export default Vue.extend({
         return `Playing from playlist ${playlistName}...`;
       } else if (this.zoneInfo.videoId) {
         return `Playing video...`;
+      } else if (this.zone.adArray.length === 0) {
+        return `Please add ads to zone`;
       }
-      return 'Select media to play';
+      return 'Click play to start playing ads in zone';
     },
     timestamp(): string {
       return `${this.time(this.progress)}/${this.time(

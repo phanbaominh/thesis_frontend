@@ -110,7 +110,7 @@ export default Vue.extend({
     },
   },
   created() {
-    AdsetConst.ranges.forEach((range, i) =>
+    AdsetConst.ages.forEach((range, i) =>
       this.ages.push({ value: i, text: range })
     );
   },

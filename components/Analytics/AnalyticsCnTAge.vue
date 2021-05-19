@@ -15,9 +15,7 @@ export default Vue.extend({
         { text: 'Age group', value: 'name' },
         { text: 'Views', value: 'views' },
       ],
-      valueSelectItems: [
-        { text: 'Views by video', value: AnalyticsValue.Views },
-      ],
+      valueSelectItems: [{ text: 'Views by ad', value: AnalyticsValue.Views }],
     };
   },
 });

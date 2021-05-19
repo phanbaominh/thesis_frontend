@@ -13,9 +13,18 @@
 import Vue from 'vue';
 import { TypeUser } from '~/types/types';
 export default Vue.extend({
+  head() {
+    return {
+      meta: this.isAdManager
+        ? [{ hid: 'viewport', name: 'viewport', content: 'width=1080' }]
+        : [],
+    };
+  },
   computed: {
-    isAdManager() {
-      return this.$auth.user && this.$auth.user.typeUser === TypeUser.AdManager;
+    isAdManager(): boolean {
+      return !!(
+        this.$auth.user && this.$auth.user.typeUser === TypeUser.AdManager
+      );
     },
   },
 });

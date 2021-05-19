@@ -42,18 +42,14 @@
 
     <v-divider></v-divider>
     <v-card-text>
-      <v-list-item v-for="(value, key) in adsetDesc" :key="key">
-        <span class="font-weight-bold">{{ key + ':' }}</span>
-
-        {{ ` ${value || 'None'}` }}
-      </v-list-item>
+      <AdsetDesc :ad-set="adset" />
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
-import { Adset, AdsetConst, AdsetGender } from '~/types/types';
+import { Adset } from '~/types/types';
 export default Vue.extend({
   props: {
     initAdset: {
@@ -67,28 +63,6 @@ export default Vue.extend({
       updateDialog: false,
       adset: this.initAdset,
     };
-  },
-  computed: {
-    adsetDesc(): { [key: string]: string } {
-      const ageLine = this.adset.ages.value
-        .map((age) => AdsetConst.ranges[age])
-        .join(', ');
-      const dowLine = this.adset.daysOfWeek.value
-        .map((dow) => AdsetConst.dows[dow])
-        .join(', ');
-      const hodLine = this.adset.hoursOfDay.value
-        .map((hod) => AdsetConst.hods[hod])
-        .join(', ');
-      const genderLine = this.adset.genders.value
-        .map((g) => (g === AdsetGender.Male ? 'Male' : 'Female'))
-        .join(',');
-      return {
-        Ages: ageLine,
-        Gender: genderLine,
-        DoW: dowLine,
-        HoD: hodLine,
-      };
-    },
   },
   methods: {
     async onDelete(adset: Adset) {
