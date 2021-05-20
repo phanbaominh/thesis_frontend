@@ -1,6 +1,11 @@
 <template>
   <div>
-    <GmapAutocomplete @place_changed="setPlace" />
+    <GmapAutocomplete
+      :options="{
+        fields: ['geometry', 'formatted_address', 'address_components'],
+      }"
+      @place_changed="setPlace"
+    />
     <button @click="addMarker">Add</button>
     <GmapMap :center="center" :zoom="12" style="width: 100%; height: 400px"
       ><GmapMarker
@@ -17,13 +22,13 @@ export default Vue.extend({
   data() {
     return {
       center: { lat: 45.508, lng: -73.587 },
-      currentPlace: null,
-      markers: [],
-      places: [],
+      currentPlace: null as any,
+      markers: [] as any[],
+      places: [] as any[],
     };
   },
   methods: {
-    setPlace(place) {
+    setPlace(place: any) {
       this.currentPlace = place;
     },
     addMarker() {
