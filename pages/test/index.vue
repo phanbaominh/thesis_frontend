@@ -1,10 +1,13 @@
 <template>
   <div>
-    <BaseTest />
-    <v-btn @click="onTest">Query</v-btn>
-    <v-btn @click="onNewData">New Data</v-btn>
-    <input v-model="text" type="text" />
-    <v-btn @click="onNewNoti">New noti</v-btn>
+    <div>
+      <BaseTest />
+      <v-btn @click="onTest">Query</v-btn>
+      <v-btn @click="onNewData">New Data</v-btn>
+      <input v-model="text" type="text" />
+      <v-btn @click="onNewNoti">New noti</v-btn>
+    </div>
+    <BuildingPlaceMap />
   </div>
 </template>
 <script lang="ts">

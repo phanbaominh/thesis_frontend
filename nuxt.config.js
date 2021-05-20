@@ -30,6 +30,7 @@ export default {
     '~/plugins/axios.ts',
     '~/plugins/chart.ts',
     '~/plugins/handleErrors.ts',
+    '~/plugins/map.ts',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -108,6 +109,9 @@ export default {
   publicRuntimeConfig: {
     WS_URL: process.env.WS_URL || 'http://localhost:3000',
     apiURL: process.env.API_URL || 'http://localhost:3000/api',
+  },
+  env: {
+    MAP_API_KEY: process.env.MAP_API_KEY,
   },
   server: {
     port: process.env.PORT || 8000,
