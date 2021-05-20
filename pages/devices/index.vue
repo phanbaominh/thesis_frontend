@@ -3,7 +3,7 @@
     <template #pending>
       <span> Fetching devices...</span>
     </template>
-    <DataIterator type="Devices" :init-items="devices">
+    <DataIterator type="Devices" :init-items="formattedDevices">
       <DeviceCreateDialog
         v-if="canGeneralWriteDevice"
         @newDevice="onNewDevice"
@@ -92,6 +92,7 @@ export default Vue.extend({
   data() {
     return {
       devices: [] as Device[],
+
       // isNameDialogOpened: [] as Boolean[],
     };
   },
@@ -100,7 +101,7 @@ export default Vue.extend({
   },
   computed: {
     filteredKeys(): string[] {
-      return Object.keys(this.devices[0]).filter(
+      return Object.keys(this.formattedDevices[0]).filter(
         (key) => key !== 'name' && key[0] !== '_'
       );
     },
@@ -109,6 +110,13 @@ export default Vue.extend({
     },
     canGeneralDeleteDevice(): boolean {
       return this.$permission.check(Permission.DeleteDevice);
+    },
+    formattedDevices(): { 'Serial number': string; Zone: string }[] {
+      return this.devices.map((dev) => ({
+        name: dev.name,
+        'Serial number': dev.serialNumber,
+        Zone: dev.zoneId?.name || 'None',
+      }));
     },
   },
   methods: {

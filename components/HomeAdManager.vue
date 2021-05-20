@@ -187,7 +187,7 @@ export default Vue.extend({
       const labels = [];
 
       for (let i = 0; i <= diffday; i += step) {
-        labels.push(timeStart.add(i, 'day').format('YYYY/MM/DD'));
+        labels.push(timeStart.add(i, 'day').format('DD/MM/YYYY'));
       }
       this.labels = labels;
     },

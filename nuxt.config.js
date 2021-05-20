@@ -31,6 +31,7 @@ export default {
     '~/plugins/chart.ts',
     '~/plugins/handleErrors.ts',
     '~/plugins/map.ts',
+    '~/plugins/utils.ts',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

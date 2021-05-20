@@ -76,7 +76,6 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
-import dayjs from 'dayjs';
 import { Ad, AdStatus } from '~/types/types';
 export default Vue.extend({
   props: {
@@ -114,10 +113,8 @@ export default Vue.extend({
       const statusKey = `Time when ${this.ad.status}`;
       return {
         'Remaining budget': this.ad.remainingBudget,
-        'Creation time': dayjs(this.ad.timeDeploy).format(
-          'YYYY/MM/DD -- HH:MM'
-        ),
-        [statusKey]: dayjs(this.ad.timeStatus).format('YYYY/MM/DD -- HH:MM'),
+        'Creation time': this.$utils.timeFormat(this.ad.timeDeploy),
+        [statusKey]: this.$utils.timeFormat(this.ad.timeStatus),
       };
     },
   },

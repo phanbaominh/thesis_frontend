@@ -47,8 +47,9 @@ export interface Device {
   _id: string;
   name: string;
   serialNumber: string;
-  zoneId: string | null;
+  zoneId: { _id: string; name: string } | null;
   status: boolean;
+  timeStatusChange: string;
 }
 export enum TypeUser {
   BuildingManager = 'bdManager',
@@ -173,8 +174,8 @@ export interface Ad {
   budget: number;
   bdManagerId: string;
   status?: string;
-  timeDeploy?: Date;
-  timeStatus?: Date;
+  timeDeploy?: string;
+  timeStatus?: string;
   remainingBudget?: number;
 }
 
@@ -210,11 +211,16 @@ export interface ZoneInfo {
   zoneId: string;
   isScheduleRunning: boolean;
   scheduleId: string;
+  mediaName: string;
+  timeStart: number;
+  adName: string;
 }
 
 export interface ZoneDeviceLog {
   name: string;
   mediaName: string | null;
+  adName: string;
+  timeStart: string;
 }
 
 export interface Zone {
@@ -265,6 +271,6 @@ export interface AppNotification {
   text: string;
   type: NotiType;
   isRead: boolean;
-  cTime: Date;
+  cTime: string;
   link: string;
 }

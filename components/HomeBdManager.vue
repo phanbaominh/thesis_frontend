@@ -17,8 +17,12 @@
               </div>
             </template>
 
-            <template #item.zoneId="{ item }">
-              {{ item.zoneId || 'None' }}
+            <template #item.zone="{ item }">
+              {{ item.zoneId.name || 'None' }}
+            </template>
+
+            <template #item.timeStatusChange="{ item }">
+              {{ $utils.timeFormat(item.timeStatusChange) }}
             </template>
           </v-data-table>
         </BaseFetcher>
@@ -44,8 +48,9 @@ export default Vue.extend({
       devices: [] as Device[],
       headers: [
         { text: 'Device Name', value: 'name' },
-        { text: 'Zone Id', value: 'zoneId' },
+        { text: 'Zone', value: 'zone' },
         { text: 'Status', value: 'status' },
+        { text: 'Time status change', value: 'timeStatusChange' },
       ],
       devicesLog: [] as ZoneDeviceLog[],
       chartData: {},

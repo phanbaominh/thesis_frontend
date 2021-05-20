@@ -12,7 +12,7 @@
           icon="pencil"
           @updateName="onUpdateName"
         />
-        <v-btn
+        <!-- <v-btn
           depressed
           fab
           color="blue"
@@ -22,7 +22,7 @@
           @click="onPlayZone"
         >
           <v-icon> mdi-play </v-icon>
-        </v-btn>
+        </v-btn> -->
         <v-spacer></v-spacer>
         <v-dialog
           v-if="canReadDevice"

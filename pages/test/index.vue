@@ -6,8 +6,9 @@
       <v-btn @click="onNewData">New Data</v-btn>
       <input v-model="text" type="text" />
       <v-btn @click="onNewNoti">New noti</v-btn>
+      <v-btn @click="onNewDevice">New device</v-btn>
     </div>
-    <BuildingPlaceMap />
+    <!-- <BuildingPlaceMap /> -->
   </div>
 </template>
 <script lang="ts">
@@ -45,6 +46,7 @@ function getFakeData() {
     zoneId: faker.helpers.randomize(testData.zoneIds),
     videoId: faker.helpers.randomize(testData.videoIds),
     adOfferId: faker.helpers.randomize(testData.adOfferIds),
+    deviceId: faker.helpers.randomize(testData.deviceIds),
     timeStamp:
       faker.date
         .between(dayjs().subtract(30, 'd').toDate(), dayjs().hour(23).toDate())
@@ -77,7 +79,7 @@ export default Vue.extend({
     onNewData() {
       this.$socket.emit(
         'test',
-        new Array(1000).fill(0).map(() => {
+        new Array(800).fill(0).map(() => {
           const fake = getFakeData();
 
           return fake;
@@ -87,6 +89,12 @@ export default Vue.extend({
     async onNewNoti() {
       await this.$axios.$post(this.$apiUrl.userNotification, {
         text: this.text,
+      });
+    },
+    async onNewDevice() {
+      await this.$axios.$post(`${this.$apiUrl.devices}/insert-new`, {
+        name: faker.name.firstName(),
+        serialNumber: faker.datatype.string(),
       });
     },
   },

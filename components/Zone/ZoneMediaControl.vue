@@ -20,9 +20,10 @@
       :max="zoneInfo.durationFull"
       :messages="timestamp"
       class="mt-n2 px-2"
-      :disabled="!controlPerm"
+      disabled
       @end="onProgress"
     ></v-slider>
+    <!-- :disabled="!controlPerm" -->
     <v-row>
       <v-container class="d-flex justify-center mt-2">
         <v-btn fab x-small depressed :disabled="!controlPerm" @click="onPause">
@@ -103,7 +104,9 @@ export default Vue.extend({
   },
   computed: {
     mediaName(): string {
-      return this.video ? this.$truncate(this.video.name) : 'Media Name';
+      return this.zoneInfo.mediaName
+        ? this.$truncate(this.zoneInfo.mediaName)
+        : 'Media Name';
     },
     subtitle(): string {
       if (this.zoneInfo.isPause) {
@@ -278,7 +281,7 @@ export default Vue.extend({
       });
     },
     async onPause() {
-      const event = this.zoneInfo.isPause ? 'unpause-video' : 'pause-video';
+      const event = this.zoneInfo.isPause ? 'play-video-auto' : 'pause-video';
       this.zoneInfo.isPause
         ? this.setProgressInterval()
         : this.clearProgressInterval();
