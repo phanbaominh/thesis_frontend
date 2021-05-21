@@ -47,10 +47,8 @@
 </template>
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
-import BaseButtonToolbar from './BaseButtonToolbar.vue';
 import { Nameable } from '~/types/types';
 export default Vue.extend({
-  components: { BaseButtonToolbar },
   props: {
     mediaArray: {
       required: true,

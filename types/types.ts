@@ -115,7 +115,7 @@ export interface SubuserPermissionGroup {
   user: { _id: string; username: string };
   permissionGroups: { _id: string; name: string; relationId: string }[];
 }
-export type Select = { text: string; value: any };
+export type Select = { text: string; value: any; [key: string]: any };
 
 export interface PermissionRelation {
   _id: string;
@@ -172,6 +172,7 @@ export interface Ad {
   adSetId: string;
   contentId: string;
   budget: number;
+  zoneIds: string[];
   bdManagerId: string;
   status?: string;
   timeDeploy?: string;

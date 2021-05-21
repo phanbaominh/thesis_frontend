@@ -2,9 +2,7 @@
   <v-container>
     <v-card class="pa-4">
       <v-card-title>
-        <v-btn small class="mr-2" color="white" depressed @click="onBack">
-          <v-icon>mdi-arrow-left</v-icon>
-        </v-btn>
+        <BaseBackButton @click="onBack"> </BaseBackButton>
         Create a zone
       </v-card-title>
       <v-form

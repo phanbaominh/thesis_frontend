@@ -13,6 +13,7 @@ interface ApiUrl {
   zoneLogs: IdToUrl;
   playlists: Url;
   playlist: IdToUrl;
+  playlistPreview: IdToUrl;
   videos: Url;
   video: IdToUrl;
   videoArray: Url;
@@ -42,7 +43,6 @@ interface ApiUrl {
   adsAdManager: Url;
   adsBdManager: Url;
   ad: IdToUrl;
-  adMediaPreview: IdToUrl;
   adStatus: IdToUrl;
   adStatusCancel: IdToUrl;
   adDetailed: IdToUrl;
@@ -51,6 +51,7 @@ interface ApiUrl {
   analyticsBdManager: Url;
   analyticsAge: Url;
   analyticsGender: Url;
+  bdManagerZoneInfo: IdToUrl;
 }
 
 declare module 'vue/types/vue' {
@@ -123,7 +124,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     adsAdManager: `${adsUrl}/ad-manager`,
     adsBdManager: `${adsUrl}/bd-manager`,
     ad: (id: string) => `${adsUrl}/${id}`,
-    adMediaPreview: (id: string) => `${adsUrl}/${id}/media-preview`,
+    playlistPreview: (id: string) => `${playlistUrl}/${id}/preview`,
     adDetailed: (id: string) => `${adsUrl}/full-infor/${id}`,
     adStatus: (id: string) => `${adsUrl}/status/${id}`,
     adStatusCancel: (id: string) => `${adsUrl}/status-cancel/${id}`,
@@ -132,6 +133,8 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     analyticsBdManager: `${analyticsUrl}/bdManager`,
     analyticsAge: `${analyticsUrl}/age`,
     analyticsGender: `${analyticsUrl}/gender`,
+    bdManagerZoneInfo: (id: string) =>
+      `${usersUrl}/bd-managers/${id}/zone-info`,
   });
 };
 

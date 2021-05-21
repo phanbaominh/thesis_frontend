@@ -6,12 +6,15 @@ const axiosPlugin: Plugin = ({ $axios, error: nuxtError, $toast }) => {
   //   if (config.url?.startsWith($apiUrl.user)) isAuthRequest = true;
   //   else isAuthRequest = false;
   // });
+  function isString(thing: any) {
+    return thing && typeof thing === 'string';
+  }
   $axios.onError((error) => {
     $toast.error(
       'Error: ' +
-        (error.response?.data.message?.message ||
-          error.response?.data.message ||
-          error.message ||
+        (isString(error.response?.data.message?.message) ||
+          isString(error.response?.data.message) ||
+          isString(error.message) ||
           'Server failed to response')
     );
 

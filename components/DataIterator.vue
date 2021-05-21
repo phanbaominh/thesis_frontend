@@ -105,11 +105,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import BaseButton from './BaseButton.vue';
 // let testArray = new Array(10).fill(0);
 // testArray = testArray.map((_n, i) => ({ title: `Video${i}` }));
 export default Vue.extend({
-  components: { BaseButton },
   props: {
     initItems: {
       required: true,

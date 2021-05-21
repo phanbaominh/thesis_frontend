@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog">
+  <v-dialog v-model="dialog" width="500">
     <template #activator="{ on, attrs }">
       <v-btn color="primary" x-small fab depressed v-bind="attrs" v-on="on">
         <v-icon>mdi-map</v-icon>
@@ -7,7 +7,7 @@
     </template>
     <v-card>
       <BaseDialogTitle @close="dialog = false"> Zone location </BaseDialogTitle>
-      <GmapMap
+      <!-- <GmapMap
         :center="center"
         :zoom="20"
         :options="{ gestureHandling: 'none', zoomControl: false }"
@@ -15,7 +15,7 @@
         class="mt-2"
       >
         <GmapMarker :position="center" />
-      </GmapMap>
+      </GmapMap> -->
     </v-card>
   </v-dialog>
 </template>

@@ -8,15 +8,15 @@
     <template #activator="{ on, attrs }">
       <v-btn
         class="ml-2"
-        fab
         dark
         depressed
         color="blue"
         v-bind="attrs"
-        x-small
+        small
         v-on="on"
       >
-        <v-icon>mdi-eye</v-icon>
+        <v-icon left>mdi-eye</v-icon>
+        Preview
       </v-btn>
     </template>
     <v-card class="px-2">
@@ -61,13 +61,13 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { DetailedAd, Media } from '~/types/types';
+import { Media, Playlist } from '~/types/types';
 export default Vue.extend({
   props: {
-    ad: {
+    content: {
       type: Object,
       required: true,
-    } as Vue.PropOptions<DetailedAd>,
+    } as Vue.PropOptions<Playlist>,
   },
   data() {
     return {
@@ -77,8 +77,8 @@ export default Vue.extend({
   },
   async fetch() {
     this.playlistMediaArray = (
-      await this.$axios.$get(this.$apiUrl.adMediaPreview(this.ad._id), {
-        params: { videoIds: this.ad.contentId.mediaArray },
+      await this.$axios.$get(this.$apiUrl.playlistPreview(this.content._id), {
+        params: { videoIds: this.content.mediaArray },
       })
     ).videos;
   },

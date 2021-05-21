@@ -1,77 +1,88 @@
 <template>
-  <BaseDialogForm
-    title="Create an ad:"
-    :action="`${$apiUrl}/permissions`"
-    :control-dialog="dialog"
-    v-bind="$attrs"
-    @submit="onSubmit"
-  >
-    <template #activator="{ on, attrs }">
-      <slot name="activator" :on="on" :attrs="attrs"></slot>
-    </template>
-    <BaseFetcher :fetch-state="$fetchState">
-      <template #pending>Fetching adsets, media...</template>
-      <v-text-field
-        v-model="ad.name"
-        name="name"
-        label="Name"
-        outlined
-        dense
-        :rules="[(v) => !!v || 'Name is required']"
-      >
-      </v-text-field>
-      <v-select
-        v-model="ad.adSetId"
-        name="adset"
-        label="Adset"
-        outlined
-        dense
-        :items="adsets"
-        hint="Pick an adset"
-        persistent-hint
-        :rules="[(v) => !!v || 'Adset is required']"
-      >
-      </v-select>
-      <v-select
-        v-model="ad.contentId"
-        name="playlist"
-        label="Playlist"
-        outlined
-        dense
-        :items="mediaArray"
-        hint="Pick a playlist"
-        persistent-hint
-        :rules="[(v) => !!v || 'Playlist is required']"
-      >
-      </v-select>
-      <v-select
-        v-model="ad.bdManagerId"
-        name="buildingManager"
-        label="Building Manager"
-        outlined
-        dense
-        :items="buildingManagers"
-        hint="Pick a building manager"
-        persistent-hint
-        :rules="[(v) => !!v || 'Building manager is required']"
-      >
-      </v-select>
-      <v-text-field
-        v-model="ad.budget"
-        name="budget"
-        label="Budget"
-        outlined
-        dense
-        type="number"
-        persistent-hint
-        hint="Pick a budget"
-        :rules="[
-          (v) => !!v || 'Budget is required',
-          (v) => (v && v >= 0) || 'Budget has to be larger than 0',
-        ]"
-      />
-    </BaseFetcher>
-  </BaseDialogForm>
+  <v-container>
+    <v-card class="pa-4">
+      <v-card-title>
+        <BaseBackButton @click="onBack"> </BaseBackButton>
+        Create an ad
+      </v-card-title>
+      <BaseFetcher :fetch-state="$fetchState">
+        <template #pending>Fetching adsets, media...</template>
+        <v-form
+          ref="form"
+          v-model="valid"
+          :action="$apiUrl.ads"
+          method="post"
+          @submit.prevent="onSubmit"
+        >
+          <v-text-field
+            v-model="ad.name"
+            name="name"
+            label="Name"
+            outlined
+            dense
+            :rules="[(v) => !!v || 'Name is required']"
+          >
+          </v-text-field>
+          <v-select
+            v-model="ad.adSetId"
+            name="adset"
+            label="Adset"
+            outlined
+            dense
+            :items="adsets"
+            :rules="[(v) => !!v || 'Adset is required']"
+          >
+          </v-select>
+          <AdFormAdsetInfo v-if="ad.adSetId" :adset-id="ad.adSetId" />
+          <v-row>
+            <v-col>
+              <v-select
+                v-model="ad.contentId"
+                name="playlist"
+                label="Playlist"
+                outlined
+                dense
+                :items="mediaArray"
+                :rules="[(v) => !!v || 'Playlist is required']"
+              >
+              </v-select>
+            </v-col>
+            <v-col v-if="ad.contentId">
+              <AdFormPlaylistInfo :playlist-id="ad.contentId" class="mt-2"
+            /></v-col>
+          </v-row>
+          <v-select
+            v-model="ad.bdManagerId"
+            name="buildingManager"
+            label="Building Manager"
+            outlined
+            dense
+            :items="buildingManagers"
+            :rules="[(v) => !!v || 'Building manager is required']"
+          >
+          </v-select>
+          <AdFormBdManagerInfo
+            v-if="ad.bdManagerId"
+            :bd-manager-id="ad.bdManagerId"
+            :zone-ids.sync="ad.zoneIds"
+          />
+          <v-text-field
+            v-model="ad.budget"
+            name="budget"
+            label="Budget"
+            outlined
+            dense
+            type="number"
+            :rules="[
+              (v) => !!v || 'Budget is required',
+              (v) => (v && v >= 0) || 'Budget has to be larger than 0',
+            ]"
+          />
+          <BaseSubmitActions> Create </BaseSubmitActions>
+        </v-form>
+      </BaseFetcher>
+    </v-card>
+  </v-container>
 </template>
 <script lang="ts">
 import Vue from 'vue';
@@ -83,10 +94,6 @@ export default Vue.extend({
       default: null,
       type: Object,
     } as Vue.PropOptions<Adset | null>,
-    dialog: {
-      required: true,
-      type: Boolean,
-    },
   },
   data() {
     return {
@@ -96,7 +103,9 @@ export default Vue.extend({
         adSetId: '',
         contentId: '',
         budget: 0,
+        zoneIds: [],
       } as Omit<Ad, '_id'>,
+      valid: false,
       mediaArray: [] as Select[],
       adsets: [] as Select[],
       buildingManagers: [] as Select[],
@@ -119,8 +128,16 @@ export default Vue.extend({
     }));
   },
   methods: {
-    onSubmit() {
-      this.$emit('submit', this.ad);
+    async onSubmit() {
+      if (!(this.$refs.form as any).validate()) return;
+      await this.$handleErrors(async () => {
+        const newAd = (await this.$axios.$post(this.$apiUrl.ads, this.ad))
+          .adOffer as Ad;
+        this.$router.push(`/ads/${newAd._id}`);
+      });
+    },
+    onBack() {
+      this.$router.push('/ads');
     },
   },
 });
