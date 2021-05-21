@@ -7,7 +7,8 @@ const axiosPlugin: Plugin = ({ $axios, error: nuxtError, $toast }) => {
   //   else isAuthRequest = false;
   // });
   function isString(thing: any) {
-    return thing && typeof thing === 'string';
+    if (thing && typeof thing === 'string') return thing;
+    return null;
   }
   $axios.onError((error) => {
     $toast.error(

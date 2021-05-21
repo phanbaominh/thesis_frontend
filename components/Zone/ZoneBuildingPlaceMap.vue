@@ -51,13 +51,19 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+    initMarker: {
+      type: Object,
+      default: null,
+    },
   },
   data() {
     return {
-      center: { lat: 45.508, lng: -73.587 },
+      center: { lat: 0, lng: 0 },
       currentPlace: null as any,
-      zoomLevel: 12,
-      marker: null as { lat: number; lng: number } | null,
+      zoomLevel: this.initMarker ? 20 : 12,
+      marker: this.initMarker
+        ? ({ ...this.initMarker } as { lat: number; lng: number })
+        : null,
     };
   },
   computed: {
@@ -73,7 +79,8 @@ export default Vue.extend({
     },
   },
   mounted() {
-    this.geolocate();
+    if (!this.initMarker) this.geolocate();
+    else this.center = { ...this.initMarker };
   },
   methods: {
     setPlace(place: any) {

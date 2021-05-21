@@ -23,6 +23,7 @@
         <ZoneBuildingPlaceMap
           class="mb-2"
           :error-messages="errorMessages"
+          :init-marker="zone.location"
           @setMarker="onSetMarker"
         >
         </ZoneBuildingPlaceMap>
@@ -46,7 +47,9 @@
             (v) => (v && v >= 0) || 'Price per second has to be larger than 0',
           ]"
         ></v-text-field>
-        <BaseSubmitActions> Create </BaseSubmitActions>
+        <BaseSubmitActions>
+          {{ initZone ? 'Update' : 'Create' }}
+        </BaseSubmitActions>
       </v-form>
     </v-card>
   </v-container>
@@ -55,7 +58,12 @@
 import Vue from 'vue';
 import { Zone } from '~/types/types';
 export default Vue.extend({
-  props: {},
+  props: {
+    initZone: {
+      type: Object,
+      default: null,
+    },
+  },
   data() {
     return {
       valid: false,
@@ -64,6 +72,7 @@ export default Vue.extend({
         location: null as { lat: number; lng: number } | null,
         locationDesc: '',
         pricePerTimePeriod: 0,
+        ...this.initZone,
       } as Zone,
       errorMessages: '',
     };
@@ -76,9 +85,15 @@ export default Vue.extend({
         return;
       }
       await this.$handleErrors(async () => {
-        const newZone = (
-          await this.$axios.$post(this.$apiUrl.zones, { ...this.zone })
-        ).zone as Zone;
+        const newZone = this.initZone
+          ? ((
+              await this.$axios.$put(
+                this.$apiUrl.zone(this.initZone._id),
+                this.zone
+              )
+            ).zone as Zone)
+          : ((await this.$axios.$post(this.$apiUrl.zones, this.zone))
+              .zone as Zone);
         this.$router.push(`/zones/${newZone._id}`);
       });
     },

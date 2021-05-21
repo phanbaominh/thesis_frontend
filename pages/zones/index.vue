@@ -37,9 +37,17 @@
                   zone.name
                 }}</nuxt-link>
                 <v-spacer></v-spacer>
-                <!-- <v-btn class="mr-2" color="primary" x-small fab depressed>
+                <v-btn
+                  class="mr-2"
+                  color="primary"
+                  x-small
+                  fab
+                  depressed
+                  nuxt
+                  :to="`/zones/${zone._id}/edit`"
+                >
                   <v-icon>mdi-pencil</v-icon>
-                </v-btn> -->
+                </v-btn>
                 <DialogDelete
                   v-if="canGeneralDeleteZone()"
                   v-slot="{ on, attrs }"
@@ -58,26 +66,7 @@
                 </DialogDelete>
               </v-card-title>
               <v-divider></v-divider>
-              <!-- <v-container class="d-flex flex-column">
-                <v-icon x-large color="primary" class="align-self-center">
-                  mdi-monitor
-                </v-icon>
-              </v-container> -->
-              <v-list>
-                <v-list-item v-for="(value, key) in zoneDesc(zone)" :key="key">
-                  <v-list-item-title>
-                    <span class="font-weight-bold mr-1">{{ key + ':' }}</span>
-                    {{ `${value}` }}
-                  </v-list-item-title>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-title>
-                    <span class="font-weight-bold mr-1">Location:</span>
-                    {{ `${zone.locationDesc}` }}
-                    <ZoneMapDialog class="ml-2" :location="zone.location" />
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list>
+              <ZoneDesc :zone="zone" />
             </v-card>
           </v-col>
         </v-row>
@@ -114,11 +103,6 @@ export default Vue.extend({
     }
   },
   methods: {
-    zoneDesc(zone: Zone): { [key: string]: string } {
-      return {
-        'Price per second': zone.pricePerTimePeriod.toString(),
-      };
-    },
     async onNewZone(name: string) {
       await this.$handleErrors(async () => {
         const newZone = (await this.$axios.$post(this.$apiUrl.zones, { name }))

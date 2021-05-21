@@ -22,7 +22,10 @@
       <AdsetDesc :ad-set="ad.adSetId" />
     </v-card-text>
     <v-divider></v-divider>
-
+    <v-card-title>Zones</v-card-title>
+    <div class="pa-2">
+      <AdDetailedZoneTable :zones="ad.zoneIds" />
+    </div>
     <slot name="append" :ad="ad"></slot>
   </v-card>
 </template>
