@@ -234,6 +234,9 @@ export interface Zone {
   isMuteVideo: boolean;
   isLoopOneVideo: boolean;
   isLoopAllVideo: boolean;
+  location: { lat: number; lng: number };
+  locationDesc: string;
+  pricePerTimePeriod: number;
 }
 
 export enum AnalyticsFrequency {

@@ -1,13 +1,26 @@
 <template>
   <BaseFetcher :fetch-state="$fetchState">
     <DataIterator type="Zones" :init-items="zones">
-      <lazy-DialogName
+      <!-- <lazy-DialogName
         v-if="$permission.canGeneralWriteZone()"
         init-name=""
         title="Create a zone:"
         @updateName="onNewZone"
       >
-      </lazy-DialogName>
+      </lazy-DialogName> -->
+      <v-btn
+        depressed
+        fab
+        :color="'blue'"
+        class="align-self-center mr-2"
+        :small="!$vuetify.breakpoint.xs"
+        :x-small="$vuetify.breakpoint.xs"
+        dark
+        nuxt
+        to="/zones/create"
+      >
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
       <template #main="{ items: displayedZones }">
         <v-row>
           <v-col
@@ -45,11 +58,26 @@
                 </DialogDelete>
               </v-card-title>
               <v-divider></v-divider>
-              <v-container class="d-flex flex-column">
+              <!-- <v-container class="d-flex flex-column">
                 <v-icon x-large color="primary" class="align-self-center">
                   mdi-monitor
                 </v-icon>
-              </v-container>
+              </v-container> -->
+              <v-list>
+                <v-list-item v-for="(value, key) in zoneDesc(zone)" :key="key">
+                  <v-list-item-title>
+                    <span class="font-weight-bold mr-1">{{ key + ':' }}</span>
+                    {{ `${value}` }}
+                  </v-list-item-title>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-title>
+                    <span class="font-weight-bold mr-1">Location:</span>
+                    {{ `${zone.locationDesc}` }}
+                    <ZoneMapDialog class="ml-2" :location="zone.location" />
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list>
             </v-card>
           </v-col>
         </v-row>
@@ -86,6 +114,11 @@ export default Vue.extend({
     }
   },
   methods: {
+    zoneDesc(zone: Zone): { [key: string]: string } {
+      return {
+        'Price per second': zone.pricePerTimePeriod.toString(),
+      };
+    },
     async onNewZone(name: string) {
       await this.$handleErrors(async () => {
         const newZone = (await this.$axios.$post(this.$apiUrl.zones, { name }))

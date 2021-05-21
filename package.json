@@ -24,7 +24,8 @@
     "socket.io-client": "^4.0.1",
     "vue-chartjs": "^3.5.1",
     "vue-markdown": "^2.2.4",
-    "vue2-google-maps": "^0.10.7"
+    "vue2-google-maps": "^0.10.7",
+    "vue2-google-maps-withscopedautocomp": "^0.12.1"
   },
   "devDependencies": {
     "@nuxt/types": "^2.14.12",
