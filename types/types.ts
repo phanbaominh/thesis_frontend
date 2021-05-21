@@ -128,10 +128,10 @@ export interface PermissionRelation {
 export interface Adset {
   _id: string;
   name: string;
-  ages: AdsetItem<number[]>;
-  genders: AdsetItem<number[]>;
-  daysOfWeek: AdsetItem<number[]>;
-  hoursOfDay: AdsetItem<number[]>;
+  ages?: AdsetItem<number[]>;
+  genders?: AdsetItem<number[]>;
+  daysOfWeek?: AdsetItem<number[]>;
+  hoursOfDay?: AdsetItem<number[]>;
 }
 export const AdsetConst = {
   ages: [

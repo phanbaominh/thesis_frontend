@@ -2,12 +2,16 @@
   <AdDetailed :ad="ad">
     <template #top-right>
       <v-btn
+        :fab="$vuetify.breakpoint.smAndDown"
+        depressed
+        small
         :disabled="!isDeployed"
         color="primary"
         nuxt
         :to="`/analytics/ad?adOffer=${ad._id}`"
       >
-        <v-icon>mdi-chart-line</v-icon>Analytics
+        <v-icon>mdi-chart-line</v-icon>
+        <span v-if="!$vuetify.breakpoint.smAndDown">Analytics</span>
       </v-btn>
     </template>
   </AdDetailed>

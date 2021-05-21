@@ -17,7 +17,7 @@
       :rules="[(v) => !!v || 'Name is required']"
     >
     </v-text-field>
-    <AdsetSelectMultiple
+    <!-- <AdsetSelectMultiple
       name="age"
       label="Age ranges"
       :items="ages"
@@ -39,7 +39,7 @@
       v-bind.sync="adset.genders"
       :multiple="null"
     >
-    </AdsetSelectMultiple>
+    </AdsetSelectMultiple> -->
     <AdsetSelectMultiple
       name="dow"
       label="Days of week"

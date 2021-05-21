@@ -16,6 +16,18 @@
         :rules="uploadFileRules"
       >
       </v-file-input>
+      <v-select
+        v-model="selectedAdset"
+        name="preset"
+        label="Preset"
+        :items="mediaArray"
+        :menu-props="{ maxHeight: '400' }"
+        hint="Copy setting from other video"
+        persistent-hint
+        outlined
+        dense
+      >
+      </v-select>
       <AdsetSelectMultiple
         name="age"
         label="Age ranges"
@@ -67,9 +79,8 @@ export default Vue.extend({
       valid: false,
       uploadFileRules: [(v: any) => !!v || 'File is required'],
       adset: {
-        ages: { value: [], strict: false },
-        genders: { value: 0, strict: false },
-        ...this.media?.adSetId,
+        ages: { value: [], strict: false, ...this.media?.adSetId.ages },
+        genders: { value: 0, strict: false, ...this.media?.adSetId.genders },
       },
       ages: AdsetConst.ages.map((range, i) => ({
         value: i,
@@ -79,6 +90,10 @@ export default Vue.extend({
         { text: 'Male', value: 10 },
         { text: 'Female', value: 11 },
       ] as Select[],
+      selectedAdset: null as {
+        ages: { value: number[]; strict: boolean };
+        genders: { value: number[]; strict: boolean };
+      } | null,
     };
   },
   computed: {
@@ -91,8 +106,19 @@ export default Vue.extend({
         this.isUploading
       );
     },
+    mediaArray(): Select[] {
+      return this.$accessor.allMediaArray
+        .filter((media) => media._id !== this.media?._id)
+        .map((m) => ({ text: m.name, value: m.adSetId }));
+    },
   },
   watch: {
+    selectedAdset() {
+      if (this.selectedAdset) {
+        this.adset.ages = { ...this.selectedAdset.ages };
+        this.adset.genders = { ...this.selectedAdset.genders };
+      }
+    },
     uploadedFile(newVal) {
       if (newVal) {
         const video = document.createElement('video');

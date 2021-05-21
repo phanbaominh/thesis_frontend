@@ -94,7 +94,7 @@ export default Vue.extend({
         this.$nuxt.$loading.finish();
       });
     },
-    getDateSubtitle(date: Date) {
+    getDateSubtitle(date: string) {
       return dayjs(date).fromNow();
     },
     getNotiColor(type: NotiType) {

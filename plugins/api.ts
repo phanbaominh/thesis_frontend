@@ -42,6 +42,7 @@ interface ApiUrl {
   adsAdManager: Url;
   adsBdManager: Url;
   ad: IdToUrl;
+  adMediaPreview: IdToUrl;
   adStatus: IdToUrl;
   adStatusCancel: IdToUrl;
   adDetailed: IdToUrl;
@@ -122,6 +123,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     adsAdManager: `${adsUrl}/ad-manager`,
     adsBdManager: `${adsUrl}/bd-manager`,
     ad: (id: string) => `${adsUrl}/${id}`,
+    adMediaPreview: (id: string) => `${adsUrl}/${id}/media-preview`,
     adDetailed: (id: string) => `${adsUrl}/full-infor/${id}`,
     adStatus: (id: string) => `${adsUrl}/status/${id}`,
     adStatusCancel: (id: string) => `${adsUrl}/status-cancel/${id}`,

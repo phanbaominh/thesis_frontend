@@ -13,7 +13,7 @@
       <v-list-item>
         <span class="font-weight-bold mr-2"> Content: </span>
         {{ ad.contentId.mediaArray.length }} videos
-        <BuildingAdContentPreview :content="ad.contentId" />
+        <BuildingAdContentPreview :ad="ad" />
       </v-list-item>
     </v-card-text>
     <v-divider></v-divider>

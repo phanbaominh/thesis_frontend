@@ -45,7 +45,14 @@ export default Vue.extend({
       selectedStrict: this.strict,
     };
   },
+
   watch: {
+    value() {
+      this.selectedValue = this.value;
+    },
+    strict() {
+      this.selectedStrict = this.strict;
+    },
     selectedValue() {
       this.$emit('update:value', this.selectedValue);
     },
