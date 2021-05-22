@@ -38,10 +38,7 @@
       >
         <v-icon>mdi-pencil</v-icon>
       </v-btn>
-      <DialogDelete
-        v-if="isDeployed || (!isDeletable && !isBd)"
-        @delete="onCancel"
-      >
+      <DialogDelete v-if="isCancelable" @delete="onCancel">
         <template #title>Do you want to cancel this?</template>
         <template #default="{ on: on2, attrs: attrs2 }">
           <v-btn
@@ -123,7 +120,11 @@ export default Vue.extend({
       return this.ad.status === AdStatus.Deployed;
     },
     isCancelable(): boolean {
-      return this.ad.status === AdStatus.Pending || this.isDeployed;
+      return (
+        (this.ad.status === AdStatus.Pending && !this.isBd) ||
+        this.isDeployed ||
+        this.ad.status === AdStatus.Empty
+      );
     },
     adDesc(): { [key: string]: any } {
       const statusKey = `Time when ${this.ad.status}`;

@@ -46,6 +46,7 @@ interface ApiUrl {
   adStatus: IdToUrl;
   adStatusCancel: IdToUrl;
   adStatusSend: IdToUrl;
+  adStatusRedeploy: IdToUrl;
   adDetailed: IdToUrl;
   analyticsOverview: Url;
   analyticsAdOffer: Url;
@@ -130,6 +131,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     adStatus: (id: string) => `${adsUrl}/status/${id}`,
     adStatusCancel: (id: string) => `${adsUrl}/status-cancel/${id}`,
     adStatusSend: (id: string) => `${adsUrl}/${id}/send`,
+    adStatusRedeploy: (id: string) => `${adsUrl}/${id}/redeploy`,
     analyticsOverview: `${analyticsUrl}/overview`,
     analyticsAdOffer: `${analyticsUrl}/adOffer`,
     analyticsBdManager: `${analyticsUrl}/bdManager`,

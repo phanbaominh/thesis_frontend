@@ -15,9 +15,17 @@
       </v-btn>
     </template>
     <template #append>
-      <v-card-actions v-if="isIdle">
+      <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="onSend"> Send </v-btn>
+        <v-btn v-if="isIdle" color="blue darken-1" text @click="onSend">
+          Send
+        </v-btn>
+        <AdDetailedRedeployForm
+          v-if="isEmpty"
+          :ad="ad"
+          :dialog="dialog"
+          @redeploy="onRedeploy"
+        />
       </v-card-actions>
     </template>
   </AdDetailed>
@@ -33,6 +41,7 @@ export default Vue.extend({
   data() {
     return {
       ad: (null as any) as DetailedAd,
+      dialog: false,
     };
   },
   computed: {
@@ -45,12 +54,23 @@ export default Vue.extend({
     isIdle(): boolean {
       return this.ad.status === AdStatus.Idle;
     },
+    isEmpty(): boolean {
+      return this.ad.status === AdStatus.Empty;
+    },
   },
   methods: {
     async onSend() {
       await this.$handleErrors(async () => {
         await this.$axios.$put(this.$apiUrl.adStatusSend(this.ad._id));
         this.ad.status = AdStatus.Pending;
+      });
+    },
+    async onRedeploy(budget: number) {
+      await this.$handleErrors(async () => {
+        await this.$axios.$put(this.$apiUrl.adStatusRedeploy(this.ad._id), {
+          budget,
+        });
+        this.ad.status = AdStatus.Deployed;
       });
     },
   },
