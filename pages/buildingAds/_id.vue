@@ -57,6 +57,17 @@ export default Vue.extend({
       return this.ad.status === AdStatus.Pending;
     },
   },
+  created() {
+    this.$socket.on('cancel-pending-offer', ({ id }) => {
+      if (id === this.ad._id) {
+        this.$toast.info(`Ad ${this.ad.name} was just canceled`);
+        this.$router.push('/buildingads');
+      }
+    });
+  },
+  beforeDestroy() {
+    this.$socket.off('cancel-pending-offer');
+  },
   methods: {
     async changeStatus(status: AdStatus) {
       await this.$handleErrors(async () => {
@@ -68,7 +79,8 @@ export default Vue.extend({
       await this.changeStatus(AdStatus.Deployed);
     },
     async onReject() {
-      await this.changeStatus(AdStatus.Rejected);
+      await this.changeStatus(AdStatus.Idle);
+      this.$router.push('/buildingads');
     },
   },
 });

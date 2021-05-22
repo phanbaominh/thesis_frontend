@@ -17,7 +17,9 @@ export default Vue.extend({
         return 'blue';
       } else if (this.status === AdStatus.Deployed) {
         return 'green';
-      } else if (this.status === AdStatus.Rejected) {
+      } else if (this.status === AdStatus.Idle) {
+        return 'amber accent-3';
+      } else if (this.status === AdStatus.Empty) {
         return 'red';
       } else {
         return 'grey lighten-1';

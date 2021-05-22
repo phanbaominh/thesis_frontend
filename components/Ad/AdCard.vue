@@ -33,7 +33,7 @@
         depressed
         nuxt
         :to="`/ads/${ad._id}/edit`"
-        :disabled="!isDeletable"
+        :disabled="!isIdle"
         @click.native.stop
       >
         <v-icon>mdi-pencil</v-icon>
@@ -112,14 +112,18 @@ export default Vue.extend({
     };
   },
   computed: {
-    isDeletable(): boolean {
-      return (
-        this.ad.status === AdStatus.Canceled ||
-        this.ad.status === AdStatus.Rejected
-      );
+    isIdle(): boolean {
+      return this.ad.status === AdStatus.Idle;
     },
+    isDeletable(): boolean {
+      return this.isIdle || this.ad.status === AdStatus.Finished;
+    },
+
     isDeployed(): boolean {
       return this.ad.status === AdStatus.Deployed;
+    },
+    isCancelable(): boolean {
+      return this.ad.status === AdStatus.Pending || this.isDeployed;
     },
     adDesc(): { [key: string]: any } {
       const statusKey = `Time when ${this.ad.status}`;
@@ -133,8 +137,10 @@ export default Vue.extend({
   methods: {
     async onCancel() {
       await this.$handleErrors(async () => {
-        await this.$axios.$put(this.$apiUrl.adStatusCancel(this.ad._id));
-        this.ad.status = AdStatus.Canceled;
+        const newStatus = (
+          await this.$axios.$put(this.$apiUrl.adStatusCancel(this.ad._id))
+        ).status as AdStatus;
+        this.ad.status = newStatus;
         this.$emit('cancel', this.ad);
         this.dialog = false;
       });

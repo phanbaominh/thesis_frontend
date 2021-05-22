@@ -163,8 +163,9 @@ export enum AdsetGender {
 export enum AdStatus {
   Pending = 'pending',
   Deployed = 'deployed',
-  Rejected = 'rejected',
-  Canceled = 'canceled',
+  Idle = 'idle',
+  Empty = 'empty',
+  Finished = 'finished',
 }
 export interface Ad {
   _id: string;
