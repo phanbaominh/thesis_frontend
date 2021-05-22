@@ -79,9 +79,11 @@ export default Vue.extend({
       const deletedIds = deletedArray.map((media) => media._id);
       await this.$handleErrors(async () => {
         for (const id of deletedIds) {
-          await this.$axios.$delete(this.$apiUrl.video(id));
+          try {
+            await this.$axios.$delete(this.$apiUrl.video(id));
+            this.$accessor.DELETE_MEDIA_FROM_ARRAY(id);
+          } catch {}
         }
-        this.$accessor.DELETE_MEDIA_FROM_ARRAY(deletedIds);
       });
     },
     // removeFile(index: number) {

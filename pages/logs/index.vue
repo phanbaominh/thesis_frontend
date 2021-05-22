@@ -22,7 +22,7 @@
         </thead>
       </template>
       <template #item.ad="{ item: { ad } }">
-        <nuxt-link :to="`/ads/${ad.id}`">{{ ad.name }}</nuxt-link>
+        <nuxt-link :to="`/ads/${ad._id}`">{{ ad.name }}</nuxt-link>
       </template>
       <template #item.genders="{ item: { genders } }">
         {{ `Male: ${genders[0]}, Female: ${genders[1]}` }}

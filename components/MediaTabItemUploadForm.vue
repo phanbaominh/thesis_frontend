@@ -171,6 +171,7 @@ export default Vue.extend({
         if (!this.media) return;
         await this.$axios.$put(this.$apiUrl.video(this.media._id), this.adset);
         this.$emit('submit');
+        this.$toast.success('Successfully updated video settings');
       });
     },
     refresh() {

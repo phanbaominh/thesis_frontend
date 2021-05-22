@@ -37,9 +37,9 @@ export const mutations = mutationTree(state, {
   SET_ALL_MEDIA_ARRAY(state, allMediaArray) {
     state.allMediaArray = allMediaArray;
   },
-  DELETE_MEDIA_FROM_ARRAY(state, deletedIds) {
+  DELETE_MEDIA_FROM_ARRAY(state, deletedId) {
     state.allMediaArray = state.allMediaArray.filter(
-      (media) => !deletedIds.includes(media._id)
+      (media) => deletedId !== media._id
     );
   },
   ADD_MEDIA_TO_ARRAY(state, media) {

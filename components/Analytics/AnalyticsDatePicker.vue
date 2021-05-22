@@ -18,16 +18,34 @@
           :value="Number(value)"
           @selected="onSelected"
         />
-        <v-list-item v-if="!isCustom" @click="isCustom = true">
-          <v-list-item-title>Custom</v-list-item-title>
-        </v-list-item>
-        <div v-else>
-          <v-date-picker v-model="dates" range></v-date-picker>
-          <BaseDialogActions @close="isCustom = false" @confirm="onApplyCustom">
-            Apply
-            <template #close> No </template>
-          </BaseDialogActions>
-        </div>
+
+        <v-dialog v-model="isCustom" width="290">
+          <template #activator="{ on, attrs }">
+            <v-list-item v-bind="attrs" v-on="on">
+              <v-list-item-title>Custom</v-list-item-title>
+            </v-list-item>
+          </template>
+          <v-card class="pa-2">
+            <BaseDialogTitle @close="isCustom = false">
+              Pick a period
+            </BaseDialogTitle>
+
+            <v-date-picker
+              v-model="dates"
+              range
+              :max="currentDate"
+              elevation="3"
+            >
+            </v-date-picker>
+            <BaseDialogActions
+              @close="isCustom = false"
+              @confirm="onApplyCustom"
+            >
+              Apply
+              <template #close> No </template>
+            </BaseDialogActions>
+          </v-card>
+        </v-dialog>
       </v-list>
     </v-menu>
   </div>
@@ -47,6 +65,7 @@ export default Vue.extend({
       selectedText: 'Last 7 days',
       isCustom: false,
       showMenu: false,
+      currentDate: dayjs().format(),
     };
   },
   watch: {

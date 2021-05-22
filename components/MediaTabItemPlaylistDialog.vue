@@ -15,10 +15,8 @@
           <v-spacer></v-spacer>
           <DialogDelete
             v-if="$permission.canGeneralDeleteAd()"
-            color="error"
             @delete="$emit('delete')"
           >
-            <v-icon>mdi-delete</v-icon>
           </DialogDelete>
         </v-card-title>
       </v-card>
@@ -96,9 +94,12 @@ export default Vue.extend({
       const newMediaArray = this.playlist.mediaArray.filter(
         (id) => !deletedIds.includes(id)
       );
-      await this.updatePlaylistWithNewMediaArray(newMediaArray);
-      this.playlistMediaArray = this.playlistMediaArray.filter(
-        (media) => !deletedIds.includes(media._id)
+      await this.updatePlaylistWithNewMediaArray(
+        newMediaArray,
+        () =>
+          (this.playlistMediaArray = this.playlistMediaArray.filter(
+            (media) => !deletedIds.includes(media._id)
+          ))
       );
     },
     async onConfirmAdd(addedMediaArray: Media[]) {
@@ -106,11 +107,14 @@ export default Vue.extend({
       const newMediaArray = this.playlist.mediaArray.concat(
         addedMediaArray.map((media) => media._id)
       );
-      await this.updatePlaylistWithNewMediaArray(newMediaArray);
-
-      addedMediaArray.forEach((media) => this.playlistMediaArray.push(media));
+      await this.updatePlaylistWithNewMediaArray(newMediaArray, () =>
+        addedMediaArray.forEach((media) => this.playlistMediaArray.push(media))
+      );
     },
-    async updatePlaylistWithNewMediaArray(newMediaArray: string[]) {
+    async updatePlaylistWithNewMediaArray(
+      newMediaArray: string[],
+      cb: () => any
+    ) {
       await this.$handleErrors(async () => {
         await this.$axios.$put(this.$apiUrl.playlist(this.playlist._id), {
           ...this.playlist,
@@ -119,6 +123,7 @@ export default Vue.extend({
         this.playlist.mediaArray = newMediaArray;
         this.$emit('update:playlist', this.playlist);
         this.updateNonPlaylistMediaArray();
+        cb();
       });
     },
     async updatePlaylistWithNewName(newName: string) {

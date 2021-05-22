@@ -8,8 +8,10 @@
           depressed
           :small="!$vuetify.breakpoint.xs"
           :x-small="$vuetify.breakpoint.xs"
+          :color="color"
           v-on="on"
         >
+          <v-icon>mdi-delete</v-icon>
         </v-btn>
       </slot>
     </template>
@@ -27,6 +29,12 @@
 <script lang="ts">
 import Vue from 'vue';
 export default Vue.extend({
+  props: {
+    color: {
+      type: String,
+      default: 'error',
+    },
+  },
   data() {
     return {
       dialog: false,
