@@ -4,7 +4,10 @@
       <template #activator="{ on, attrs }">
         <div v-bind="attrs" v-on="on">
           <v-avatar>
-            <img src="/default-avatar.png" alt="Avatar" />
+            <img
+              :src="$auth.user ? $auth.user.avatar : '/default-avatar.png'"
+              alt="Avatar"
+            />
           </v-avatar>
           <span v-if="!$vuetify.breakpoint.xs">{{
             $auth.user ? $auth.user.username : 'None'

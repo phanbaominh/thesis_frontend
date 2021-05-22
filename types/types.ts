@@ -59,6 +59,8 @@ export interface User {
   _id: string;
   username: string;
   email: string;
+  desc: string;
+  avatar: string;
   password: string;
   adminId?: string;
   typeUser?: TypeUser;

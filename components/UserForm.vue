@@ -22,7 +22,16 @@
         label="Email"
         outlined
         dense
+        :disabled="!!initUser"
         :rules="emailRules"
+      ></v-text-field>
+      <v-text-field
+        v-model="user.desc"
+        name="desc"
+        label="Desc"
+        outlined
+        dense
+        :rules="[(v) => !!v || 'Description is required']"
       ></v-text-field>
       <v-text-field
         v-if="!initUser"
@@ -91,6 +100,7 @@ export default Vue.extend({
         username: '',
         password: '',
         email: '',
+        desc: '',
         ...this.initUser,
       } as User,
       repeatPass: '',

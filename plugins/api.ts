@@ -22,6 +22,7 @@ interface ApiUrl {
   devices: Url;
   device: IdToUrl;
   user: Url;
+  userUpdate: Url;
   userTypeUser: Url;
   userNotification: Url;
   buildingManagers: Url;
@@ -107,6 +108,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     devices: deviceUrl,
     device: (id: string) => `${deviceUrl}/${id}`,
     user: `${usersUrl}`,
+    userUpdate: `${usersUrl}/update`,
     userTypeUser: `${usersUrl}/type-user`,
     userNotification: `${usersUrl}/notifications`,
     permGroups: permGroupUrl,

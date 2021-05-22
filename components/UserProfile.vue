@@ -31,7 +31,10 @@ export default Vue.extend({
       //   (await this.$axios.$put(this.$apiUrl.user, { user: this.user })).user
       // );
       await this.$handleErrors(async () => {
-        await this.$axios.$put(this.$apiUrl.user, { user });
+        await this.$axios.$put(this.$apiUrl.userUpdate, {
+          username: user.username,
+          desc: user.desc,
+        });
         await this.$auth.fetchUser();
         this.$toast.success('Successfully update your profile');
       });

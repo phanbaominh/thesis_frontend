@@ -11,6 +11,12 @@
         {{ ` ${value || 'None'}` }}
       </v-list-item>
       <v-list-item>
+        <span class="font-weight-bold mr-2">Building Manager:</span>
+        <v-card flat outlined rounded>
+          <AdBdManagerListItem :bd-manager="ad.bdManagerId" />
+        </v-card>
+      </v-list-item>
+      <v-list-item>
         <span class="font-weight-bold mr-2"> Content: </span>
         {{ ad.contentId.mediaArray.length }} videos
         <PlaylistPreview :content="ad.contentId" />
@@ -46,7 +52,6 @@ export default Vue.extend({
         Name: `${this.ad.name}`,
         Budget: `${this.ad.budget}`,
         AdManager: `${this.ad.adManagerId.email}`,
-        BuildingManager: `${this.ad.bdManagerId.email}`,
       };
     },
 

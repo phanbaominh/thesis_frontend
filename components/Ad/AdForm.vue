@@ -60,6 +60,25 @@
             :items="buildingManagers"
             :rules="[(v) => !!v || 'Building manager is required']"
           >
+            <template #item="{ on, attrs, item }">
+              <v-list-item two-line v-bind="attrs" v-on="on">
+                <v-list-item-avatar>
+                  <v-img :alt="`${item.username} avatar`" :src="item.avatar">
+                  </v-img>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ item.username }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    {{ $truncate(item.desc, 30) }}</v-list-item-subtitle
+                  >
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+            <template #selection="{ item }">
+              <AdBdManagerListItem :bd-manager="item" />
+            </template>
           </v-select>
           <AdFormBdManagerInfo
             v-if="ad.bdManagerId"
@@ -129,6 +148,7 @@ export default Vue.extend({
     ).users.map((bm: User) => ({
       text: bm.username,
       value: bm._id,
+      ...bm,
     }));
   },
   methods: {
