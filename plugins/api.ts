@@ -54,6 +54,7 @@ interface ApiUrl {
   analyticsAge: Url;
   analyticsGender: Url;
   bdManagerZoneInfo: IdToUrl;
+  logs: Url;
 }
 
 declare module 'vue/types/vue' {
@@ -139,6 +140,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     analyticsGender: `${analyticsUrl}/gender`,
     bdManagerZoneInfo: (id: string) =>
       `${usersUrl}/bd-managers/${id}/zone-info`,
+    logs: `${analyticsUrl}`,
   });
 };
 

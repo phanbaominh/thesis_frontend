@@ -279,3 +279,20 @@ export interface AppNotification {
   cTime: string;
   link: string;
 }
+interface NameIdable {
+  name: string;
+  _id: string;
+}
+
+export interface AdLog {
+  ad: NameIdable;
+  bdManager: { _id: string; username: string };
+  video: NameIdable;
+  device: NameIdable;
+  timeStart: number;
+  runTime: number;
+  views: number;
+  ages: number[];
+  genders: number[];
+  cost: number;
+}

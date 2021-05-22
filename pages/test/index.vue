@@ -49,7 +49,7 @@ function getFakeData() {
     deviceId: faker.helpers.randomize(testData.deviceIds),
     timeStamp:
       faker.date
-        .between(dayjs().subtract(30, 'd').toDate(), dayjs().hour(23).toDate())
+        .between(dayjs().subtract(40, 'd').toDate(), dayjs().hour(23).toDate())
         .valueOf() / 1000,
     snapshots: new Array(faker.datatype.number({ min: 1, max: 20 }))
       .fill(0)

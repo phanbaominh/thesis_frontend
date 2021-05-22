@@ -96,6 +96,12 @@ export default Vue.extend({
           to: '/analytics',
           disabled: false,
         },
+        {
+          icon: 'mdi-table',
+          title: 'Logs',
+          to: '/logs',
+          disabled: false,
+        },
       ];
     },
     buildingManagerNavItems(): { [key: string]: any }[] {
@@ -118,7 +124,7 @@ export default Vue.extend({
           to: '/zones',
         },
         {
-          icon: 'mdi-select-group',
+          icon: 'mdi-youtube-tv',
           title: 'Ads',
           to: '/buildingads',
           disabled: !this.$permission.canGeneralReadAd(),
