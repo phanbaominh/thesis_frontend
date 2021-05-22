@@ -5,7 +5,7 @@
         :fab="$vuetify.breakpoint.smAndDown"
         depressed
         small
-        :disabled="!isDeployed"
+        :disabled="!isAnalyzable"
         color="primary"
         nuxt
         :to="`/analytics/ad?adOffer=${ad._id}`"
@@ -21,7 +21,6 @@ import Vue from 'vue';
 import { AdStatus, DetailedAd } from '~/types/types';
 export default Vue.extend({
   async asyncData({ route, $axios, $apiUrl }) {
-    await Promise.resolve();
     const ad = (await $axios.$get($apiUrl.adDetailed(route.params.id))).adOffer;
     return { ad };
   },
@@ -31,8 +30,11 @@ export default Vue.extend({
     };
   },
   computed: {
-    isDeployed(): boolean {
-      return this.ad.status === AdStatus.Deployed;
+    isAnalyzable(): boolean {
+      return (
+        this.ad.status === AdStatus.Deployed ||
+        this.ad.status === AdStatus.Canceled
+      );
     },
   },
 });

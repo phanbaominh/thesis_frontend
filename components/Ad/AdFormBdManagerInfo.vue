@@ -2,7 +2,7 @@
   <BaseFetcher :fetch-state="$fetchState">
     <template #pending> Loading ad set</template>
     <v-select
-      v-model="selectedZones"
+      v-model="selectedZoneIds"
       dense
       outlined
       label="Zone"
@@ -28,6 +28,10 @@
         </v-list-item>
       </template>
     </v-select>
+    <AdDetailedZoneTable
+      v-if="selectedZones.length > 0"
+      :zones="selectedZones"
+    />
   </BaseFetcher>
 </template>
 <script lang="ts">
@@ -55,7 +59,7 @@ export default Vue.extend({
     return {
       zonesInfo: [] as ZoneInfo[],
       zoneSelects: [] as Select[],
-      selectedZones: this.zoneIds as string[],
+      selectedZoneIds: this.zoneIds as string[],
     };
   },
   async fetch() {
@@ -68,12 +72,19 @@ export default Vue.extend({
       ...zone,
     }));
   },
+  computed: {
+    selectedZones(): ZoneInfo[] {
+      return this.zonesInfo.filter((zone) =>
+        this.selectedZoneIds.includes(zone._id)
+      );
+    },
+  },
   watch: {
     bdManagerId() {
       this.$fetch();
     },
     selectedZones() {
-      this.$emit('update:zoneIds', this.selectedZones);
+      this.$emit('update:zoneIds', this.selectedZoneIds);
     },
   },
 });

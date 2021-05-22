@@ -65,6 +65,7 @@
             v-if="ad.bdManagerId"
             :bd-manager-id="ad.bdManagerId"
             :zone-ids.sync="ad.zoneIds"
+            class="mb-2"
           />
           <v-text-field
             v-model="ad.budget"
@@ -78,7 +79,9 @@
               (v) => (v && v >= 0) || 'Budget has to be larger than 0',
             ]"
           />
-          <BaseSubmitActions> Create </BaseSubmitActions>
+          <BaseSubmitActions>
+            {{ initAd ? 'Update' : 'Create' }}
+          </BaseSubmitActions>
         </v-form>
       </BaseFetcher>
     </v-card>
@@ -93,7 +96,7 @@ export default Vue.extend({
     initAd: {
       default: null,
       type: Object,
-    } as Vue.PropOptions<Adset | null>,
+    } as Vue.PropOptions<Ad | null>,
   },
   data() {
     return {
@@ -104,6 +107,7 @@ export default Vue.extend({
         contentId: '',
         budget: 0,
         zoneIds: [],
+        ...this.initAd,
       } as Omit<Ad, '_id'>,
       valid: false,
       mediaArray: [] as Select[],
@@ -131,8 +135,14 @@ export default Vue.extend({
     async onSubmit() {
       if (!(this.$refs.form as any).validate()) return;
       await this.$handleErrors(async () => {
-        const newAd = (await this.$axios.$post(this.$apiUrl.ads, this.ad))
-          .adOffer as Ad;
+        const newAd = this.initAd
+          ? ((await this.$axios.$put(this.$apiUrl.ad(this.initAd._id), this.ad))
+              .adOffer as Ad)
+          : ((await this.$axios.$post(this.$apiUrl.ads, this.ad))
+              .adOffer as Ad);
+        this.$toast.success(
+          `You have successfully ${this.initAd ? 'updated' : 'created an'} ad`
+        );
         this.$router.push(`/ads/${newAd._id}`);
       });
     },

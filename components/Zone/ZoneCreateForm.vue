@@ -94,6 +94,11 @@ export default Vue.extend({
             ).zone as Zone)
           : ((await this.$axios.$post(this.$apiUrl.zones, this.zone))
               .zone as Zone);
+        this.$toast.success(
+          `You have successfully ${
+            this.initZone ? 'updated' : 'created a'
+          } zone`
+        );
         this.$router.push(`/zones/${newZone._id}`);
       });
     },

@@ -180,16 +180,6 @@ export interface Ad {
   remainingBudget?: number;
 }
 
-export interface DetailedAd {
-  _id: string;
-  name: string;
-  adSetId: Adset;
-  contentId: { _id: string; name: string; mediaArray: string[] };
-  budget: number;
-  bdManagerId: User;
-  adManagerId: User;
-  status?: string;
-}
 export type ArrayElement<
   ArrayType extends readonly unknown[]
 > = ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
@@ -239,7 +229,17 @@ export interface Zone {
   locationDesc: string;
   pricePerTimePeriod: number;
 }
-
+export interface DetailedAd {
+  _id: string;
+  name: string;
+  adSetId: Adset;
+  contentId: { _id: string; name: string; mediaArray: string[] };
+  budget: number;
+  bdManagerId: User;
+  adManagerId: User;
+  zoneIds: Zone[];
+  status?: string;
+}
 export enum AnalyticsFrequency {
   Daily = 1,
   Monthly = 30,

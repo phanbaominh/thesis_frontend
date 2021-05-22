@@ -25,7 +25,19 @@
           </v-btn>
         </template>
       </AdForm> -->
-
+      <v-btn
+        class="mr-2"
+        color="primary"
+        x-small
+        fab
+        depressed
+        nuxt
+        :to="`/ads/${ad._id}/edit`"
+        :disabled="!isDeletable"
+        @click.native.stop
+      >
+        <v-icon>mdi-pencil</v-icon>
+      </v-btn>
       <DialogDelete
         v-if="isDeployed || (!isDeletable && !isBd)"
         @delete="onCancel"
