@@ -32,6 +32,7 @@
           @updateName="updatePlaylistWithNewName"
         />
       </BaseDialogTitle>
+      <AdBelongToChips :id="playlist._id" key-name="playlist" class="mb-2" />
       <v-card outlined class="mt-2">
         <BaseFetcher :fetch-state="$fetchState">
           <MediaAddDelete

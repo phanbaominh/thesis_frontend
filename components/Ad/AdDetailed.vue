@@ -25,7 +25,16 @@
     <v-divider></v-divider>
     <v-card-title>Adset</v-card-title>
     <v-card-text>
-      <AdsetDesc :ad-set="ad.adSetId" />
+      <AdsetDesc :ad-set="ad.adSetId">
+        <template #prepend>
+          <v-list-item class="text-body-1">
+            <span class="font-weight-bold mr-2">Name:</span>
+            <nuxt-link :to="`/adsets?q=${ad.adSetId.name}`">
+              {{ ad.adSetId.name }}
+            </nuxt-link>
+          </v-list-item>
+        </template>
+      </AdsetDesc>
     </v-card-text>
     <v-divider></v-divider>
     <v-card-title>Zones</v-card-title>

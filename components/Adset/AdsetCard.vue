@@ -12,6 +12,7 @@
       >
         <template #activator="{ on, attrs }">
           <v-btn
+            class="mr-2"
             color="blue"
             x-small
             fab
@@ -65,10 +66,10 @@ export default Vue.extend({
     };
   },
   methods: {
-    async onDelete(adset: Adset) {
+    async onDelete() {
       await this.$handleErrors(async () => {
-        await this.$axios.$delete(this.$apiUrl.adset(adset._id));
-        this.$emit('delete', adset);
+        await this.$axios.$delete(this.$apiUrl.adset(this.adset._id));
+        this.$emit('delete', this.adset);
         this.dialog = false;
       });
     },

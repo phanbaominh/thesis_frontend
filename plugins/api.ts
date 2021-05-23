@@ -39,6 +39,7 @@ interface ApiUrl {
   subusers: Url;
   subuser: IdToUrl;
   adsets: Url;
+  adsBelongTo: Url;
   adset: IdToUrl;
   ads: Url;
   adsAdManager: Url;
@@ -126,6 +127,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     adsets: adsetsUrl,
     adset: (id: string) => `${adsetsUrl}/${id}`,
     ads: adsUrl,
+    adsBelongTo: `${adsUrl}/belong-to`,
     adsAdManager: `${adsUrl}/ad-manager`,
     adsBdManager: `${adsUrl}/bd-manager`,
     ad: (id: string) => `${adsUrl}/${id}`,

@@ -21,6 +21,7 @@
     <v-card class="pt-2 px-4">
       <BaseDialogTitle @close="onCloseDialog">
         {{ title }}
+        <slot name="title.append"></slot>
       </BaseDialogTitle>
 
       <v-form

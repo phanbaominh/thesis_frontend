@@ -1,5 +1,6 @@
 <template>
   <v-list>
+    <slot name="prepend"></slot>
     <v-list-item
       v-for="(value, key) in displayedAdsetDesc"
       :key="key"

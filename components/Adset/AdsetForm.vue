@@ -8,6 +8,12 @@
     <template #activator="{ on, attrs }">
       <slot name="activator" :on="on" :attrs="attrs"></slot>
     </template>
+    <AdBelongToChips
+      v-if="initAdset"
+      :id="adset._id"
+      key-name="adSet"
+      class="mb-2"
+    />
     <v-text-field
       v-model="adset.name"
       name="name"
@@ -17,6 +23,7 @@
       :rules="[(v) => !!v || 'Name is required']"
     >
     </v-text-field>
+
     <!-- <AdsetSelectMultiple
       name="age"
       label="Age ranges"
@@ -44,7 +51,6 @@
       name="dow"
       label="Days of week"
       :items="dows"
-      :disabled="isUpdateForm"
       :menu-props="{ maxHeight: '400' }"
       required-strict
       hint="Limited ads to these days of the week"
@@ -56,7 +62,6 @@
       name="hod"
       label="Hours of day"
       :items="hods"
-      :disabled="isUpdateForm"
       :menu-props="{ maxHeight: '400' }"
       hint="Limited ads to these hours of day"
       :rules="[(v) => v.length > 0 || 'Hour of day is required']"
@@ -81,6 +86,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      ads: [] as { _id: string; name: string }[],
       adset: {
         name: '',
         daysOfWeek: { value: [] as number[], strict: true },
@@ -104,6 +110,7 @@ export default Vue.extend({
       })) as Select[],
     };
   },
+
   computed: {
     isUpdateForm(): boolean {
       return !!this.initAdset;

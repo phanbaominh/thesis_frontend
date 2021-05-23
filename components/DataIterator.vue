@@ -121,11 +121,15 @@ export default Vue.extend({
       default: false,
       type: Boolean,
     },
+    initSearch: {
+      default: '',
+      type: String,
+    },
   },
   data() {
     return {
       itemsPerPageArray: [4, 8, 12],
-      search: '',
+      search: this.initSearch,
       filter: {},
       page: 1,
       itemsPerPage: 12,
@@ -140,6 +144,9 @@ export default Vue.extend({
   watch: {
     initItems() {
       this.items = this.initItems;
+    },
+    initSearch() {
+      this.search = this.initSearch;
     },
   },
   methods: {
