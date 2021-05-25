@@ -250,6 +250,7 @@ export enum AnalyticsFrequency {
 export enum AnalyticsValue {
   Views = 'views',
   RunTime = 'runTime',
+  Cost = 'moneyCharge',
 }
 
 export interface AnalyticsData {
@@ -297,4 +298,5 @@ export interface AdLog {
   ages: number[];
   genders: number[];
   cost: number;
+  image: string;
 }

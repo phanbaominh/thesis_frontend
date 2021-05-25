@@ -27,6 +27,12 @@
       <template #item.genders="{ item: { genders } }">
         {{ `Male: ${genders[0]}, Female: ${genders[1]}` }}
       </template>
+      <template #item.cost="{ item: { cost } }">
+        {{ $utils.moneyFormat(cost) }}
+      </template>
+      <template #item.costPerView="{ item: { cost, views } }">
+        {{ $utils.moneyFormat(cost / views) }}
+      </template>
       <template #item.ages="{ item }">
         {{ item.ages.toString() }}
       </template>
@@ -42,8 +48,8 @@
       <template #item.device="{ item: { device } }">
         {{ device.name }}
       </template>
-      <template #item.firstFrame>
-        <LogImagePreview link="#" />
+      <template #item.image="{ item: { image } }">
+        <LogImagePreview v-if="image" :link="image" />
       </template>
     </v-data-table>
   </v-card>
@@ -57,10 +63,11 @@ export default Vue.extend({
     return {
       headers: [
         { text: 'Ad', value: 'ad' },
+        { text: 'Cost     ', value: 'cost' },
         { text: 'Views', value: 'views' },
         { text: 'Run time', value: 'runTime' },
-        { text: 'First frame', value: 'firstFrame' },
-        { text: 'Cost', value: 'cost' },
+        { text: 'First frame', value: 'image' },
+        { text: 'Cost per view', value: 'costPerView' },
         { text: 'Time start', value: 'timeStart' },
         { text: 'Device', value: 'device' },
         { text: 'Zone', value: 'zone' },

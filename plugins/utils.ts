@@ -8,6 +8,23 @@ const utils = {
       return dayjs(time).format(formatString);
     return dayjs.unix(time).format(formatString);
   },
+  moneyFormat(amount: number, currency = 'VND'): string {
+    const isInteger = Number.isInteger(amount);
+    const amountString = isInteger ? amount.toString() : amount.toFixed(2);
+    const stringArray = isInteger
+      ? amountString.split('')
+      : amountString.split('.')[0].split('');
+    const tail =
+      (isInteger ? '' : '.' + amountString.split('.')[1]) + ' ' + currency;
+    const n = stringArray.length - 1;
+    return (
+      stringArray.reduceRight((acc, val, i) => {
+        const y = Math.abs(i - n) % 3;
+        if (y === 0 && Math.abs(i - n) !== 0) return val + ',' + acc;
+        return val + acc;
+      }, '') + tail
+    );
+  },
 };
 declare module 'vue/types/vue' {
   interface Vue {

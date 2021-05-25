@@ -15,8 +15,8 @@
         First frame from camera
       </BaseDialogTitle>
       <v-img
-        src="https://picsum.photos/id/11/500/300"
-        lazy-src="https://picsum.photos/id/11/100/60"
+        :src="link"
+        alt="The first frame captured by camera"
         max-width="500"
       >
         <template #placeholder>

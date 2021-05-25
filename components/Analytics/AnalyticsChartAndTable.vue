@@ -52,6 +52,7 @@ export default Vue.extend({
         [
           { text: 'Views by ad', value: AnalyticsValue.Views },
           { text: 'Run times by ad', value: AnalyticsValue.RunTime },
+          { text: 'Cost by ad', value: AnalyticsValue.Cost },
         ] as Select[],
       type: Array,
     },

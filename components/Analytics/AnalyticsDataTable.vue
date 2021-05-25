@@ -16,9 +16,18 @@
           :colspan="i === 0 ? 2 : 1"
         >
           <span v-if="i === 0" class="">Totals </span>
-          <span v-else> {{ getTotals(header.value) }}</span>
+          <span v-else>
+            {{
+              header.text === 'Cost'
+                ? $utils.moneyFormat(getTotals(header.value))
+                : getTotals(header.value)
+            }}
+          </span>
         </td>
       </tr>
+    </template>
+    <template #item.cost="{ item }">
+      {{ $utils.moneyFormat(item.cost) }}
     </template>
   </v-data-table>
 </template>

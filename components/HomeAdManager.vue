@@ -12,11 +12,23 @@
         <v-card class="pa-4 mb-4" flat>
           <v-tabs v-model="tab" grow class="mb-2" icons-and-text>
             <v-tab v-for="item in tabItems" :key="item.text">
-              <span class="text-h6">{{ item.total }}</span>
+              <span class="text-h6">{{
+                item.text === 'Cost'
+                  ? $utils.moneyFormat(item.total)
+                  : item.total
+              }}</span>
               {{ item.text }}
             </v-tab>
           </v-tabs>
           <v-tabs-items v-model="tab">
+            <v-tab-item>
+              <LineChart
+                v-if="!$fetchState.pending && !$fetchState.error"
+                class="custom-chart"
+                :chart-data="costChartData"
+                :options="options"
+              />
+            </v-tab-item>
             <v-tab-item>
               <LineChart
                 v-if="!$fetchState.pending && !$fetchState.error"
@@ -56,6 +68,9 @@
           <template #item.name="{ item }">
             <nuxt-link :to="`/ads/${item.id}`">{{ item.name }}</nuxt-link>
           </template>
+          <template #item.cost="{ item }">
+            {{ $utils.moneyFormat(item.cost) }}
+          </template>
         </v-data-table>
       </BaseFetcher>
     </v-card-text>
@@ -69,16 +84,19 @@ import { AnalyticsQueryObject } from '~/types/types';
 export default Vue.extend({
   data() {
     return {
+      costChartData: {} as Chart.ChartData,
       viewsChartData: {} as Chart.ChartData,
       runTimeChartData: {} as Chart.ChartData,
       topAdsTableData: [] as any,
       headers: [
         { text: 'Ad', value: 'name' },
+        { text: 'Cost', value: 'cost' },
         { text: 'Views', value: 'views' },
         { text: 'Run time', value: 'runTime' },
       ],
       tab: null,
       tabItems: {
+        cost: { text: 'Cost', total: 0 },
         views: { text: 'Views', total: 0 },
         runTime: { text: 'Run time', total: 0 },
       },
@@ -118,8 +136,10 @@ export default Vue.extend({
     ).data as {
       views: number[];
       runTime: number[];
+      cost: number[];
       totalViews: number;
       totalRunTime: number;
+      totalCost: number;
       topAds: {
         id: string;
         name: string;
@@ -132,34 +152,16 @@ export default Vue.extend({
     const timeEnd = this.$accessor.analytics.timeEnd;
     const diffday = timeEnd.diff(timeStart, 'day');
     this.setLabels(freq, timeStart, diffday);
-    this.viewsChartData = {
-      labels: this.labels,
-      datasets: [
-        {
-          label: 'Views',
-          data: rawData.views,
-          fill: false,
-          borderColor: '#0080ff',
-        },
-      ],
-    };
+    this.costChartData = this.getChartData('Cost', rawData.cost);
+    this.viewsChartData = this.getChartData('Views', rawData.views);
+    this.runTimeChartData = this.getChartData('Run time', rawData.runTime);
 
-    this.runTimeChartData = {
-      labels: this.labels,
-      datasets: [
-        {
-          label: 'Run time',
-          data: rawData.runTime,
-          fill: false,
-          borderColor: '#0080ff',
-        },
-      ],
-    };
     this.topAdsTableData = rawData.topAds.sort((ad1, ad2) => {
       return -(ad1.views - ad2.views);
     });
     this.tabItems.views.total = rawData.totalViews;
     this.tabItems.runTime.total = rawData.totalRunTime;
+    this.tabItems.cost.total = rawData.totalCost;
   },
   computed: {
     query(): AnalyticsQueryObject {
@@ -183,6 +185,19 @@ export default Vue.extend({
     });
   },
   methods: {
+    getChartData(label: string, data: number[]) {
+      return {
+        labels: this.labels,
+        datasets: [
+          {
+            label,
+            data,
+            fill: false,
+            borderColor: '#0080ff',
+          },
+        ],
+      };
+    },
     setLabels(step: number, timeStart: dayjs.Dayjs, diffday: number) {
       const labels = [];
 

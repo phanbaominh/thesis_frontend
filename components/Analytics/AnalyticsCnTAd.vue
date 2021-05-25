@@ -8,6 +8,7 @@ export default Vue.extend({
     return {
       headers: [
         { text: 'Ad', value: 'name' },
+        { text: 'Cost', value: 'cost' },
         { text: 'Views', value: 'views' },
         { text: 'Run time', value: 'runTime' },
       ],

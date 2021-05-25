@@ -15,12 +15,12 @@ import Vue from 'vue';
 export default Vue.extend({
   middleware: [
     'checkUserIsAdManager',
-    ({ $permission, $auth, redirect }) => {
-      if ($auth.user) {
-        if (!$permission.check($permission.MediaPermissions))
-          return redirect('/');
-      }
-    },
+    // ({ $permission, $auth, redirect }) => {
+    //   if ($auth.user) {
+    //     if (!$permission.check($permission.MediaPermissions))
+    //       return redirect('/');
+    //   }
+    // },
   ],
   data() {
     return {
