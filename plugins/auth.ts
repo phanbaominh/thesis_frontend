@@ -13,7 +13,7 @@ const ZonePermissions = [
   Permission.ControlZone,
 ];
 
-const MediaPermissions = [
+const AdPermissions = [
   Permission.ReadAd,
   Permission.WriteAd,
   Permission.DeleteAd,
@@ -42,7 +42,7 @@ interface PermissionPlugin {
   check: CheckPermission;
   DevicePermissions: Permission[];
   ZonePermissions: Permission[];
-  MediaPermissions: Permission[];
+  AdPermissions: Permission[];
   PermPermissions: Permission[];
   canGeneralReadDevice: canFunction;
   canGeneralWriteZone: canFunction;
@@ -152,22 +152,22 @@ const socketPlugin: Plugin = ({ $toast, $auth }, inject) => {
   };
 
   const canGeneralReadAd = () => {
-    return check(MediaPermissions);
+    return check(AdPermissions);
   };
 
   const canGeneralWriteAd = () => {
-    return check(MediaPermissions);
+    return check(AdPermissions);
   };
 
   const canGeneralDeleteAd = () => {
-    return check(MediaPermissions);
+    return check(AdPermissions);
   };
 
   inject('permission', {
     check,
     DevicePermissions,
     PermPermissions,
-    MediaPermissions,
+    AdPermissions,
     ZonePermissions,
     canGeneralReadDevice,
     canGeneralReadZone,

@@ -85,7 +85,7 @@
       <v-spacer></v-spacer>
       <v-col v-if="canReadAd" cols="12" lg="6">
         <v-card outlined>
-          <MediaAddDelete
+          <!-- <MediaAddDelete
             :media-array="zone.adArray"
             :all-media-array="nonZoneAdArray"
             type="Ads"
@@ -95,12 +95,28 @@
             @add="onAdd"
             @delete="onDelete"
           >
-            <!-- <v-list-item-action>
-              <BaseButton color="primary" dark @click="onPlayVideo(media)">
-                <v-icon>mdi-play</v-icon>
-              </BaseButton>
-            </v-list-item-action> -->
-          </MediaAddDelete>
+          
+          </MediaAddDelete> -->
+          <DataIterator type="Ads" :init-items="zone.adArray" compact>
+            <template #main="{ items: displayedAdArray }">
+              <MediaList :items="displayedAdArray">
+                <template #default="{ item: ad }">
+                  <v-list-item-title
+                    class="text-subtitle-1 text-sm-h6 font-weight-regular"
+                  >
+                    <nuxt-link :to="`/buildingads/${ad._id}`">{{
+                      ad.name
+                    }}</nuxt-link>
+                    <v-chip v-if="isEmpty(ad)" color="red" text-color="white">
+                      {{ ad.status }}
+                    </v-chip>
+                  </v-list-item-title>
+                </template>
+                <!-- <template #actions="{ item: media }">
+                </template> -->
+              </MediaList>
+            </template>
+          </DataIterator>
         </v-card>
       </v-col>
     </v-row>
@@ -157,7 +173,9 @@ export default Vue.extend({
   },
   async fetch() {
     this.allAdArray = ((await this.$axios.$get(this.$apiUrl.adsBdManager))
-      .adOffers as Ad[]).filter((ad) => ad.status === AdStatus.Deployed);
+      .adOffers as Ad[]).filter(
+      (ad) => ad.status === AdStatus.Deployed || ad.status === AdStatus.Empty
+    );
     this.allDeviceArray = (
       await this.$axios.$get(this.$apiUrl.devices)
     ).devices.filter((device: Device) => device.zoneId === null);
@@ -182,7 +200,7 @@ export default Vue.extend({
     canReadAd(): Boolean {
       return (
         this.canGeneralReadZone ||
-        this.$permission.check(this.$permission.MediaPermissions, {
+        this.$permission.check(this.$permission.AdPermissions, {
           zoneId: this.zone._id,
         })
       );
@@ -227,6 +245,9 @@ export default Vue.extend({
     this.$socket.off(`/receive/update/${this.zone._id}/infor-video`);
   },
   methods: {
+    isEmpty(ad: Ad): boolean {
+      return ad.status === AdStatus.Empty;
+    },
     onDelete(deletedArray: Ad[]) {
       const deletedIds = deletedArray.map((media) => media._id);
 

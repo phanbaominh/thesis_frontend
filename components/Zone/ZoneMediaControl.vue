@@ -26,7 +26,7 @@
     <!-- :disabled="!controlPerm" -->
     <v-row>
       <v-container class="d-flex justify-center mt-2">
-        <v-btn fab x-small depressed :disabled="!controlPerm" @click="onPause">
+        <v-btn fab x-small depressed :disabled="isDisabled" @click="onPause">
           <v-icon> mdi-{{ zoneInfo.isPause ? 'play' : 'pause' }} </v-icon>
         </v-btn>
         <!-- <v-btn fab x-small depressed :disabled="!controlPerm" @click="onLoop">
@@ -44,7 +44,7 @@
       <v-slider
         v-model="volume"
         track-color="light-grey"
-        :disabled="!controlPerm"
+        :disabled="isDisabled"
         @end="onVolume"
       >
         <template #prepend>
@@ -58,7 +58,7 @@
 </template>
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
-import { Video, Zone, ZoneInfo } from '~/types/types';
+import { Ad, AdStatus, Video, Zone, ZoneInfo } from '~/types/types';
 // const exampleZI: ZoneInfo = {
 //   loopMode: 0,
 //   isMute: false,
@@ -95,7 +95,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      zoneInfo: {} as ZoneInfo,
+      zoneInfo: { isPause: true } as ZoneInfo,
       progress: 0 as number,
       volume: 0 as number,
       videoPlayer: null as HTMLVideoElement | null,
@@ -109,7 +109,11 @@ export default Vue.extend({
         : 'Media Name';
     },
     subtitle(): string {
-      if (this.zoneInfo.isPause) {
+      if (this.zone.adArray.length === 0) {
+        return `Please add ads to zone`;
+      } else if (this.deployedAdArray.length === 0) {
+        return `All ads are empty`;
+      } else if (this.zoneInfo.isPause) {
         return 'Paused';
       } else if (this.zoneInfo.isPlaylistRunning) {
         const playlistName =
@@ -119,10 +123,7 @@ export default Vue.extend({
         return `Playing from playlist ${playlistName}...`;
       } else if (this.zoneInfo.videoId) {
         return `Playing video...`;
-      } else if (this.zone.adArray.length === 0) {
-        return `Please add ads to zone`;
-      }
-      return 'Click play to start playing ads in zone';
+      } else return 'Click play to start playing ads in zone';
     },
     timestamp(): string {
       return `${this.time(this.progress)}/${this.time(
@@ -162,6 +163,12 @@ export default Vue.extend({
     },
     loadFromServer(): boolean {
       return this.volume !== this.zoneInfo.volumeVideo && process.server;
+    },
+    deployedAdArray(): Ad[] {
+      return this.zone.adArray.filter((ad) => ad.status === AdStatus.Deployed);
+    },
+    isDisabled(): boolean {
+      return !this.controlPerm || this.deployedAdArray.length === 0;
     },
   },
   watch: {

@@ -1,6 +1,6 @@
 <template>
   <AdDetailed :ad="ad">
-    <template #append>
+    <template v-if="$permission.canGeneralWriteAd()" #append>
       <BaseDialogActions v-if="isPending" @close="onReject" @confirm="onAccept">
         Accept
         <template #close> Reject </template>

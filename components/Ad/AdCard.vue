@@ -26,6 +26,7 @@
         </template>
       </AdForm> -->
       <v-btn
+        v-if="!isBd"
         class="mr-2"
         color="primary"
         x-small
@@ -113,6 +114,7 @@ export default Vue.extend({
       return this.ad.status === AdStatus.Idle;
     },
     isDeletable(): boolean {
+      if (this.isBd && !this.$permission.canGeneralDeleteAd()) return false;
       return this.isIdle || this.ad.status === AdStatus.Finished;
     },
 
@@ -120,6 +122,7 @@ export default Vue.extend({
       return this.ad.status === AdStatus.Deployed;
     },
     isCancelable(): boolean {
+      if (this.isBd && !this.$permission.canGeneralWriteAd()) return false;
       return (
         (this.ad.status === AdStatus.Pending && !this.isBd) ||
         this.isDeployed ||
