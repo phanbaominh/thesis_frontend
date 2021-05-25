@@ -178,11 +178,18 @@ export interface Ad {
   zoneIds: string[];
   bdManagerId: string;
   status?: string;
-  timeDeploy?: string;
+  timeCreate?: string;
   timeStatus?: string;
   remainingBudget?: number;
 }
 
+export interface AdTableRow extends Ad {
+  views: number;
+  cost: number;
+  runTime: number;
+  avgViews: number;
+  avgRunTime: number;
+}
 export type ArrayElement<
   ArrayType extends readonly unknown[]
 > = ArrayType extends readonly (infer ElementType)[] ? ElementType : never;

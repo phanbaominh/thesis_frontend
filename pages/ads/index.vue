@@ -1,7 +1,7 @@
 <template>
   <BaseFetcher :fetch-state="$fetchState">
     <template #pending> Fetching ads... </template>
-    <DataIterator :type="'Ads'" :init-items="ads" :compact="false">
+    <!-- <DataIterator :type="'Ads'" :init-items="ads" :compact="false">
       <v-btn
         depressed
         fab
@@ -29,7 +29,23 @@
           </v-col>
         </v-row>
       </template>
-    </DataIterator>
+    </DataIterator> -->
+
+    <AdTable :init-ad-table-data="adTableData">
+      <v-btn
+        depressed
+        fab
+        :color="'blue'"
+        class="align-self-center mr-2"
+        :small="!$vuetify.breakpoint.xs"
+        :x-small="$vuetify.breakpoint.xs"
+        dark
+        nuxt
+        to="/ads/create"
+      >
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+    </AdTable>
   </BaseFetcher>
 </template>
 <script lang="ts">
@@ -39,10 +55,16 @@ export default Vue.extend({
   data() {
     return {
       ads: [] as Ad[],
+      adTableData: [],
+      loading: true,
     };
   },
   async fetch() {
-    this.ads = (await this.$axios.$get(this.$apiUrl.adsAdManager)).adOffers;
+    // this.ads = (await this.$axios.$get(this.$apiUrl.adsAdManager)).adOffers;
+    this.adTableData = (
+      await this.$axios.$get(this.$apiUrl.adsTableFormat)
+    ).adOffers;
+    this.loading = false;
   },
   methods: {
     // async onNew(ad: Ad) {

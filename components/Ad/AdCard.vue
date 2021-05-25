@@ -133,7 +133,7 @@ export default Vue.extend({
       const statusKey = `Time when ${this.ad.status}`;
       return {
         'Remaining budget': this.ad.remainingBudget,
-        'Creation time': this.$utils.timeFormat(this.ad.timeDeploy),
+        'Creation time': this.$utils.timeFormat(this.ad.timeCreate),
         [statusKey]: this.$utils.timeFormat(this.ad.timeStatus),
       };
     },

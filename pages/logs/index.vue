@@ -9,7 +9,7 @@
       hide-default-header
       :items="logs"
       item-key="name"
-      class="elevation-1"
+      class="elevation-3"
       :loading="loading"
     >
       <template #header>
@@ -22,7 +22,7 @@
         </thead>
       </template>
       <template #item.ad="{ item: { ad } }">
-        <nuxt-link :to="`/ads/${ad._id}`">{{ ad.name }}</nuxt-link>
+        <AdLink :ad="ad"></AdLink>
       </template>
       <template #item.genders="{ item: { genders } }">
         {{ `Male: ${genders[0]}, Female: ${genders[1]}` }}
@@ -31,7 +31,7 @@
         {{ $utils.moneyFormat(cost) }}
       </template>
       <template #item.costPerView="{ item: { cost, views } }">
-        {{ $utils.moneyFormat(cost / views) }}
+        {{ $utils.moneyFormat(cost / (views || 1)) }}
       </template>
       <template #item.ages="{ item }">
         {{ item.ages.toString() }}
