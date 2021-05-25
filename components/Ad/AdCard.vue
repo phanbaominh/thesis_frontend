@@ -2,7 +2,11 @@
   <v-card link @click="onClickCard">
     <v-card-title class="subheading font-weight-bold">
       {{ ad.name }}
-      <AdCardStatus :status="ad.status" class="ml-2" />
+      <AdCardStatus
+        :status="ad.status"
+        :time-status="ad.timeStatus"
+        class="ml-2"
+      />
       <v-spacer></v-spacer>
 
       <!-- <AdForm

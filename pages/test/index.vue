@@ -47,7 +47,7 @@ function getFakeData() {
     videoId: faker.helpers.randomize(testData.videoIds),
     adOfferId: faker.helpers.randomize(testData.adOfferIds),
     deviceId: faker.helpers.randomize(testData.deviceIds),
-    imagePath: faker.image.people(300, 300),
+    imagePath: faker.image.people(640, 480),
     moneyCharge: faker.datatype.number({ min: 1000, max: 10000 }),
     timeStamp:
       faker.date

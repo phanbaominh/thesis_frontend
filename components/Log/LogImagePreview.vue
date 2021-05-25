@@ -1,7 +1,7 @@
 <template>
   <v-dialog
     v-model="dialog"
-    width="500"
+    width="640"
     :fullscreen="$vuetify.breakpoint.smAndDown"
     :hide-overlay="$vuetify.breakpoint.smAndDown"
   >
@@ -17,7 +17,7 @@
       <v-img
         :src="link"
         alt="The first frame captured by camera"
-        max-width="500"
+        max-width="640"
       >
         <template #placeholder>
           <v-row class="fill-height ma-0" align="center" justify="center">

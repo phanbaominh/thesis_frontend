@@ -3,7 +3,6 @@
     :headers="headers"
     :items="adTableData"
     :search="search"
-    :loading="loading"
     class="elevation-3"
   >
     <template #top>
@@ -47,7 +46,11 @@
       <AdLink :ad="ad" />
     </template>
     <template #item.status="{ item: ad }">
-      <AdCardStatus :status="ad.status" class="ml-2" />
+      <AdCardStatus
+        :status="ad.status"
+        class="ml-2"
+        :time-status="ad.timeStatus"
+      />
     </template>
     <template #item.actions="{ item: ad }">
       <AdTableAction
@@ -58,8 +61,17 @@
         @cancel="onCancel"
       />
     </template>
+    <template #header.avgRunTime>
+      <th title="Average run time of video shown">Average run times</th>
+    </template>
+    <template #header.avgViews>
+      <th title="Average views per video shown">Average views</th>
+    </template>
     <template #item.cost="{ item: { cost } }">
       {{ $utils.moneyFormat(cost) }}
+    </template>
+    <template #item.remainingBudget="{ item: { remainingBudget } }">
+      {{ $utils.moneyFormat(remainingBudget) }}
     </template>
     <template #item.costPerView="{ item: { cost, views } }">
       {{ $utils.moneyFormat(cost / (views || 1)) }}
@@ -67,14 +79,11 @@
     <template #item.timeCreate="{ item }">
       {{ $utils.timeFormat(item.timeCreate) }}
     </template>
-    <template #item.timeStatus="{ item }">
-      {{ $utils.timeFormat(item.timeStatus) }}
-    </template>
     <template #item.avgViews="{ item: { avgViews } }">
       {{ avgViews.toFixed(2) }}
     </template>
     <template #item.avgRunTime="{ item: { avgRunTime } }">
-      {{ avgRunTime.toFixed(2) }}
+      <span>{{ avgRunTime.toFixed(2) }}</span>
     </template>
     <template #item.bdManager="{ item: { bdManagerId } }">
       {{ bdManagerId.username }}
@@ -96,10 +105,6 @@ export default Vue.extend({
       type: Array,
       required: true,
     } as Vue.PropOptions<AdTableRow[]>,
-    loading: {
-      type: Boolean,
-      required: true,
-    },
     isBd: {
       default: false,
       type: Boolean,
@@ -115,6 +120,10 @@ export default Vue.extend({
         {
           text: 'Cost',
           value: 'cost',
+        },
+        {
+          text: 'Remaining budget',
+          value: 'remainingBudget',
         },
         {
           text: 'Views',
@@ -133,19 +142,15 @@ export default Vue.extend({
           value: 'timeCreate',
         },
         {
-          text: 'Time when status change',
-          value: 'timeStatus',
-        },
-        {
-          text: 'Cost per View',
+          text: 'Cost per view',
           value: 'costPerView',
         },
         {
-          text: 'Average view per video',
+          text: 'Average view',
           value: 'avgViews',
         },
         {
-          text: 'Average run time per video',
+          text: 'Average run time',
           value: 'avgRunTime',
         },
         {

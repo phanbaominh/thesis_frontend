@@ -1,5 +1,7 @@
 <template>
-  <v-chip :color="color" text-color="white"> {{ status }}</v-chip>
+  <v-chip :color="color" text-color="white" :title="title">
+    {{ status }}
+  </v-chip>
 </template>
 <script lang="ts">
 import Vue from 'vue';
@@ -10,6 +12,10 @@ export default Vue.extend({
       required: true,
       type: String,
     } as Vue.PropOptions<AdStatus>,
+    timeStatus: {
+      required: true,
+      type: String,
+    },
   },
   computed: {
     color() {
@@ -24,6 +30,11 @@ export default Vue.extend({
       } else {
         return 'grey lighten-1';
       }
+    },
+    title() {
+      return `Status was changed to ${this.status} at ${this.$utils.timeFormat(
+        this.timeStatus
+      )}`;
     },
   },
 });
