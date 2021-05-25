@@ -69,17 +69,23 @@ export default Vue.extend({
     this.$socket.off('cancel-pending-offer');
   },
   methods: {
-    async changeStatus(status: AdStatus) {
+    // async changeStatus(status: AdStatus) {
+    //   await this.$handleErrors(async () => {
+    //     await this.$axios.$put(this.$apiUrl.adStatus(this.ad._id), { status });
+    //     this.ad.status = status;
+    //   });
+    // },
+    async onAccept() {
       await this.$handleErrors(async () => {
-        await this.$axios.$put(this.$apiUrl.adStatus(this.ad._id), { status });
-        this.ad.status = status;
+        await this.$axios.$put(this.$apiUrl.adStatusDeploy(this.ad._id));
+        this.ad.status = AdStatus.Deployed;
       });
     },
-    async onAccept() {
-      await this.changeStatus(AdStatus.Deployed);
-    },
     async onReject() {
-      await this.changeStatus(AdStatus.Idle);
+      await this.$handleErrors(async () => {
+        await this.$axios.$put(this.$apiUrl.adStatusReject(this.ad._id));
+        this.ad.status = AdStatus.Idle;
+      });
       this.$router.push('/buildingads');
     },
   },
