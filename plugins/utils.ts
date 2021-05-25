@@ -2,7 +2,7 @@ import { Plugin } from '@nuxt/types';
 import dayjs from 'dayjs';
 const utils = {
   timeFormat(time: number | Date | string | null | undefined): string {
-    const formatString = 'HH:MM - DD/MM/YYYY';
+    const formatString = 'HH:mm - DD/MM/YYYY';
     if (!time) return 'Unknown';
     if (time instanceof Date || typeof time === 'string')
       return dayjs(time).format(formatString);

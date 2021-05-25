@@ -59,7 +59,7 @@ export default Vue.extend({
         this.zone.deviceArray.find((device) => device._id === zoneInfo.deviceId)
           ?.name || 'None';
       const mediaName = zoneInfo.mediaName;
-      this.devicesLog.push({
+      this.devicesLog.unshift({
         name,
         mediaName,
         timeStart: this.$utils.timeFormat(zoneInfo.timeStart),
