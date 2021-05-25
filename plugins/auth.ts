@@ -156,11 +156,11 @@ const socketPlugin: Plugin = ({ $toast, $auth }, inject) => {
   };
 
   const canGeneralWriteAd = () => {
-    return check(AdPermissions);
+    return check(Permission.WriteAd);
   };
 
   const canGeneralDeleteAd = () => {
-    return check(AdPermissions);
+    return check(Permission.DeleteAd);
   };
 
   inject('permission', {

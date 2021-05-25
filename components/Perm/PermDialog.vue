@@ -123,8 +123,10 @@ export default Vue.extend({
   //     this.dialog = false;
   //   },
   // },
-  created() {
-    this.setMediaPermItems();
+  watch: {
+    dialog() {
+      if (this.dialog) this.setMediaPermItems();
+    },
   },
   methods: {
     addKeyToTabItem(key: PermissionName, tabItem: PermissionTabItem) {
