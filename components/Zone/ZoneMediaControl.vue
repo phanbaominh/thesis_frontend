@@ -287,7 +287,9 @@ export default Vue.extend({
         : this.clearProgressInterval();
       this.zoneInfo.isPause = !this.zoneInfo.isPause;
 
-      await this.videoControlRequest(event);
+      await this.videoControlRequest(event, {
+        zoneId: this.zone._id,
+      });
     },
     async onMute() {
       const event = this.zoneInfo.isMute ? 'unmute-video' : 'mute-video';

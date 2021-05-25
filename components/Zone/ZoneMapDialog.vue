@@ -7,7 +7,7 @@
     </template>
     <v-card>
       <BaseDialogTitle @close="dialog = false"> Zone location </BaseDialogTitle>
-      <!-- <GmapMap
+      <GmapMap
         :center="center"
         :zoom="20"
         :options="{ gestureHandling: 'none', zoomControl: false }"
@@ -15,7 +15,7 @@
         class="mt-2"
       >
         <GmapMarker :position="center" />
-      </GmapMap> -->
+      </GmapMap>
     </v-card>
   </v-dialog>
 </template>
