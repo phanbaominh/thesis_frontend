@@ -130,6 +130,12 @@ export default Vue.extend({
           disabled: !this.$permission.canGeneralReadAd(),
         },
         {
+          icon: 'mdi-chart-line',
+          title: 'Analytics',
+          to: '/bd-analytics',
+          disabled: false,
+        },
+        {
           icon: 'mdi-account-key',
           title: 'Permissions',
           to:

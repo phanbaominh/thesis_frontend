@@ -28,7 +28,7 @@ export const state = () => ({
     frequency: AnalyticsFrequency.Daily,
     timeStart: dayjs().subtract(6, 'day'),
     timeEnd: dayjs(),
-    ad: 'all',
+    item: 'all',
     filters: {},
   },
 });
@@ -96,15 +96,15 @@ export const mutations = mutationTree(state, {
   SET_ANALYTICS_FILTER(state, payload) {
     state.analytics.filters = payload;
   },
-  SET_ANALYTICS_AD(state, ad) {
-    state.analytics.ad = ad;
+  SET_ANALYTICS_ITEM(state, item) {
+    state.analytics.item = item;
   },
 });
 
 export const getters = getterTree(state, {
   // Type-checked
   analyticsQuery: ({
-    analytics: { frequency, filters, timeEnd, timeStart, value, ad },
+    analytics: { frequency, filters, timeEnd, timeStart, value, item },
   }): AnalyticsQueryObject => {
     // const filterString = Object.entries(filters)
     //   .map(([key, value]) => `&${key}=${value}`)
@@ -115,7 +115,7 @@ export const getters = getterTree(state, {
       timeStart: timeStart.unix(),
       frequency,
       timeEnd: timeEnd.unix(),
-      adOffer: ad,
+      item,
       ...filters,
     };
   },

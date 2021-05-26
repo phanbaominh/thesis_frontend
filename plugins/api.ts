@@ -60,6 +60,10 @@ interface ApiUrl {
   analyticsBdManager: Url;
   analyticsAge: Url;
   analyticsGender: Url;
+  bdAnalyticsZone: Url;
+  bdAnalyticsAdManager: Url;
+  bdAnalyticsAge: Url;
+  bdAnalyticsGender: Url;
   bdManagerZoneInfo: IdToUrl;
   logs: Url;
 }
@@ -98,6 +102,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
   const adsetsUrl = `${apiURL}/adsets`;
   const adsUrl = `${apiURL}/adoffers`;
   const analyticsUrl = `${apiURL}/analytics`;
+  const bdAnalyticsUrl = `${apiURL}/bd-analytics`;
   inject('apiUrl', {
     zones: zonesUrl,
     zonesTableFormat: `${zonesUrl}/table`,
@@ -152,6 +157,10 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     analyticsBdManager: `${analyticsUrl}/bdManager`,
     analyticsAge: `${analyticsUrl}/age`,
     analyticsGender: `${analyticsUrl}/gender`,
+    bdAnalyticsZone: `${bdAnalyticsUrl}/zone`,
+    bdAnalyticsAdManager: `${bdAnalyticsUrl}/ad-manager`,
+    bdAnalyticsAge: `${bdAnalyticsUrl}/age`,
+    bdAnalyticsGender: `${bdAnalyticsUrl}/gender`,
     bdManagerZoneInfo: (id: string) =>
       `${usersUrl}/bd-managers/${id}/zone-info`,
     logs: `${analyticsUrl}`,

@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-row>
-      <v-col cols="2"> <AnalyticsAdSelect /> </v-col>
+      <v-col cols="2"> <AnalyticsZoneSelect /> </v-col>
 
       <v-spacer></v-spacer>
       <v-col cols="2">
@@ -25,13 +25,13 @@ import Vue from 'vue';
 import dayjs from 'dayjs';
 export default Vue.extend({
   key: (to) => to.fullPath,
-  middleware: 'checkUserIsAdManager',
+  middleware: 'checkUserIsBuildingManager',
   data() {
     return {
       tab: null,
       tabItems: [
-        { text: 'Ads', to: 'ad' },
-        { text: 'Building Managers', to: 'bdManager' },
+        { text: 'Zones', to: 'zone' },
+        { text: 'Ad Managers', to: 'adManager' },
         { text: 'Age', to: 'age' },
         { text: 'Gender', to: 'gender' },
       ],
@@ -49,7 +49,7 @@ export default Vue.extend({
     const {
       timeStart: qTimeStart,
       timeEnd: qTimeEnd,
-      adOffer = 'all',
+      item = 'all',
     } = this.$route.query;
     const timeStart = dayjs(
       Number(qTimeStart || 0) * 1000 || dayjs().subtract(6, 'day')
@@ -59,7 +59,7 @@ export default Vue.extend({
       start: timeStart,
       end: timeEnd,
     });
-    this.$accessor.SET_ANALYTICS_ITEM(adOffer);
+    this.$accessor.SET_ANALYTICS_ITEM(item);
   },
 });
 </script>

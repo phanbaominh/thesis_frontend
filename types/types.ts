@@ -265,7 +265,10 @@ export enum AnalyticsValue {
 export interface AnalyticsData {
   name: string;
   views: number;
+  cost: number;
   runTime?: number;
+  avgRunTime?: number;
+  avgViews?: number;
   data: number[];
 }
 

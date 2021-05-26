@@ -1,13 +1,13 @@
 <template>
   <BaseFetcher :fetch-state="$fetchState">
-    <template #pending>Loading Ad Offer</template>
-    <v-select v-model="selectedItem" outlined dense :items="items" label="Ad">
+    <template #pending>Lozoneing zones</template>
+    <v-select v-model="selectedItem" outlined dense :items="items" label="Zone">
     </v-select>
   </BaseFetcher>
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { Ad, AdStatus, Select } from '~/types/types';
+import { Zone, Select } from '~/types/types';
 export default Vue.extend({
   data() {
     return {
@@ -16,10 +16,12 @@ export default Vue.extend({
     };
   },
   async fetch() {
-    const ads = ((await this.$axios.$get(this.$apiUrl.adsAdManager))
-      .adOffers as Ad[]).filter((ad) => ad.status === AdStatus.Deployed);
+    const zones = ((await this.$axios.$get(this.$apiUrl.zones))
+      .zones as Zone[]).filter((zone) => zone.name !== 'General');
     this.items.push({ text: 'All', value: 'all' });
-    ads.forEach((ad) => this.items.push({ text: ad.name, value: ad._id }));
+    zones.forEach((zone) =>
+      this.items.push({ text: zone.name, value: zone._id })
+    );
   },
   watch: {
     selectedItem() {
