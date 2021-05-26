@@ -7,6 +7,7 @@ interface IdToUrl {
 }
 interface ApiUrl {
   zones: Url;
+  zonesTableFormat: Url;
   zone: IdToUrl;
   zoneAddDevice: Url;
   zoneDeleteDevice: Url;
@@ -99,6 +100,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
   const analyticsUrl = `${apiURL}/analytics`;
   inject('apiUrl', {
     zones: zonesUrl,
+    zonesTableFormat: `${zonesUrl}/table`,
     zone: (id: string) => `${zonesUrl}/${id}`,
     zoneLogs: (id: string) => `${zonesUrl}/${id}/logs`,
     zoneAddDevice: `${zonesUrl}/add-device`,

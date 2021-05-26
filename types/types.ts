@@ -245,10 +245,12 @@ export interface DetailedAd {
   adSetId: Adset;
   contentId: { _id: string; name: string; mediaArray: string[] };
   budget: number;
+  remainingBudget: number;
   bdManagerId: User;
   adManagerId: User;
   zoneIds: Zone[];
   status?: string;
+  timeStatus: string;
 }
 export enum AnalyticsFrequency {
   Daily = 1,

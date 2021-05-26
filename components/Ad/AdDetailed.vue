@@ -65,7 +65,8 @@ export default Vue.extend({
     overviewDesc(): { [key: string]: string } {
       return {
         Name: `${this.ad.name}`,
-        Budget: `${this.ad.budget}`,
+        Budget: this.$utils.moneyFormat(this.ad.budget),
+        'Remaining budget': this.$utils.moneyFormat(this.ad.remainingBudget),
         AdManager: `${this.ad.adManagerId.email}`,
       };
     },

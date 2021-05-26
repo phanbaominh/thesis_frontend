@@ -5,13 +5,26 @@
         <v-card-title class="text-subtitle-1 text-sm-h6">
           {{ zone.name }}
         </v-card-title>
-        <DialogName
+        <!-- <DialogName
           v-if="$permission.canGeneralWriteZone()"
           :init-name="zone.name"
           title="Change zone name:"
           icon="pencil"
           @updateName="onUpdateName"
-        />
+        /> -->
+        <v-btn
+          depressed
+          fab
+          :color="'blue'"
+          class="align-self-center mr-2"
+          :small="!$vuetify.breakpoint.xs"
+          :x-small="$vuetify.breakpoint.xs"
+          nuxt
+          :to="`${zone._id}/edit`"
+          dark
+        >
+          <v-icon>mdi-pencil</v-icon>
+        </v-btn>
         <!-- <v-btn
           depressed
           fab
@@ -176,9 +189,10 @@ export default Vue.extend({
     );
     this.allDeviceArray = (
       await this.$axios.$get(this.$apiUrl.devices)
-    ).devices.filter((device: Device) => device.zoneId === null);
+    ).devices.filter((device: Device) => !device.zoneId);
 
     this.updateNonZoneArray();
+    this.updateNonZoneArray('device');
   },
   computed: {
     canGeneralReadZone(): Boolean {
