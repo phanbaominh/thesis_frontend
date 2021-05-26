@@ -62,7 +62,7 @@ export default Vue.extend({
   async fetch() {
     // this.ads = (await this.$axios.$get(this.$apiUrl.adsAdManager)).adOffers;
     this.adTableData = (
-      await this.$axios.$get(this.$apiUrl.adsTableFormat)
+      await this.$axios.$get(this.$apiUrl.adsTableFormatByAd)
     ).adOffers;
     this.loading = false;
   },

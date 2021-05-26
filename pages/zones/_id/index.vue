@@ -104,9 +104,7 @@
                   <v-list-item-title
                     class="text-subtitle-1 text-sm-h6 font-weight-regular"
                   >
-                    <nuxt-link :to="`/buildingads/${ad._id}`">{{
-                      ad.name
-                    }}</nuxt-link>
+                    <BuildingAdLink :ad="ad" />
                     <v-chip v-if="isEmpty(ad)" color="red" text-color="white">
                       {{ ad.status }}
                     </v-chip>

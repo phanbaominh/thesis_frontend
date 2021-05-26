@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="350">
+  <v-dialog v-model="dialog" :max-width="maxWidth">
     <template #activator="{ on, attrs }">
       <slot :on="on" :attrs="attrs">
         <v-btn
@@ -33,6 +33,10 @@ export default Vue.extend({
     color: {
       type: String,
       default: 'error',
+    },
+    maxWidth: {
+      type: Number,
+      default: 350,
     },
   },
   data() {

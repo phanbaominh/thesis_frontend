@@ -43,7 +43,7 @@
       ></v-text-field>
     </template>
     <template #item.name="{ item: ad }">
-      <AdLink :ad="ad" />
+      <BuildingAdLink :ad="ad" />
     </template>
     <template #item.status="{ item: ad }">
       <AdCardStatus
@@ -55,16 +55,11 @@
     <template #item.actions="{ item: ad }">
       <AdTableAction
         :ad="ad"
-        :to="`ads/${ad._id}`"
+        is-bd
+        :to="`buildingads/${ad._id}`"
         @delete="onDelete"
         @change="onChange"
       />
-    </template>
-    <template #header.avgRunTime>
-      <th title="Average run time of video shown">Average run times</th>
-    </template>
-    <template #header.avgViews>
-      <th title="Average views per video shown">Average views</th>
     </template>
     <template #item.cost="{ item: { cost } }">
       {{ $utils.moneyFormat(cost) }}
@@ -72,26 +67,11 @@
     <template #item.remainingBudget="{ item: { remainingBudget } }">
       {{ $utils.moneyFormat(remainingBudget) }}
     </template>
-    <template #item.costPerView="{ item: { cost, views } }">
-      {{ $utils.moneyFormat(cost / (views || 1)) }}
-    </template>
     <template #item.timeCreate="{ item }">
       {{ $utils.timeFormat(item.timeCreate) }}
     </template>
-    <template #item.avgViews="{ item: { avgViews } }">
-      {{ avgViews.toFixed(2) }}
-    </template>
-    <template #item.avgRunTime="{ item: { avgRunTime } }">
-      <span>{{ avgRunTime.toFixed(2) }}</span>
-    </template>
-    <template #item.bdManager="{ item: { bdManagerId } }">
-      {{ bdManagerId.username }}
-    </template>
-    <template #item.adset="{ item: { adSetId } }">
-      <AdLinkAdset :adset="adSetId" />
-    </template>
-    <template #item.content="{ item: { contentId } }">
-      {{ contentId.name }}
+    <template #item.adManager="{ item: { adManagerId } }">
+      {{ adManagerId.username }}
     </template>
   </v-data-table>
 </template>
@@ -113,16 +93,12 @@ export default Vue.extend({
           value: 'name',
         },
         {
-          text: 'Cost',
+          text: 'Profit',
           value: 'cost',
         },
         {
           text: 'Remaining budget',
           value: 'remainingBudget',
-        },
-        {
-          text: 'Views',
-          value: 'views',
         },
         {
           text: 'Run time',
@@ -137,28 +113,8 @@ export default Vue.extend({
           value: 'timeCreate',
         },
         {
-          text: 'Cost per view',
-          value: 'costPerView',
-        },
-        {
-          text: 'Average view',
-          value: 'avgViews',
-        },
-        {
-          text: 'Average run time',
-          value: 'avgRunTime',
-        },
-        {
-          text: 'Building Manager',
-          value: 'bdManager',
-        },
-        {
-          text: 'Content',
-          value: 'content',
-        },
-        {
-          text: 'Adset',
-          value: 'adset',
+          text: 'Ad Manager',
+          value: 'adManager',
         },
         {
           text: 'Actions',

@@ -1,5 +1,20 @@
 <template>
   <AdDetailed :ad="ad">
+    <template #top-left>
+      <v-btn
+        v-if="isIdle"
+        class="ml-2"
+        color="primary"
+        x-small
+        fab
+        depressed
+        nuxt
+        :to="`/ads/${ad._id}/edit`"
+        @click.native.stop
+      >
+        <v-icon>mdi-pencil</v-icon>
+      </v-btn>
+    </template>
     <template #top-right>
       <v-btn
         :fab="$vuetify.breakpoint.smAndDown"

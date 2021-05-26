@@ -42,7 +42,8 @@ interface ApiUrl {
   adsBelongTo: Url;
   adset: IdToUrl;
   ads: Url;
-  adsTableFormat: Url;
+  adsTableFormatByAd: Url;
+  adsTableFormatByBd: Url;
   adsAdManager: Url;
   adsBdManager: Url;
   ad: IdToUrl;
@@ -130,7 +131,8 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     adsets: adsetsUrl,
     adset: (id: string) => `${adsetsUrl}/${id}`,
     ads: adsUrl,
-    adsTableFormat: `${adsUrl}/table`,
+    adsTableFormatByAd: `${adsUrl}/table-ad`,
+    adsTableFormatByBd: `${adsUrl}/table-bd`,
     adsBelongTo: `${adsUrl}/belong-to`,
     adsAdManager: `${adsUrl}/ad-manager`,
     adsBdManager: `${adsUrl}/bd-manager`,

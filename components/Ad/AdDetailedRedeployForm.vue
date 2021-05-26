@@ -6,9 +6,11 @@
     @submit="onRedeploy"
   >
     <template #activator="{ on, attrs }">
-      <v-btn color="blue darken-1" text v-bind="attrs" v-on="on">
-        Redeploy
-      </v-btn>
+      <slot :on="on" :attrs="attrs">
+        <v-btn color="blue darken-1" text v-bind="attrs" v-on="on">
+          Redeploy
+        </v-btn>
+      </slot>
     </template>
     <v-text-field
       v-model="newBudget"
