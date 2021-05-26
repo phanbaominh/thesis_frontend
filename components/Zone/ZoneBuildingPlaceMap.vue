@@ -18,13 +18,14 @@
               hint="Search or right click on map to select location"
               persistent-hint
               :error-messages="errorMessages"
+              :disabled="disabled"
               @attrs="attrs"
               @listeners="listeners"
             >
             </v-text-field>
           </v-col>
           <v-col>
-            <v-btn :disabled="!currentPlace" @click="onAddMarker">
+            <v-btn :disabled="!currentPlace || disabled" @click="onAddMarker">
               Add Marker
             </v-btn>
           </v-col>
@@ -54,6 +55,10 @@ export default Vue.extend({
     initMarker: {
       type: Object,
       default: null,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -108,6 +113,7 @@ export default Vue.extend({
       });
     },
     onRightClickMap(mouseArgs: any) {
+      if (this.disabled) return;
       this.marker = {
         lat: mouseArgs.latLng.lat(),
         lng: mouseArgs.latLng.lng(),

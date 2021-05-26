@@ -24,6 +24,7 @@
           class="mb-2"
           :error-messages="errorMessages"
           :init-marker="zone.location"
+          :disabled="hasAds"
           @setMarker="onSetMarker"
         >
         </ZoneBuildingPlaceMap>
@@ -42,6 +43,7 @@
           outlined
           dense
           type="number"
+          :disabled="hasAds"
           :rules="[
             (v) => !!v || 'Price per second is required',
             (v) => (v && v >= 0) || 'Price per second has to be larger than 0',
@@ -76,6 +78,11 @@ export default Vue.extend({
       } as Zone,
       errorMessages: '',
     };
+  },
+  computed: {
+    hasAds(): boolean {
+      return this.initZone && this.initZone.adArray.length > 0;
+    },
   },
   methods: {
     async onSubmit() {
