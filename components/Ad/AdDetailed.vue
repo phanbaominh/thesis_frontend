@@ -1,7 +1,12 @@
 <template>
   <v-card>
     <v-card-title
-      >Overview <AdCardStatus :status="ad.status" class="ml-2" />
+      >Overview
+      <AdCardStatus
+        :status="ad.status"
+        :time-status="ad.timeStatus"
+        class="ml-2"
+      />
       <slot name="top-left"></slot>
       <v-spacer></v-spacer>
       <slot name="top-right"></slot>

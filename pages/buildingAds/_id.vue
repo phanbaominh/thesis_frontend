@@ -1,10 +1,26 @@
 <template>
   <AdDetailed :ad="ad">
-    <template v-if="$permission.canGeneralWriteAd()" #append>
-      <BaseDialogActions v-if="isPending" @close="onReject" @confirm="onAccept">
-        Accept
-        <template #close> Reject </template>
-      </BaseDialogActions>
+    <template #append>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <template v-if="isPending && $permission.canGeneralWriteAd()">
+          <AdDetailedActionDialog @confirm="onAccept">
+            <template #name>Accept</template>
+            Do you want to accept and deploy this ad?
+          </AdDetailedActionDialog>
+          <AdDetailedActionDialog @confirm="onReject">
+            <template #name>Reject</template>
+            Do you want to reject this ad?
+          </AdDetailedActionDialog>
+        </template>
+        <AdDetailedActionDialog v-if="isCancelable" @confirm="onCancel">
+          <template #name>Cancel</template>
+          Do you want to cancel this ad?
+        </AdDetailedActionDialog>
+        <AdDetailedActionDialog v-if="isDeletable" @confirm="onDelete">
+          <template #name>Delete</template>
+        </AdDetailedActionDialog>
+      </v-card-actions>
     </template>
   </AdDetailed>
 </template>
@@ -24,6 +40,19 @@ export default Vue.extend({
   computed: {
     isPending(): boolean {
       return this.ad.status === AdStatus.Pending;
+    },
+    isDeletable(): boolean {
+      return (
+        this.ad.status === AdStatus.Finished &&
+        this.$permission.canGeneralDeleteAd()
+      );
+    },
+    isCancelable(): boolean {
+      return (
+        (this.ad.status === AdStatus.Deployed ||
+          this.ad.status === AdStatus.Empty) &&
+        this.$permission.canGeneralWriteAd()
+      );
     },
   },
   created() {
@@ -56,6 +85,20 @@ export default Vue.extend({
         this.ad.status = AdStatus.Idle;
       });
       this.$router.push('/buildingads');
+    },
+    async onCancel() {
+      await this.$handleErrors(async () => {
+        const newStatus = (
+          await this.$axios.$put(this.$apiUrl.adStatusCancel(this.ad._id))
+        ).status as AdStatus;
+        this.ad.status = newStatus;
+      });
+    },
+    async onDelete() {
+      await this.$handleErrors(async () => {
+        await this.$axios.$delete(this.$apiUrl.ad(this.ad._id));
+        this.$router.push('/buildingads');
+      });
     },
   },
 });

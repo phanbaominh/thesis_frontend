@@ -32,15 +32,23 @@
     <template #append>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn v-if="isIdle" color="blue darken-1" text @click="onSend">
-          Send
-        </v-btn>
+        <AdDetailedActionDialog v-if="isIdle" @confirm="onSend">
+          <template #name>Send</template>
+          Do you want to send this ad?
+        </AdDetailedActionDialog>
         <AdDetailedRedeployForm
           v-if="isEmpty"
           :ad="ad"
           :dialog="dialog"
           @redeploy="onRedeploy"
         />
+        <AdDetailedActionDialog v-if="isCancelable" @confirm="onCancel">
+          <template #name>Cancel</template>
+          Do you want to cancel this ad?
+        </AdDetailedActionDialog>
+        <AdDetailedActionDialog v-if="isDeletable" @confirm="onDelete">
+          <template #name>Delete</template>
+        </AdDetailedActionDialog>
       </v-card-actions>
     </template>
   </AdDetailed>
@@ -72,6 +80,17 @@ export default Vue.extend({
     isEmpty(): boolean {
       return this.ad.status === AdStatus.Empty;
     },
+    isDeletable(): boolean {
+      return this.isIdle || this.ad.status === AdStatus.Finished;
+    },
+
+    isCancelable(): boolean {
+      return (
+        this.ad.status === AdStatus.Pending ||
+        this.ad.status === AdStatus.Deployed ||
+        this.isEmpty
+      );
+    },
   },
   methods: {
     async onSend() {
@@ -86,6 +105,20 @@ export default Vue.extend({
           budget,
         });
         this.ad.status = AdStatus.Deployed;
+      });
+    },
+    async onCancel() {
+      await this.$handleErrors(async () => {
+        const newStatus = (
+          await this.$axios.$put(this.$apiUrl.adStatusCancel(this.ad._id))
+        ).status as AdStatus;
+        this.ad.status = newStatus;
+      });
+    },
+    async onDelete() {
+      await this.$handleErrors(async () => {
+        await this.$axios.$delete(this.$apiUrl.ad(this.ad._id));
+        this.$router.push('/ads');
       });
     },
   },
