@@ -3,7 +3,7 @@
     v-model="selected"
     :headers="headers"
     :items="data"
-    item-key="name"
+    item-key="_id"
     show-select
     class="elevation-1"
   >

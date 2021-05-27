@@ -55,6 +55,7 @@ interface ApiUrl {
   adStatusDeploy: IdToUrl;
   adStatusReject: IdToUrl;
   adDetailed: IdToUrl;
+  analyticsSummary: Url;
   analyticsOverview: Url;
   analyticsAdOffer: Url;
   analyticsBdManager: Url;
@@ -64,6 +65,8 @@ interface ApiUrl {
   bdAnalyticsAdManager: Url;
   bdAnalyticsAge: Url;
   bdAnalyticsGender: Url;
+  bdAnalyticsOverview: Url;
+  bdAnalyticsSummary: Url;
   bdManagerZoneInfo: IdToUrl;
   logs: Url;
 }
@@ -153,6 +156,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     adStatusDeploy: (id: string) => `${adsUrl}/${id}/deploy`,
     adStatusReject: (id: string) => `${adsUrl}/${id}/reject`,
     analyticsOverview: `${analyticsUrl}/overview`,
+    analyticsSummary: `${analyticsUrl}/summary`,
     analyticsAdOffer: `${analyticsUrl}/adOffer`,
     analyticsBdManager: `${analyticsUrl}/bdManager`,
     analyticsAge: `${analyticsUrl}/age`,
@@ -161,6 +165,8 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     bdAnalyticsAdManager: `${bdAnalyticsUrl}/ad-manager`,
     bdAnalyticsAge: `${bdAnalyticsUrl}/age`,
     bdAnalyticsGender: `${bdAnalyticsUrl}/gender`,
+    bdAnalyticsOverview: `${bdAnalyticsUrl}/overview`,
+    bdAnalyticsSummary: `${bdAnalyticsUrl}/summary`,
     bdManagerZoneInfo: (id: string) =>
       `${usersUrl}/bd-managers/${id}/zone-info`,
     logs: `${analyticsUrl}`,

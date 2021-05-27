@@ -7,18 +7,10 @@
     <v-data-table
       :headers="headers"
       :items="logs"
-      item-key="name"
+      item-key="_id"
       class="elevation-3"
       :loading="loading"
     >
-      <template #top>
-        <v-spacer></v-spacer>
-        <v-text-field
-          v-model="search"
-          label="Search "
-          class="mx-4"
-        ></v-text-field>
-      </template>
       <!-- <template #header>
         <thead>
           <tr>
@@ -60,11 +52,18 @@
       </template>
       <template v-if="$vuetify.breakpoint.smAndUp" #body.append>
         <tr>
-          <td v-for="i in 6" :key="i"></td>
+          <td colspan="2">
+            <v-text-field
+              v-model="search"
+              label="Search name"
+              class="mx-4"
+            ></v-text-field>
+          </td>
+          <td v-for="i in 4" :key="i"></td>
           <td colspan="4">
             <div class="date-search">
               <span class="text-caption date-caption-from">
-                {{ from.date }} {{ from.time }}
+                {{ from.time }} {{ from.date }}
                 <v-icon
                   v-if="isVisible(from)"
                   x-small
@@ -75,11 +74,11 @@
               </span>
               <div>
                 <span>From:</span>
-                <LogDatePicker @pick="from.date = $event" />
                 <LogTimePicker @pick="from.time = $event" />
+                <LogDatePicker @pick="from.date = $event" />
               </div>
               <span class="text-caption date-caption-to">
-                {{ to.date }} {{ to.time }}
+                {{ to.time }} {{ to.date }}
                 <v-icon
                   v-if="isVisible(to)"
                   x-small
@@ -90,8 +89,8 @@
               </span>
               <div>
                 <span>To: </span>
-                <LogDatePicker @pick="to.date = $event" />
                 <LogTimePicker @pick="to.time = $event" />
+                <LogDatePicker @pick="to.date = $event" />
               </div>
             </div>
           </td>

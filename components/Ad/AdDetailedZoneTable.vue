@@ -3,7 +3,7 @@
     :headers="headers"
     hide-default-header
     :items="zones"
-    item-key="name"
+    item-key="_id"
     class="elevation-1"
   >
     <template #header>

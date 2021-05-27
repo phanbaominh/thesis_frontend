@@ -6,7 +6,12 @@
     <v-card>
       <v-card-title>Pick a date:</v-card-title>
 
-      <v-date-picker v-model="date" elevation="3" full-width></v-date-picker>
+      <v-date-picker
+        v-model="date"
+        elevation="3"
+        full-width
+        :max="currentDate"
+      ></v-date-picker>
 
       <BaseDialogActions @close="dialog = false" @confirm="onConfirm">
         Apply
@@ -22,6 +27,7 @@ export default Vue.extend({
     return {
       date: '',
       dialog: false,
+      currentDate: new Date().toISOString(),
     };
   },
   methods: {

@@ -1,43 +1,53 @@
 <template>
-  <v-row>
-    <v-col cols="12" lg="6">
-      <v-card v-if="$permission.canGeneralReadDevice()">
-        <v-card-title>Device report</v-card-title>
-        <BaseFetcher :fetch-state="$fetchState">
-          <v-data-table
-            :headers="headers"
-            :items="devices"
-            :items-per-page="5"
-            class="elevation-1"
-          >
-            <template #item.status="{ item }">
-              <div :class="item.status ? 'green--text' : 'red--text'">
-                <span>{{ item.status ? 'Online' : 'Offline' }}</span>
-                <v-icon></v-icon>
-              </div>
-            </template>
-
-            <template #item.zone="{ item }">
-              {{ item.zoneId.name || 'None' }}
-            </template>
-
-            <template #item.timeStatusChange="{ item }">
-              {{ $utils.timeFormat(item.timeStatusChange) }}
-            </template>
-          </v-data-table>
-        </BaseFetcher>
-      </v-card></v-col
-    ><v-col cols="12" lg="6">
-      <v-card v-if="$permission.canGeneralReadDevice()" class="pb-4">
-        <v-card-title>Device report: {{ devices.length }} total</v-card-title>
-        <DashboardChart
-          :key="updateChart"
-          :loaded="!$fetchState.pending && !$fetchState.error"
-          :chart-data="chartData"
-        />
-      </v-card>
-    </v-col>
-  </v-row>
+  <div>
+    <v-row>
+      <v-col cols="12" lg="6">
+        <v-card v-if="$permission.canGeneralReadDevice()">
+          <v-card-title>Device report</v-card-title>
+          <BaseFetcher :fetch-state="$fetchState">
+            <v-data-table
+              :headers="headers"
+              :items="devices"
+              :items-per-page="5"
+              class="elevation-1"
+            >
+              <template #item.status="{ item }">
+                <div :class="item.status ? 'green--text' : 'red--text'">
+                  <span>{{ item.status ? 'Online' : 'Offline' }}</span>
+                  <v-icon></v-icon>
+                </div>
+              </template>
+              <template #item.zone="{ item }">
+                {{ item.zoneId.name || 'None' }}
+              </template>
+              <template #item.timeStatusChange="{ item }">
+                {{ $utils.timeFormat(item.timeStatusChange) }}
+              </template>
+            </v-data-table>
+          </BaseFetcher>
+        </v-card></v-col
+      ><v-col cols="12" lg="6">
+        <v-card v-if="$permission.canGeneralReadDevice()" class="pb-4">
+          <v-card-title>Device report: {{ devices.length }} total</v-card-title>
+          <DashboardChart
+            :key="updateChart"
+            :loaded="!$fetchState.pending && !$fetchState.error"
+            :chart-data="chartData"
+          />
+        </v-card>
+      </v-col>
+    </v-row>
+    <HomeOverview
+      :link="$apiUrl.bdAnalyticsOverview"
+      cost-header-text="Profit"
+      class="mt-2"
+      name-key="Zone"
+    >
+      <template #link="{ item: zone }">
+        <ZoneLink :zone="zone" />
+      </template>
+    </HomeOverview>
+  </div>
 </template>
 <script lang="ts">
 import Vue from 'vue';
