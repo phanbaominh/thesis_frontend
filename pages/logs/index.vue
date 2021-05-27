@@ -6,13 +6,20 @@
     </v-card-title>
     <v-data-table
       :headers="headers"
-      hide-default-header
       :items="logs"
       item-key="name"
       class="elevation-3"
       :loading="loading"
     >
-      <template #header>
+      <template #top>
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          label="Search "
+          class="mx-4"
+        ></v-text-field>
+      </template>
+      <!-- <template #header>
         <thead>
           <tr>
             <th v-for="hd in headers" :key="hd.text" class="text-h6">
@@ -20,7 +27,7 @@
             </th>
           </tr>
         </thead>
-      </template>
+      </template> -->
       <template #item.ad="{ item: { ad } }">
         <AdLink :ad="ad"></AdLink>
       </template>
@@ -51,30 +58,58 @@
       <template #item.image="{ item: { image } }">
         <LogImagePreview v-if="image" :link="image" />
       </template>
+      <template v-if="$vuetify.breakpoint.smAndUp" #body.append>
+        <tr>
+          <td v-for="i in 6" :key="i"></td>
+          <td colspan="4">
+            <div class="date-search">
+              <span class="text-caption date-caption-from">
+                {{ from.date }} {{ from.time }}
+                <v-icon
+                  v-if="isVisible(from)"
+                  x-small
+                  @click="from = { time: '', date: '' }"
+                >
+                  mdi-close
+                </v-icon>
+              </span>
+              <div>
+                <span>From:</span>
+                <LogDatePicker @pick="from.date = $event" />
+                <LogTimePicker @pick="from.time = $event" />
+              </div>
+              <span class="text-caption date-caption-to">
+                {{ to.date }} {{ to.time }}
+                <v-icon
+                  v-if="isVisible(to)"
+                  x-small
+                  @click="to = { time: '', date: '' }"
+                >
+                  mdi-close
+                </v-icon>
+              </span>
+              <div>
+                <span>To: </span>
+                <LogDatePicker @pick="to.date = $event" />
+                <LogTimePicker @pick="to.time = $event" />
+              </div>
+            </div>
+          </td>
+        </tr>
+      </template>
     </v-data-table>
   </v-card>
 </template>
 <script lang="ts">
 import Vue from 'vue';
 import dayjs from 'dayjs';
-import { AdLog, AnalyticsQueryObject } from '~/types/types';
+import { Ad, AdLog, AnalyticsQueryObject } from '~/types/types';
 export default Vue.extend({
   data() {
     return {
-      headers: [
-        { text: 'Ad', value: 'ad' },
-        { text: 'Cost     ', value: 'cost' },
-        { text: 'Views', value: 'views' },
-        { text: 'Run time', value: 'runTime' },
-        { text: 'First frame', value: 'image' },
-        { text: 'Cost per view', value: 'costPerView' },
-        { text: 'Time start', value: 'timeStart' },
-        { text: 'Device', value: 'device' },
-        { text: 'Zone', value: 'zone' },
-        { text: 'Building manager', value: 'bdManager' },
-        { text: 'Male/Female', value: 'genders' },
-        { text: 'Age ranges', value: 'ages' },
-      ],
+      search: '',
+      from: { date: '', time: '' },
+      to: { date: '', time: '' },
       loading: true,
       logs: [] as AdLog[],
     };
@@ -86,6 +121,49 @@ export default Vue.extend({
     this.loading = false;
   },
   computed: {
+    headers() {
+      return [
+        {
+          text: 'Ad',
+          value: 'ad',
+          filter: (value: Ad) => {
+            if (!this.search) return true;
+            const regex = new RegExp(this.search);
+            return regex.test(value.name);
+          },
+        },
+        { text: 'Cost     ', value: 'cost' },
+        { text: 'Views', value: 'views' },
+        { text: 'Run time', value: 'runTime' },
+        { text: 'First frame', value: 'image' },
+        { text: 'Cost per view', value: 'costPerView' },
+        {
+          text: 'Time start',
+          value: 'timeStart',
+          filter: (value: number) => {
+            const fromDateStr = this.from.date + this.from.time;
+            const toDateStr = this.to.date + this.to.time;
+            const fromDate = dayjs(fromDateStr);
+            const toDate = dayjs(toDateStr);
+            const dateStart = dayjs.unix(value);
+            if (!fromDate.isValid() && !toDate.isValid()) return true;
+            return (
+              (!fromDate.isValid() ||
+                dateStart.isAfter(fromDate) ||
+                dateStart.isSame(fromDate)) &&
+              (!toDate.isValid() ||
+                dateStart.isBefore(toDate) ||
+                dateStart.isSame(toDate))
+            );
+          },
+        },
+        { text: 'Device', value: 'device' },
+        { text: 'Zone', value: 'zone' },
+        { text: 'Building manager', value: 'bdManager' },
+        { text: 'Male/Female', value: 'genders' },
+        { text: 'Age ranges', value: 'ages' },
+      ];
+    },
     query(): AnalyticsQueryObject {
       return this.$accessor.analyticsQuery;
     },
@@ -106,5 +184,23 @@ export default Vue.extend({
       end: timeEnd,
     });
   },
+  methods: {
+    isVisible(time: { time: string; date: string }) {
+      return !!(time.time || time.date);
+    },
+  },
 });
 </script>
+<style scoped>
+.date-search {
+  position: relative;
+}
+.date-caption-from {
+  position: absolute;
+  top: -10px;
+}
+.date-caption-to {
+  position: absolute;
+  top: 15px;
+}
+</style>
