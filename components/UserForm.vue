@@ -2,7 +2,6 @@
   <v-form
     ref="form"
     v-model="valid"
-    class="d-flex justify-center"
     :disabled="disabled"
     @submit.prevent="onSubmit"
   >

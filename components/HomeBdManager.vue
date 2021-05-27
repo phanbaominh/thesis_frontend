@@ -1,5 +1,15 @@
 <template>
   <div>
+    <HomeOverview
+      :link="$apiUrl.bdAnalyticsOverview"
+      cost-header-text="Profit"
+      class="mb-4"
+      name-key="Zone"
+    >
+      <template #link="{ item: zone }">
+        <ZoneLink :zone="zone" />
+      </template>
+    </HomeOverview>
     <v-row>
       <v-col cols="12" lg="6">
         <v-card v-if="$permission.canGeneralReadDevice()">
@@ -37,16 +47,6 @@
         </v-card>
       </v-col>
     </v-row>
-    <HomeOverview
-      :link="$apiUrl.bdAnalyticsOverview"
-      cost-header-text="Profit"
-      class="mt-2"
-      name-key="Zone"
-    >
-      <template #link="{ item: zone }">
-        <ZoneLink :zone="zone" />
-      </template>
-    </HomeOverview>
   </div>
 </template>
 <script lang="ts">

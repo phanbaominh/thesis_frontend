@@ -1,9 +1,26 @@
 <template>
   <v-container>
-    <UserProfile
-      :disabled="!!($auth.user && $auth.user.adminId)"
-      class="mb-4"
-    />
+    <v-row>
+      <v-col cols="6">
+        <UserProfile
+          :disabled="!!($auth.user && $auth.user.adminId)"
+          class="mb-4"
+        />
+      </v-col>
+      <v-col cols="6">
+        <HomeSummary
+          v-if="isAdManager"
+          :link="$apiUrl.analyticsSummary"
+          class="mb-4"
+        />
+        <HomeSummary
+          v-else
+          :link="$apiUrl.bdAnalyticsSummary"
+          class="mb-4"
+          cost-name="Profit"
+        />
+      </v-col>
+    </v-row>
     <HomeAdManager v-if="isAdManager" />
     <HomeBdManager v-else />
   </v-container>
