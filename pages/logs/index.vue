@@ -21,7 +21,8 @@
         </thead>
       </template> -->
       <template #item.ad="{ item: { ad } }">
-        <AdLink :ad="ad"></AdLink>
+        <AdLink v-if="isAdManager" :ad="ad"></AdLink>
+        <span v-else> {{ ad.name }}</span>
       </template>
       <template #item.genders="{ item: { genders } }">
         {{ `Male: ${genders[0]}, Female: ${genders[1]}` }}
@@ -42,7 +43,8 @@
         {{ bdManager.username }}
       </template>
       <template #item.zone="{ item: { zone } }">
-        {{ zone.name }}
+        <ZoneLink v-if="!isAdManager" :zone="zone" />
+        <span v-else>{{ zone.name }}</span>
       </template>
       <template #item.device="{ item: { device } }">
         {{ device.name }}
@@ -102,8 +104,15 @@
 <script lang="ts">
 import Vue from 'vue';
 import dayjs from 'dayjs';
-import { Ad, AdLog, AnalyticsQueryObject } from '~/types/types';
+import { AdLog, AnalyticsQueryObject, Nameable, TypeUser } from '~/types/types';
 export default Vue.extend({
+  middleware: [
+    ({ $permission, $auth, redirect }) => {
+      if ($auth.user) {
+        if (!$permission.canGeneralReadAnalytics()) return redirect('/');
+      }
+    },
+  ],
   data() {
     return {
       search: '',
@@ -120,17 +129,40 @@ export default Vue.extend({
     this.loading = false;
   },
   computed: {
-    headers() {
+    isAdManager(): boolean {
+      return !!(
+        this.$auth.user && this.$auth.user.typeUser === TypeUser.AdManager
+      );
+    },
+    headers(): any[] {
+      const adHeader = {
+        text: 'Ad',
+        value: 'ad',
+        ...(this.isAdManager
+          ? {
+              filter: (value: Nameable) => {
+                if (!this.search) return true;
+                const regex = new RegExp(this.search);
+                return regex.test(value.name);
+              },
+            }
+          : {}),
+      };
+      const zoneHeader = {
+        text: 'Zone',
+        value: 'zone',
+        ...(!this.isAdManager
+          ? {
+              filter: (value: Nameable) => {
+                if (!this.search) return true;
+                const regex = new RegExp(this.search);
+                return regex.test(value.name);
+              },
+            }
+          : {}),
+      };
       return [
-        {
-          text: 'Ad',
-          value: 'ad',
-          filter: (value: Ad) => {
-            if (!this.search) return true;
-            const regex = new RegExp(this.search);
-            return regex.test(value.name);
-          },
-        },
+        this.isAdManager ? adHeader : zoneHeader,
         { text: 'Cost     ', value: 'cost' },
         { text: 'Views', value: 'views' },
         { text: 'Run time', value: 'runTime' },
@@ -157,7 +189,7 @@ export default Vue.extend({
           },
         },
         { text: 'Device', value: 'device' },
-        { text: 'Zone', value: 'zone' },
+        !this.isAdManager ? adHeader : zoneHeader,
         { text: 'Building manager', value: 'bdManager' },
         { text: 'Male/Female', value: 'genders' },
         { text: 'Age ranges', value: 'ages' },

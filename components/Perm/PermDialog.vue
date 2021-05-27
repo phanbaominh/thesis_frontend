@@ -112,7 +112,7 @@ export default Vue.extend({
     return {
       dialog: false,
       tab: 0,
-      tabItems: ['Ad', 'Device', 'Zone', 'Permission'],
+      tabItems: ['Ad', 'Device', 'Zone', 'Permission', 'Advanced'],
       permTabItems: [] as PermissionTabItem[],
       permGroup: this.initPermGroup,
       isAdmin: this.initPermGroup.name === 'admin',
@@ -156,12 +156,17 @@ export default Vue.extend({
         WritePermission: false,
         DeletePermission: false,
       };
+
+      const advancedPermTabItem: PermissionTabItem = {
+        ReadAnalytics: false,
+      };
       this.permGroup.permissions.forEach((perm) => {
         const permName = Permission[perm] as PermissionName;
         this.addKeyToTabItem(permName, adPermTabItem);
         this.addKeyToTabItem(permName, devicePermTabItem);
         this.addKeyToTabItem(permName, zonePermTabItem);
         this.addKeyToTabItem(permName, permPermTabItem);
+        this.addKeyToTabItem(permName, advancedPermTabItem);
       });
       this.$accessor.SET_PERMS(this.permGroup.permissions);
       this.permTabItems = [
@@ -169,6 +174,7 @@ export default Vue.extend({
         devicePermTabItem,
         zonePermTabItem,
         permPermTabItem,
+        advancedPermTabItem,
       ];
     },
     async onUpdatePermGroup(updatedPermGroup: PermissionGroup) {

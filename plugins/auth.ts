@@ -1,5 +1,9 @@
 import { Plugin } from '@nuxt/types';
-import { DetailedZonePermissionGroup, Permission } from '~/types/types';
+import {
+  DetailedZonePermissionGroup,
+  Permission,
+  TypeUser,
+} from '~/types/types';
 const DevicePermissions = [
   Permission.ReadDevice,
   Permission.DeleteDevice,
@@ -50,6 +54,7 @@ interface PermissionPlugin {
   canGeneralReadAd: canFunction;
   canGeneralWriteAd: canFunction;
   canGeneralDeleteAd: canFunction;
+  canGeneralReadAnalytics: canFunction;
   isAdmin: canFunction;
 }
 declare module 'vue/types/vue' {
@@ -93,6 +98,7 @@ const socketPlugin: Plugin = ({ $toast, $auth }, inject) => {
       isLogging?: boolean;
     }
   ): boolean => {
+    if ($auth.user && $auth.user.typeUser === TypeUser.AdManager) return true;
     if ($auth.user && $auth.user.zonePermissionGroups) {
       // eslint-disable-next-line prefer-const
       const defaultOptions = {
@@ -163,6 +169,9 @@ const socketPlugin: Plugin = ({ $toast, $auth }, inject) => {
     return check(Permission.DeleteAd);
   };
 
+  const canGeneralReadAnalytics = () => {
+    return check(Permission.ReadAnalytics);
+  };
   inject('permission', {
     check,
     DevicePermissions,
@@ -175,6 +184,7 @@ const socketPlugin: Plugin = ({ $toast, $auth }, inject) => {
     canGeneralReadAd,
     canGeneralWriteAd,
     canGeneralDeleteAd,
+    canGeneralReadAnalytics,
   } as PermissionPlugin);
 };
 export default socketPlugin;

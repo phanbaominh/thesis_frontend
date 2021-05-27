@@ -132,7 +132,7 @@
       </v-col>
     </v-row>
     <v-card class="mt-10">
-      <v-card-title>Media Log</v-card-title>
+      <v-card-title>Device Log (past 24h)</v-card-title>
       <ZoneDevicesLog :zone="zone" />
     </v-card>
   </v-container>

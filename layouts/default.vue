@@ -133,7 +133,7 @@ export default Vue.extend({
           icon: 'mdi-chart-line',
           title: 'Analytics',
           to: '/bd-analytics',
-          disabled: false,
+          disabled: !this.$permission.canGeneralReadAnalytics(),
         },
         {
           icon: 'mdi-account-key',
@@ -145,6 +145,12 @@ export default Vue.extend({
           disabled: !this.$permission.check(this.$permission.PermPermissions, {
             isToasting: false,
           }),
+        },
+        {
+          icon: 'mdi-table',
+          title: 'Logs',
+          to: '/logs',
+          disabled: !this.$permission.canGeneralReadAnalytics(),
         },
       ];
     },

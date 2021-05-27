@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card v-if="$permission.canGeneralReadAnalytics()">
     <v-card-title>
       Overview in this period
 

@@ -49,7 +49,6 @@
                       color="error"
                       @delete="onDeleteZone(item.zone)"
                     >
-                      <v-icon>mdi-delete</v-icon>
                     </DialogDelete>
                   </v-col>
                 </v-row>

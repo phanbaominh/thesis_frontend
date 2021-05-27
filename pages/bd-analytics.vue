@@ -25,7 +25,14 @@ import Vue from 'vue';
 import dayjs from 'dayjs';
 export default Vue.extend({
   key: (to) => to.fullPath,
-  middleware: 'checkUserIsBuildingManager',
+  middleware: [
+    'checkUserIsBuildingManager',
+    ({ $permission, $auth, redirect }) => {
+      if ($auth.user) {
+        if (!$permission.canGeneralReadAnalytics()) return redirect('/');
+      }
+    },
+  ],
   data() {
     return {
       tab: null,

@@ -7,7 +7,7 @@
           class="mb-4"
         />
       </v-col>
-      <v-col cols="6">
+      <v-col v-if="$permission.canGeneralReadAnalytics()" cols="6">
         <HomeSummary
           v-if="isAdManager"
           :link="$apiUrl.analyticsSummary"

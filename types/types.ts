@@ -84,6 +84,7 @@ export enum Permission {
   ReadPermission,
   WritePermission,
   DeletePermission,
+  ReadAnalytics,
 }
 export type PermissionName = keyof typeof Permission;
 export type PermissionTabItem = { [key in PermissionName]?: boolean };
