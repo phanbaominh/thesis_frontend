@@ -13,7 +13,7 @@
       chips
       deletable-chips
       :items="zoneSelects"
-      :rules="[(v) => !!v || 'Zone is required']"
+      :rules="[(v) => (!!v && v.length > 0) || 'Zone is required']"
     >
       <template #item="{ on, attrs, item }">
         <v-list-item two-line v-bind="attrs" v-on="on">

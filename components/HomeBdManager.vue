@@ -28,7 +28,7 @@
                 </div>
               </template>
               <template #item.zone="{ item }">
-                {{ item.zoneId.name || 'None' }}
+                {{ item.zoneId ? item.zoneId.name || 'None' : 'None' }}
               </template>
               <template #item.timeStatusChange="{ item }">
                 {{ $utils.timeFormat(item.timeStatusChange) }}
