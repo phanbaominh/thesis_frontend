@@ -3,6 +3,7 @@
     :headers="headers"
     :items="deviceTableData"
     :search="search"
+    :loading="loading"
     class="elevation-3"
   >
     <template #top>
@@ -16,7 +17,7 @@
             {{ `Devices: ${deviceTableData.length}` }}
           </v-card-title>
           <v-dialog
-            v-if="canReadDevice"
+            v-if="canReadDevice && !loading"
             v-model="deviceDialog"
             width="1000"
             scrollable
@@ -32,12 +33,10 @@
                 :small="!$vuetify.breakpoint.xs"
                 :x-small="$vuetify.breakpoint.xs"
                 dark
-                nuxt
-                to="/devices/create"
                 v-bind="attrs"
                 v-on="on"
               >
-                <v-icon>mdi-plus</v-icon>
+                <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </template>
             <v-card class="cards pa-4">
@@ -103,29 +102,44 @@
     <template #item.avgViews="{ item: { avgViews } }">
       {{ avgViews.toFixed(2) }}
     </template>
+    <template #item.ad="{ item: { ad } }">
+      <AdLink v-if="ad" :ad="ad" />
+      <span v-else> None </span>
+    </template>
     <template #item.media="{ item: device }">
-      {{ `${device.media ? device.media.name : 'None'}` }}
+      {{ `${device.media ? $truncate(device.media.name) : 'None'}` }}
       <MediaTabItemPlayDialog
         v-if="device.media"
+        xsmall
         class="ml-2"
         :media="device.media"
       />
+    </template>
+    <template #item.timeStart="{ item }">
+      {{ $utils.timeFormat(item.timeStart) }}
     </template>
   </v-data-table>
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { Device, DeviceTableRow, Permission, Zone } from '~/types/types';
+import {
+  AdLog,
+  Device,
+  DeviceTableRow,
+  Permission,
+  Zone,
+  ZoneInfo,
+} from '~/types/types';
 export default Vue.extend({
   props: {
     initZone: {
       type: Object,
       required: true,
     } as Vue.PropOptions<Zone>,
-    initDeviceTableData: {
-      type: Array,
-      required: true,
-    } as Vue.PropOptions<DeviceTableRow[]>,
+    // initDeviceTableData: {
+    //   type: Array,
+    //   required: true,
+    // } as Vue.PropOptions<DeviceTableRow[]>,
   },
   data() {
     return {
@@ -143,8 +157,16 @@ export default Vue.extend({
           value: 'views',
         },
         {
+          text: 'Playing',
+          value: 'media',
+        },
+        {
           text: 'Ad',
           value: 'ad',
+        },
+        {
+          text: 'timeStart',
+          value: 'timeStart',
         },
         // {
         //   text: 'Profit per view',
@@ -170,16 +192,22 @@ export default Vue.extend({
       search: '',
       nonZoneDeviceArray: [] as Device[],
       allDeviceArray: [] as Device[],
-      deviceTableData: this.initDeviceTableData,
+      deviceTableData: [] as DeviceTableRow[],
       deviceDialog: false,
       zone: this.initZone,
+      loading: true,
     };
   },
   async fetch() {
+    this.deviceTableData = (
+      await this.$axios.$get(this.$apiUrl.zoneDeviceTable(this.zone._id))
+    ).devices;
     this.allDeviceArray = (
       await this.$axios.$get(this.$apiUrl.devices)
-    ).devices.filter((device: Device) => !device.zoneId);
-
+    ).devices.filter(
+      (device: Device) => !device.zoneId || device.zoneId._id === this.zone._id
+    );
+    this.loading = false;
     this.updateNonZoneArray();
   },
   computed: {
@@ -211,10 +239,24 @@ export default Vue.extend({
       });
     },
   },
-  watch: {
-    initDeviceTableData() {
-      this.deviceTableData = this.initDeviceTableData;
-    },
+  // watch: {
+  //   initDeviceTableData() {
+  //     this.deviceTableData = this.initDeviceTableData;
+  //   },
+  // },
+  created() {
+    this.$socket.on(
+      `/receive/update/${this.zone._id}/infor-video`,
+      this.updateDeviceStatus
+    );
+    this.$socket.on(
+      `/receive/update/${this.zone._id}/infor-video-result`,
+      this.updateDeviceResult
+    );
+  },
+  beforeDestroy() {
+    this.$socket.off(`/receive/update/${this.zone._id}/infor-video`);
+    this.$socket.off(`/receive/update/${this.zone._id}/infor-video-result`);
   },
   methods: {
     // async onDelete(deletedDeviceId: string) {
@@ -231,28 +273,30 @@ export default Vue.extend({
       await Promise.resolve();
     },
     async onAddDevice(devices: Device[]) {
-      for (const device of devices) {
-        await this.$handleErrors(async () => {
-          await this.$axios.$post(this.$apiUrl.zoneAddDevice, {
-            zoneId: this.zone._id,
-            deviceId: device._id,
-          });
-          this.zone.deviceArray.push(device);
-        });
-      }
-      this.updateNonZoneArray();
+      await this.$handleErrors(async () => {
+        for (const device of devices) {
+          const { newDevice, deviceRow } = await this.$axios.$post(
+            this.$apiUrl.zoneAddDevice,
+            {
+              zoneId: this.zone._id,
+              deviceId: device._id,
+            }
+          );
+          this.zone.deviceArray.push(newDevice);
+          this.deviceTableData.unshift(deviceRow);
+        }
+        this.updateNonZoneArray();
+      });
     },
     updateNonZoneArray() {
-      const zoneIds = this.zone.deviceArray.map(
-        (elem: { _id: string }) => elem._id
-      );
-      this.nonZoneDeviceArray = (this.allDeviceArray as Array<any>).filter(
+      const zoneIds = this.zone.deviceArray.map((elem) => elem._id);
+      this.nonZoneDeviceArray = this.allDeviceArray.filter(
         (elem) => !zoneIds.includes(elem._id)
       );
     },
     async onDeleteDevice(devices: Device[]) {
-      for (const device of devices) {
-        await this.$handleErrors(async () => {
+      await this.$handleErrors(async () => {
+        for (const device of devices) {
           await this.$axios.$post(this.$apiUrl.zoneDeleteDevice, {
             zoneId: this.zone._id,
             deviceId: device._id,
@@ -260,11 +304,40 @@ export default Vue.extend({
           this.zone.deviceArray = this.zone.deviceArray.filter(
             (d) => d._id !== device._id
           );
+          this.deviceTableData = this.deviceTableData.filter(
+            (d) => d._id !== device._id
+          );
+        }
+        this.updateNonZoneArray();
+        this.$axios.$post(this.$apiUrl.videoInfo, {
+          zoneId: this.zone._id,
         });
-      }
-      this.updateNonZoneArray();
-      this.$axios.$post(this.$apiUrl.videoInfo, {
-        zoneId: this.zone._id,
+      });
+    },
+    updateDeviceStatus(zoneInfo: ZoneInfo) {
+      const index = this.deviceTableData.findIndex(
+        (device) => device._id === zoneInfo.deviceId
+      );
+      if (index < 0) return;
+      const device = this.deviceTableData[index];
+      const mediaName = zoneInfo.mediaName;
+      this.$set(this.deviceTableData, index, {
+        ...device,
+        media: { name: mediaName, path: zoneInfo.mediaName },
+        timeStart: zoneInfo.timeStart,
+        ad: { _id: zoneInfo.adName, name: zoneInfo.adName },
+      });
+    },
+    updateDeviceResult(deviceRunResult: AdLog) {
+      const index = this.deviceTableData.findIndex(
+        (device) => device._id === deviceRunResult.device._id
+      );
+      if (index < 0) return;
+      const device = this.deviceTableData[index];
+      this.$set(this.deviceTableData, index, {
+        ...device,
+        views: deviceRunResult.views,
+        cost: deviceRunResult.cost,
       });
     },
   },

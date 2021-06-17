@@ -7,15 +7,15 @@
   >
     <template #activator="{ on, attrs }">
       <v-btn
-        :small="!$vuetify.breakpoint.xs"
-        :x-small="$vuetify.breakpoint.xs"
+        :small="!xsmall && !$vuetify.breakpoint.xs"
+        :x-small="xsmall || $vuetify.breakpoint.xs"
         fab
         depressed
         color="primary"
         v-bind="attrs"
         v-on="on"
       >
-        <v-icon>mdi-play</v-icon>
+        <v-icon>mdi-eye</v-icon>
       </v-btn>
     </template>
     <v-card>
@@ -38,6 +38,10 @@ export default Vue.extend({
       type: Object,
       required: true,
     } as PropOptions<{ name: string; path: string }>,
+    xsmall: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {

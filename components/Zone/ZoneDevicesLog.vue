@@ -48,9 +48,13 @@ export default Vue.extend({
   created() {
     this.$socket.on(
       `/receive/update/${this.zone._id}/infor-video`,
-      (payload) => {
-        this.newDeviceLog(payload);
-      }
+      this.newDeviceLog
+    );
+  },
+  beforeDestroy() {
+    this.$socket.off(
+      `/receive/update/${this.zone._id}/infor-video`,
+      this.newDeviceLog
     );
   },
   methods: {

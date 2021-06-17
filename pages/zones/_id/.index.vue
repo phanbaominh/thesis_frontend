@@ -5,6 +5,13 @@
         <v-card-title class="text-subtitle-1 text-sm-h6">
           {{ zone.name }}
         </v-card-title>
+        <!-- <DialogName
+          v-if="$permission.canGeneralWriteZone()"
+          :init-name="zone.name"
+          title="Change zone name:"
+          icon="pencil"
+          @updateName="onUpdateName"
+        /> -->
         <v-btn
           depressed
           fab
@@ -31,6 +38,7 @@
         </v-btn> -->
         <v-spacer></v-spacer>
         <v-dialog
+          v-if="canReadDevice"
           v-model="deviceDialog"
           width="1000"
           scrollable
@@ -48,14 +56,24 @@
               :x-small="$vuetify.breakpoint.xs"
               v-on="on"
             >
-              <v-icon>mdi-information-variant</v-icon>
+              <v-icon>mdi-plus</v-icon>
             </v-btn>
           </template>
           <v-card class="cards pa-4">
             <BaseDialogTitle @close="deviceDialog = false">
-              Info
+              Devices
             </BaseDialogTitle>
-            <v-card class="mb-4"> </v-card>
+            <v-card class="mb-4">
+              <MediaAddDelete
+                :media-array="zone.deviceArray"
+                :all-media-array="nonZoneDeviceArray"
+                type="Device"
+                :add-perm="canWriteDevice"
+                :delete-perm="canDeleteDevice"
+                @add="onAddDevice"
+                @delete="onDeleteDevice"
+              />
+            </v-card>
             <v-card>
               <ZonePermIterator :zone-id="zone._id" />
             </v-card>
@@ -68,7 +86,7 @@
         /> -->
       </v-row>
     </v-toolbar>
-    <!-- <v-row class="mt-2">
+    <v-row class="mt-2">
       <v-col cols="12" lg="6">
         <ZoneMediaControl
           class="cards"
@@ -78,29 +96,41 @@
         />
       </v-col>
       <v-spacer></v-spacer>
-      <v-col v-if="canReadAd" cols="12" lg="6"> </v-col>
-    </v-row> -->
-    <v-card class="mt-10">
-      <ZoneDeviceTable :init-zone="zone" />
-    </v-card>
-    <v-card class="mt-10">
-      <DataIterator type="Ads" :init-items="zone.adArray" compact>
-        <template #main="{ items: displayedAdArray }">
-          <MediaList :items="displayedAdArray">
-            <template #default="{ item: ad }">
-              <v-list-item-title
-                class="text-subtitle-1 text-sm-h6 font-weight-regular"
-              >
-                <BuildingAdLink :ad="ad" />
-                <v-chip v-if="isEmpty(ad)" color="red" text-color="white">
-                  {{ ad.status }}
-                </v-chip>
-              </v-list-item-title>
+      <v-col v-if="canReadAd" cols="12" lg="6">
+        <v-card outlined>
+          <!-- <MediaAddDelete
+            :media-array="zone.adArray"
+            :all-media-array="nonZoneAdArray"
+            type="Ads"
+            compact
+            :add-perm="canWriteAd"
+            :delete-perm="canDeleteAd"
+            @add="onAdd"
+            @delete="onDelete"
+          >
+          
+          </MediaAddDelete> -->
+          <DataIterator type="Ads" :init-items="zone.adArray" compact>
+            <template #main="{ items: displayedAdArray }">
+              <MediaList :items="displayedAdArray">
+                <template #default="{ item: ad }">
+                  <v-list-item-title
+                    class="text-subtitle-1 text-sm-h6 font-weight-regular"
+                  >
+                    <BuildingAdLink :ad="ad" />
+                    <v-chip v-if="isEmpty(ad)" color="red" text-color="white">
+                      {{ ad.status }}
+                    </v-chip>
+                  </v-list-item-title>
+                </template>
+                <!-- <template #actions="{ item: media }">
+                </template> -->
+              </MediaList>
             </template>
-          </MediaList>
-        </template>
-      </DataIterator>
-    </v-card>
+          </DataIterator>
+        </v-card>
+      </v-col>
+    </v-row>
     <v-card class="mt-10">
       <v-card-title>Device Log (past 24h)</v-card-title>
       <ZoneDevicesLog :zone="zone" />
@@ -114,8 +144,11 @@ import {
   AdStatus,
   Device,
   Permission,
+  Playlist,
   Video,
   Zone,
+  ZoneArrayable,
+  ZoneArrayType,
   ZonePermissionGroup,
 } from '~/types/types';
 
@@ -154,6 +187,12 @@ export default Vue.extend({
       .adOffers as Ad[]).filter(
       (ad) => ad.status === AdStatus.Deployed || ad.status === AdStatus.Empty
     );
+    this.allDeviceArray = (
+      await this.$axios.$get(this.$apiUrl.devices)
+    ).devices.filter((device: Device) => !device.zoneId);
+
+    this.updateNonZoneArray();
+    this.updateNonZoneArray('device');
   },
   computed: {
     canGeneralReadZone(): Boolean {
@@ -161,6 +200,14 @@ export default Vue.extend({
     },
     canGeneralWriteZone(): Boolean {
       return this.$permission.canGeneralWriteZone();
+    },
+    canReadDevice(): Boolean {
+      return (
+        this.canGeneralReadZone ||
+        this.$permission.check(this.$permission.DevicePermissions, {
+          zoneId: this.zone._id,
+        })
+      );
     },
     canReadAd(): Boolean {
       return (
@@ -178,6 +225,19 @@ export default Vue.extend({
     },
     canDeleteAd(): Boolean {
       return this.$permission.check(Permission.DeleteAd, {
+        zoneId: this.zone._id,
+      });
+    },
+    canWriteDevice(): Boolean {
+      return (
+        this.canGeneralWriteZone ||
+        this.$permission.check(Permission.WriteDevice, {
+          zoneId: this.zone._id,
+        })
+      );
+    },
+    canDeleteDevice(): Boolean {
+      return this.$permission.check(Permission.DeleteDevice, {
         zoneId: this.zone._id,
       });
     },
@@ -200,6 +260,19 @@ export default Vue.extend({
     isEmpty(ad: Ad): boolean {
       return ad.status === AdStatus.Empty;
     },
+    onDelete(deletedArray: Ad[]) {
+      const deletedIds = deletedArray.map((media) => media._id);
+
+      this.zone.adArray = this.zone.adArray.filter(
+        (ad) => !deletedIds.includes(ad._id)
+      );
+      this.updateNonZoneArray();
+    },
+    onAdd(addedAds: Ad[]) {
+      if (!this.zone.videoArray) this.zone.videoArray = [];
+      this.zone.adArray = this.zone.adArray.concat(addedAds);
+      this.updateNonZoneArray();
+    },
     async updateZone() {
       await this.$handleErrors(async () => {
         this.zone = (
@@ -219,12 +292,87 @@ export default Vue.extend({
         (_err) => (this.zone.name = oldName)
       );
     },
+    updateNonZoneArray(type = 'ad') {
+      const captializedType = type.charAt(0).toUpperCase() + type.slice(1);
+      const nonZoneKey = `nonZone${captializedType}Array` as `nonZone${Capitalize<ZoneArrayable>}Array`;
+      const allKey = `all${captializedType}Array` as `all${Capitalize<ZoneArrayable>}Array`;
+      const zoneKey = `${type}Array` as ZoneArrayType;
+      const zoneIds = (this.zone[zoneKey] as any[]).map(
+        (elem: { _id: string }) => elem._id
+      );
+      this[nonZoneKey] = (this[allKey] as Array<any>).filter(
+        (elem) => !zoneIds.includes(elem._id)
+      );
+    },
+    async onAddDevice(devices: Device[]) {
+      for (const device of devices) {
+        await this.$handleErrors(async () => {
+          await this.$axios.$post(this.$apiUrl.zoneAddDevice, {
+            zoneId: this.zone._id,
+            deviceId: device._id,
+          });
+          this.zone.deviceArray.push(device);
+        });
+      }
+      this.updateNonZoneArray('device');
+    },
+    async onDeleteDevice(devices: Device[]) {
+      for (const device of devices) {
+        await this.$handleErrors(async () => {
+          await this.$axios.$post(this.$apiUrl.zoneDeleteDevice, {
+            zoneId: this.zone._id,
+            deviceId: device._id,
+          });
+          this.zone.deviceArray = this.zone.deviceArray.filter(
+            (d) => d._id !== device._id
+          );
+        });
+      }
+      this.updateNonZoneArray('device');
+      this.$axios.$post(this.$apiUrl.videoInfo, {
+        zoneId: this.zone._id,
+      });
+    },
+    async onPlayVideo(video: Video) {
+      this.warn();
+      await this.$handleErrors(async () => {
+        await this.$axios.$post(this.$apiUrl.videoControl, {
+          eventName: 'play-video',
+          payload: {
+            zoneId: this.zone._id,
+            videoId: video._id,
+          },
+        });
+      });
+    },
     warn() {
       if (!this.$accessor.isSocketConnected) {
         this.$toast.info('Need a socket connection to server');
       } else if (this.zone.deviceArray.length === 0) {
         this.$toast.info('Please add device to zone');
       }
+    },
+    async onPlayPlaylist(playlist: Playlist) {
+      this.warn();
+      await this.$handleErrors(async () => {
+        await this.$axios.$post(this.$apiUrl.videoControl, {
+          eventName: 'play-playlist-video',
+          payload: {
+            zoneId: this.zone._id,
+            playlistVideoId: playlist._id,
+          },
+        });
+        this.playlistVideos.push({
+          id: playlist._id,
+          videos: (
+            await this.$axios.$get(this.$apiUrl.videoArray, {
+              params: {
+                videoIds: playlist.mediaArray,
+              },
+            })
+          ).video,
+        });
+      });
     },
     async onPlayZone() {
       await this.$handleErrors(async () => {

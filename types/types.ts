@@ -319,6 +319,7 @@ export interface AdLog {
   bdManager: { _id: string; username: string };
   video: NameIdable;
   device: NameIdable;
+  zone: NameIdable;
   timeStart: number;
   runTime: number;
   views: number;

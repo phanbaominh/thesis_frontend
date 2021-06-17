@@ -88,13 +88,14 @@ export default Vue.extend({
     return {
       ads: [] as { _id: string; name: string }[],
       adset: {
+        _id: '',
         name: '',
         daysOfWeek: { value: [] as number[], strict: true },
         hoursOfDay: { value: [] as number[], strict: false },
         ages: { value: [] as number[], strict: false },
         genders: { value: [] as number[], strict: false },
         ...this.initAdset,
-      } as Omit<Adset, '_id'>,
+      } as Adset,
       ages: [] as Select[],
       genders: [
         { text: 'Male', value: 10 },

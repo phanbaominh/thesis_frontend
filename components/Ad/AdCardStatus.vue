@@ -18,7 +18,7 @@ export default Vue.extend({
     },
   },
   computed: {
-    color() {
+    color(): string {
       if (this.status === AdStatus.Pending) {
         return 'blue';
       } else if (this.status === AdStatus.Deployed) {
@@ -31,7 +31,7 @@ export default Vue.extend({
         return 'grey lighten-1';
       }
     },
-    title() {
+    title(): string {
       return `Status was changed to ${this.status} at ${this.$utils.timeFormat(
         this.timeStatus
       )}`;

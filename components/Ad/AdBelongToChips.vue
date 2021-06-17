@@ -1,17 +1,19 @@
 <template>
   <BaseFetcher :fetch-state="$fetchState">
     <template #pending>Fetching ads</template>
-    Some ads:
-    <v-chip
-      v-for="ad in ads"
-      :key="ad._id"
-      nuxt
-      :to="`/ads/${ad._id}`"
-      class="mr-1"
-      small
-    >
-      {{ ad.name }}
-    </v-chip>
+    <div v-if="ads.length > 0">
+      Some ads:
+      <v-chip
+        v-for="ad in ads"
+        :key="ad._id"
+        nuxt
+        :to="`/ads/${ad._id}`"
+        class="mr-1"
+        small
+      >
+        {{ ad.name }}
+      </v-chip>
+    </div>
   </BaseFetcher>
 </template>
 <script lang="ts">
