@@ -191,6 +191,20 @@ export interface AdTableRow extends Ad {
   avgViews: number;
   avgRunTime: number;
 }
+
+export interface DeviceTableRow {
+  _id: string;
+  name: string;
+  cost: number;
+  views: number;
+  ad: { _id: string; name: string };
+  avgViews: number;
+  media?: { path: string; name: string };
+  timeStart: number;
+  volumeVideo: number;
+  isPause: boolean;
+}
+
 export type ArrayElement<
   ArrayType extends readonly unknown[]
 > = ArrayType extends readonly (infer ElementType)[] ? ElementType : never;

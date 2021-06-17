@@ -32,13 +32,12 @@
 </template>
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
-import { Media } from '~/types/types';
 export default Vue.extend({
   props: {
     media: {
       type: Object,
       required: true,
-    } as PropOptions<Media>,
+    } as PropOptions<{ name: string; path: string }>,
   },
   data() {
     return {
