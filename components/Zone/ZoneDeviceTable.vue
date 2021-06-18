@@ -134,24 +134,23 @@
       {{ $utils.timeFormat(item.timeStart) }}
     </template>
     <template #expanded-item="{ item: device }">
-      <td v-if="$vuetify.breakpoint.smAndUp" :colspan="4">
-        <!-- <v-row>
-          <v-col cols="6">
+      <td v-if="$vuetify.breakpoint.smAndUp" :colspan="4"></td>
+      <td :colspan="4">
+        <v-row>
+          <v-col :cols="$vuetify.breakpoint.smAndUp ? 6 : 12">
             <ZoneDeviceTableRowPlayControl
+              class="mt-2"
               v-bind="device"
               :control-perm="canControlZone"
             />
-          </v-col>
-          <v-col cols="4">
             <ZoneDeviceTableRowVolumeControl
-              v-bind="device"
+              :device="device"
               :control-perm="canControlZone"
             />
           </v-col>
-        </v-row> -->
-      </td>
-      <td :colspan="1">
-        <ZoneDeviceTableRowPlayControl
+          <v-col cols="6"> </v-col>
+        </v-row>
+        <!-- <ZoneDeviceTableRowPlayControl
           class="mt-2"
           v-bind="device"
           :control-perm="canControlZone"
@@ -159,7 +158,7 @@
         <ZoneDeviceTableRowVolumeControl
           :device="device"
           :control-perm="canControlZone"
-        />
+        /> -->
       </td>
     </template>
   </v-data-table>
@@ -370,12 +369,6 @@ export default Vue.extend({
       const index = this.deviceTableData.findIndex(
         (device) => device._id === deviceInfo.deviceId
       );
-      console.log(
-        'device index',
-        index,
-        deviceInfo.deviceId,
-        this.deviceTableData.map((dev) => dev._id)
-      );
       if (index < 0) return;
       const device = this.deviceTableData[index];
       this.$set(this.deviceTableData, index, {
@@ -385,7 +378,6 @@ export default Vue.extend({
         // ad: { _id: deviceInfo.adName, name: deviceInfo.adName },
         ...deviceInfo,
       });
-      console.log('device', this.deviceTableData[index]);
     },
     updateDeviceResult(deviceRunResult: any) {
       const index = this.deviceTableData.findIndex(
@@ -398,7 +390,7 @@ export default Vue.extend({
         views: device.views + deviceRunResult.views,
         cost: device.cost + deviceRunResult.moneyCharge,
         avgViews:
-          ((device.avgViews + deviceRunResult.views) * 1.0) /
+          ((device.views + deviceRunResult.views) * 1.0) /
           (device.numberOfTimes + 1),
         numberOfTimes: device.numberOfTimes + 1,
       });
