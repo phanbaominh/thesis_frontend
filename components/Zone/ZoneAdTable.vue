@@ -3,6 +3,8 @@
     :headers="headers"
     :items="adTableData"
     :search="search"
+    item-key="_id"
+    :loading="loading"
     class="elevation-3"
   >
     <template #top>
@@ -48,17 +50,24 @@
     <template #item.cost="{ item: { cost } }">
       {{ $utils.moneyFormat(cost) }}
     </template>
+    <template #item.status="{ item: ad }">
+      <AdCardStatus
+        :status="ad.status"
+        class="ml-2"
+        :time-status="ad.timeStatus"
+      />
+    </template>
   </v-data-table>
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { AdTableRow } from '~/types/types';
+import { Zone } from '~/types/types';
 export default Vue.extend({
   props: {
-    initAdTableData: {
-      type: Array,
+    zone: {
+      type: Object,
       required: true,
-    } as Vue.PropOptions<AdTableRow[]>,
+    } as Vue.PropOptions<Zone>,
   },
   data() {
     return {
@@ -72,18 +81,28 @@ export default Vue.extend({
           value: 'cost',
         },
         {
+          text: 'Views',
+          value: 'views',
+        },
+        {
           text: 'Run time',
           value: 'runTime',
         },
+        {
+          text: 'Status',
+          value: 'status',
+        },
       ],
       search: '',
-      adTableData: this.initAdTableData,
+      adTableData: [],
+      loading: true,
     };
   },
-  watch: {
-    initAdTableData() {
-      this.adTableData = this.initAdTableData;
-    },
+  async fetch() {
+    this.adTableData = (
+      await this.$axios.$get(this.$apiUrl.zoneAdTable(this.zone._id))
+    ).adOffers;
+    this.loading = false;
   },
 });
 </script>

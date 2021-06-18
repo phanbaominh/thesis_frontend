@@ -83,7 +83,7 @@
       <ZoneDeviceTable :init-zone="zone" />
     </v-card>
     <v-card class="mt-10">
-      <DataIterator type="Ads" :init-items="zone.adArray" compact>
+      <!-- <DataIterator type="Ads" :init-items="zone.adArray" compact>
         <template #main="{ items: displayedAdArray }">
           <MediaList :items="displayedAdArray">
             <template #default="{ item: ad }">
@@ -98,7 +98,8 @@
             </template>
           </MediaList>
         </template>
-      </DataIterator>
+      </DataIterator> -->
+      <ZoneAdTable :zone="zone" />
     </v-card>
     <v-card class="mt-10">
       <v-card-title>Device Log (past 24h)</v-card-title>
