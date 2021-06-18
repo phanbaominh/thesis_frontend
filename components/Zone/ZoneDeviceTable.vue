@@ -380,6 +380,7 @@ export default Vue.extend({
         // ad: { _id: deviceInfo.adName, name: deviceInfo.adName },
         ...deviceInfo,
       });
+      console.log('device', this.deviceTableData[index]);
     },
     updateDeviceResult(deviceRunResult: AdLog) {
       const index = this.deviceTableData.findIndex(
