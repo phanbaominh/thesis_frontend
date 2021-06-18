@@ -1,17 +1,24 @@
 <template>
-  <v-slider
-    v-model="progress"
-    track-color="light-grey"
-    :max="durationFull || 90"
-    :messages="timestamp"
-    disabled
-  >
-    <template #prepend>
-      <v-icon :disabled="!controlPerm" @click="onPause">
-        mdi-{{ isPause ? 'play' : 'pause' }}
+  <v-row no-gutters>
+    <v-col>
+      <v-icon :disabled="!controlPerm" class="mt-1" @click="onPause">
+        mdi-{{ dataIsPause ? 'play' : 'pause' }}
       </v-icon>
-    </template>
-  </v-slider>
+    </v-col>
+    <v-col cols="10" class="mr-4">
+      <v-slider
+        v-model="progress"
+        track-color="light-grey"
+        :max="durationFull || 90"
+        :messages="timestamp"
+        disabled
+      >
+        <!-- <template #prepend>
+      
+        </template> -->
+      </v-slider>
+    </v-col>
+  </v-row>
 </template>
 <script lang="ts">
 import Vue from 'vue';
@@ -94,11 +101,8 @@ export default Vue.extend({
     },
     async onPause() {
       const eventName = this.dataIsPause ? 'play-video-auto' : 'quit-video';
-      this.dataIsPause
-        ? this.setProgressInterval()
-        : this.clearProgressInterval();
       this.dataIsPause = !this.dataIsPause;
-
+      if (this.dataIsPause) this.clearProgressInterval();
       await this.$handleErrors(async () => {
         await this.$axios.$post(this.$apiUrl.videoControlDevice, {
           eventName,

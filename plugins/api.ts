@@ -10,6 +10,7 @@ interface ApiUrl {
   zonesTableFormat: Url;
   zone: IdToUrl;
   zoneDeviceTable: IdToUrl;
+  zoneAdTable: IdToUrl;
   zoneAddDevice: Url;
   zoneDeleteDevice: Url;
   zoneLogs: IdToUrl;
@@ -112,6 +113,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     zones: zonesUrl,
     zonesTableFormat: `${zonesUrl}/table`,
     zone: (id: string) => `${zonesUrl}/${id}`,
+    zoneAdTable: (id: string) => `${zonesUrl}/${id}/ad-table`,
     zoneDeviceTable: (id: string) => `${zonesUrl}/${id}/device-table`,
     zoneLogs: (id: string) => `${zonesUrl}/${id}/logs`,
     zoneAddDevice: `${zonesUrl}/add-device`,

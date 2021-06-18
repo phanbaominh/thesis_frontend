@@ -108,10 +108,10 @@ export default Vue.extend({
           text: 'Status',
           value: 'status',
         },
-        {
-          text: 'Creation time',
-          value: 'timeCreate',
-        },
+        // {
+        //   text: 'Creation time',
+        //   value: 'timeCreate',
+        // },
         {
           text: 'Ad Manager',
           value: 'adManager',
