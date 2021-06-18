@@ -197,11 +197,11 @@ export interface DeviceTableRow {
   name: string;
   cost: number;
   views: number;
-  ad: { _id: string; name: string };
+  ad?: { _id: string; name: string };
   avgViews: number;
   numberOfTimes: number;
   media?: { path: string; name: string };
-  timeStart: number;
+  timeStart?: number;
   volumeVideo: number;
   isPause: boolean;
 }

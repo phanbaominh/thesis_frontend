@@ -247,6 +247,11 @@ export default Vue.extend({
     ).devices.filter(
       (device: Device) => !device.zoneId || device.zoneId._id === this.zone._id
     );
+    this.$handleErrors(() => {
+      this.$axios.$post(this.$apiUrl.videoInfo, {
+        zoneId: this.zone._id,
+      });
+    });
     this.loading = false;
     this.updateNonZoneArray();
   },
@@ -301,11 +306,6 @@ export default Vue.extend({
       `/receive/update/${this.zone._id}/infor-video-result`,
       this.updateDeviceResult
     );
-    this.$handleErrors(() => {
-      this.$axios.$post(this.$apiUrl.videoInfo, {
-        zoneId: this.zone._id,
-      });
-    });
   },
   beforeDestroy() {
     this.$socket.off(`/receive/update/${this.zone._id}/infor-video`);
@@ -388,9 +388,9 @@ export default Vue.extend({
       });
       console.log('device', this.deviceTableData[index]);
     },
-    updateDeviceResult(deviceRunResult: AdLog) {
+    updateDeviceResult(deviceRunResult: any) {
       const index = this.deviceTableData.findIndex(
-        (device) => device._id === deviceRunResult.device._id
+        (device) => device._id === deviceRunResult.deviceId
       );
       if (index < 0) return;
       const device = this.deviceTableData[index];
