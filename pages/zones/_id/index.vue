@@ -48,14 +48,13 @@
               :x-small="$vuetify.breakpoint.xs"
               v-on="on"
             >
-              <v-icon>mdi-information-variant</v-icon>
+              <v-icon>mdi-account-key</v-icon>
             </v-btn>
           </template>
           <v-card class="cards pa-4">
             <BaseDialogTitle @close="deviceDialog = false">
-              Info
+              Granted Permissions
             </BaseDialogTitle>
-            <v-card class="mb-4"> </v-card>
             <v-card>
               <ZonePermIterator :zone-id="zone._id" />
             </v-card>

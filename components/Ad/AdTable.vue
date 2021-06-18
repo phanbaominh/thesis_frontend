@@ -4,6 +4,7 @@
     :items="adTableData"
     :search="search"
     class="elevation-3"
+    item-key="_id"
   >
     <template #top>
       <v-toolbar dark color="blue darken-3" class="mb-1">

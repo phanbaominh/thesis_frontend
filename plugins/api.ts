@@ -21,6 +21,7 @@ interface ApiUrl {
   videoArray: Url;
   videoInfo: Url;
   videoControl: Url;
+  videoControlDevice: Url;
   devices: Url;
   device: IdToUrl;
   user: Url;
@@ -120,6 +121,7 @@ const apiPlugin: Plugin = ({ $config: { apiURL } }, inject) => {
     videos: videoUrl,
     video: (id: string) => `${videoUrl}/${id}`,
     videoControl: `${videoControlUrl}`,
+    videoControlDevice: `${videoControlUrl}/device`,
     videoInfo: `${videoControlUrl}/get-infor-video`,
     videoArray: `${videoUrl}/get-many`,
     devices: deviceUrl,

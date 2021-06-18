@@ -1,16 +1,6 @@
 <template>
   <div>
-    <HomeOverview
-      :link="$apiUrl.bdAnalyticsOverview"
-      cost-header-text="Profit"
-      class="mb-4"
-      name-key="Zone"
-    >
-      <template #link="{ item: zone }">
-        <ZoneLink :zone="zone" />
-      </template>
-    </HomeOverview>
-    <v-row>
+    <v-row class="mb-4">
       <v-col cols="12" lg="6">
         <v-card v-if="$permission.canGeneralReadDevice()">
           <v-card-title>Device report</v-card-title>
@@ -35,8 +25,9 @@
               </template>
             </v-data-table>
           </BaseFetcher>
-        </v-card></v-col
-      ><v-col cols="12" lg="6">
+        </v-card>
+      </v-col>
+      <v-col cols="12" lg="6">
         <v-card v-if="$permission.canGeneralReadDevice()" class="pb-4">
           <v-card-title>Device report: {{ devices.length }} total</v-card-title>
           <DashboardChart
@@ -47,6 +38,15 @@
         </v-card>
       </v-col>
     </v-row>
+    <HomeOverview
+      :link="$apiUrl.bdAnalyticsOverview"
+      cost-header-text="Profit"
+      name-key="Zone"
+    >
+      <template #link="{ item: zone }">
+        <ZoneLink :zone="zone" />
+      </template>
+    </HomeOverview>
   </div>
 </template>
 <script lang="ts">

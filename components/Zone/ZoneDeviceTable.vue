@@ -4,7 +4,9 @@
     :items="deviceTableData"
     :search="search"
     :loading="loading"
+    item-key="_id"
     class="elevation-3"
+    show-expand
   >
     <template #top>
       <v-toolbar dark color="blue darken-3" class="mb-1">
@@ -89,13 +91,13 @@
     <!-- <template #item.name="{ item: device }">
       <DeviceLink :device="device" />
     </template> -->
-    <template #item.actions="{ item: device }">
+    <!-- <template #item.actions="{ item: device }">
       <BaseTableAction
         :icon="device.isPause ? 'play' : 'pause'"
         @delete="onPlay(device)"
       />
-      <!-- <BaseTableAction icon="delete" @delete="onDelete(device._id)" /> -->
-    </template>
+      <BaseTableAction icon="delete" @delete="onDelete(device._id)" />
+    </template> -->
     <template #item.cost="{ item: { cost } }">
       {{ $utils.moneyFormat(cost) }}
     </template>
@@ -117,6 +119,35 @@
     </template>
     <template #item.timeStart="{ item }">
       {{ $utils.timeFormat(item.timeStart) }}
+    </template>
+    <template #expanded-item="{ item: device }">
+      <td :colspan="4">
+        <!-- <v-row>
+          <v-col cols="6">
+            <ZoneDeviceTableRowPlayControl
+              v-bind="device"
+              :control-perm="canControlZone"
+            />
+          </v-col>
+          <v-col cols="4">
+            <ZoneDeviceTableRowVolumeControl
+              v-bind="device"
+              :control-perm="canControlZone"
+            />
+          </v-col>
+        </v-row> -->
+      </td>
+      <td :colspan="1">
+        <ZoneDeviceTableRowPlayControl
+          class="mt-2"
+          v-bind="device"
+          :control-perm="canControlZone"
+        />
+        <ZoneDeviceTableRowVolumeControl
+          v-bind="device"
+          :control-perm="canControlZone"
+        />
+      </td>
     </template>
   </v-data-table>
 </template>
@@ -184,10 +215,6 @@ export default Vue.extend({
         //   text: 'Location',
         //   value: 'location',
         // },
-        {
-          text: 'Actions',
-          value: 'actions',
-        },
       ],
       search: '',
       nonZoneDeviceArray: [] as Device[],
@@ -238,6 +265,14 @@ export default Vue.extend({
         zoneId: this.zone._id,
       });
     },
+    canControlZone(): Boolean {
+      return (
+        this.$permission.check(Permission.ControlZone) ||
+        this.$permission.check(Permission.ControlZone, {
+          zoneId: this.zone._id,
+        })
+      );
+    },
   },
   // watch: {
   //   initDeviceTableData() {
@@ -253,6 +288,11 @@ export default Vue.extend({
       `/receive/update/${this.zone._id}/infor-video-result`,
       this.updateDeviceResult
     );
+    this.$handleErrors(() => {
+      this.$axios.$post(this.$apiUrl.videoInfo, {
+        zoneId: this.zone._id,
+      });
+    });
   },
   beforeDestroy() {
     this.$socket.off(`/receive/update/${this.zone._id}/infor-video`);
@@ -268,10 +308,10 @@ export default Vue.extend({
     //     this.$toast.success('Succesfully deleted device!');
     //   });
     // },
-    async onPlay(device: DeviceTableRow) {
-      console.log(device.name);
-      await Promise.resolve();
-    },
+    // async onPlay(device: DeviceTableRow) {
+    //   console.log(device.name);
+    //   await Promise.resolve();
+    // },
     async onAddDevice(devices: Device[]) {
       await this.$handleErrors(async () => {
         for (const device of devices) {
@@ -314,18 +354,18 @@ export default Vue.extend({
         });
       });
     },
-    updateDeviceStatus(zoneInfo: ZoneInfo) {
+    updateDeviceStatus(deviceInfo: ZoneInfo) {
       const index = this.deviceTableData.findIndex(
-        (device) => device._id === zoneInfo.deviceId
+        (device) => device._id === deviceInfo.deviceId
       );
       if (index < 0) return;
       const device = this.deviceTableData[index];
-      const mediaName = zoneInfo.mediaName;
       this.$set(this.deviceTableData, index, {
         ...device,
-        media: { name: mediaName, path: zoneInfo.mediaName },
-        timeStart: zoneInfo.timeStart,
-        ad: { _id: zoneInfo.adName, name: zoneInfo.adName },
+        // media: { name: mediaName, path: deviceInfo.mediaName },
+        // timeStart: deviceInfo.timeStart,
+        // ad: { _id: deviceInfo.adName, name: deviceInfo.adName },
+        ...deviceInfo,
       });
     },
     updateDeviceResult(deviceRunResult: AdLog) {

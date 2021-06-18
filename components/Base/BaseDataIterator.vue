@@ -1,26 +1,28 @@
 <template>
   <DataIterator :type="type" :init-items="items" :compact="compact">
-    <template v-if="isSelecting">
-      <BaseButtonToolbar
-        icon="check"
-        color="success"
-        title="Confirm"
-        @click="onConfirm"
-      />
-      <BaseButtonToolbar
-        icon="close"
-        color="grey"
-        title="Cancel"
-        @click="onSwitchSelecting"
-      />
-    </template>
-    <template v-else>
-      <slot name="toolbar"></slot>
-      <BaseButtonToolbar
-        color="error"
-        icon="delete"
-        @click="onSwitchSelecting"
-      />
+    <template v-if="!readOnly">
+      <template v-if="isSelecting">
+        <BaseButtonToolbar
+          icon="check"
+          color="success"
+          title="Confirm"
+          @click="onConfirm"
+        />
+        <BaseButtonToolbar
+          icon="close"
+          color="grey"
+          title="Cancel"
+          @click="onSwitchSelecting"
+        />
+      </template>
+      <template v-else>
+        <slot name="toolbar"></slot>
+        <BaseButtonToolbar
+          color="error"
+          icon="delete"
+          @click="onSwitchSelecting"
+        />
+      </template>
     </template>
     <template #main="{ items: displayedItems }">
       <v-list>
@@ -73,6 +75,10 @@ export default Vue.extend({
     type: {
       required: true,
       type: String,
+    },
+    readOnly: {
+      default: false,
+      type: Boolean,
     },
   },
   data() {

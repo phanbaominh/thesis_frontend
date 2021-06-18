@@ -3,9 +3,10 @@
     <template #pending> Fetching permissions... </template>
     <BaseDataIterator
       v-if="$vuetify.breakpoint.smAndUp"
-      type="User-Perms:"
+      type="Granted Permissions"
       :items="userPerms"
       compact
+      read-only
     >
       <template #headers>
         <v-list-item>

@@ -199,12 +199,13 @@ export interface DeviceTableRow {
   views: number;
   ad: { _id: string; name: string };
   avgViews: number;
+  numberOfTimes: number;
   media?: { path: string; name: string };
   timeStart: number;
   volumeVideo: number;
   isPause: boolean;
 }
-
+//
 export type ArrayElement<
   ArrayType extends readonly unknown[]
 > = ArrayType extends readonly (infer ElementType)[] ? ElementType : never;

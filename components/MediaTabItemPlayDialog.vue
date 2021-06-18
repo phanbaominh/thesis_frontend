@@ -6,17 +6,19 @@
     :hide-overlay="$vuetify.breakpoint.smAndDown"
   >
     <template #activator="{ on, attrs }">
-      <v-btn
-        :small="!xsmall && !$vuetify.breakpoint.xs"
-        :x-small="xsmall || $vuetify.breakpoint.xs"
-        fab
-        depressed
-        color="primary"
-        v-bind="attrs"
-        v-on="on"
-      >
-        <v-icon>mdi-eye</v-icon>
-      </v-btn>
+      <slot name="activator" v-on="on">
+        <v-btn
+          :small="!xsmall && !$vuetify.breakpoint.xs"
+          :x-small="xsmall || $vuetify.breakpoint.xs"
+          fab
+          depressed
+          color="primary"
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-icon>mdi-eye</v-icon>
+        </v-btn>
+      </slot>
     </template>
     <v-card>
       <BaseDialogTitle @close="isPlayDialog = false">
