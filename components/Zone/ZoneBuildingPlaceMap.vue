@@ -1,52 +1,40 @@
 <template>
   <div>
-    <GmapAutocomplete
-      :options="{
-        fields: ['geometry', 'formatted_address', 'address_components'],
-      }"
-      @place_changed="setPlace"
+    <v-text-field
+      ref="input"
+      v-model="locationLabel"
+      outlined
+      dense
+      name="location"
+      placeholder="Location of zone"
+      hint="Search in the text box on the map or double click on map to add a marker"
+      persistent-hint
+      :error-messages="errorMessages"
+      disabled
     >
-      <template #input="{ attrs, listeners }">
-        <v-row>
-          <v-col>
-            <v-text-field
-              ref="input"
-              outlined
-              dense
-              name="location"
-              placeholder="Location of zone"
-              hint="Search or right click on map to select location"
-              persistent-hint
-              :error-messages="errorMessages"
-              :disabled="disabled"
-              @attrs="attrs"
-              @listeners="listeners"
-            >
-            </v-text-field>
-          </v-col>
-          <v-col>
-            <v-btn :disabled="!currentPlace || disabled" @click="onAddMarker">
-              Add Marker
-            </v-btn>
-          </v-col>
-        </v-row>
-      </template>
-    </GmapAutocomplete>
-
-    <GmapMap
-      :center="center"
+    </v-text-field>
+    <l-map
+      ref="map"
+      v-resize="onResize"
       :zoom="zoomLevel"
-      style="width: 100%; height: 400px"
-      class="mt-2"
-      @rightclick="onRightClickMap"
+      :center="center"
+      style="height: 400px"
     >
-      <GmapMarker v-if="marker" :position="marker" @click="onClickMarker" />
-    </GmapMap>
+      <l-tile-layer
+        url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+        :attribution="attribution"
+      ></l-tile-layer>
+      <l-marker v-if="marker" :lat-lng="marker"></l-marker>
+      <VGeosearch v-if="!disabled" :options="geosearchOptions" />
+    </l-map>
   </div>
 </template>
 <script lang="ts">
+import { OpenStreetMapProvider } from 'leaflet-geosearch';
+import VGeosearch from 'vue2-leaflet-geosearch';
 import Vue from 'vue';
 export default Vue.extend({
+  components: { VGeosearch },
   props: {
     errorMessages: {
       type: String,
@@ -63,12 +51,37 @@ export default Vue.extend({
   },
   data() {
     return {
+      attribution:
+        '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+      geosearchOptions: {
+        // Important part Here
+        provider: new OpenStreetMapProvider({
+          params: {
+            countrycodes: 'vn',
+          },
+        }),
+        style: 'bar',
+        showMarker: false,
+        autoClose: true,
+      },
       center: { lat: 0, lng: 0 },
       currentPlace: null as any,
       zoomLevel: this.initMarker ? 20 : 12,
       marker: this.initMarker
-        ? ({ ...this.initMarker } as { lat: number; lng: number })
+        ? this.$L.latLng(this.initMarker) // ({ ...this.initMarker } as { lat: number; lng: number })
         : null,
+      locationLabel: '',
+    };
+  },
+  head() {
+    return {
+      link: [
+        {
+          rel: 'stylesheet',
+          href:
+            'https://unpkg.com/leaflet-geosearch@2.6.0/assets/css/leaflet.css',
+        },
+      ],
     };
   },
   computed: {
@@ -83,23 +96,35 @@ export default Vue.extend({
       this.$emit('setMarker', this.marker);
     },
   },
-  mounted() {
+  created() {
     if (!this.initMarker) this.geolocate();
-    else this.center = { ...this.initMarker };
+    else this.center = this.$L.latLng(this.initMarker);
+  },
+  mounted() {
+    const mapObject = (this.$refs.map as any).mapObject;
+    mapObject.on('geosearch/showlocation', (response: any) => {
+      this.marker = this.$L.latLng({
+        lng: response.location.x,
+        lat: response.location.y,
+      });
+
+      this.center = this.marker;
+      this.locationLabel = response.location.label;
+    });
+
+    mapObject.on('dblclick', (e: any) => {
+      if (!this.disabled) {
+        this.marker = this.$L.latLng({
+          lat: e.latlng.lat,
+          lng: e.latlng.lng,
+        });
+        this.locationLabel = 'Marked';
+      }
+    });
   },
   methods: {
-    setPlace(place: any) {
-      this.currentPlace = place;
-    },
-    onAddMarker() {
-      if (this.currentPlace) {
-        this.marker = {
-          lat: this.currentPlace.geometry.location.lat(),
-          lng: this.currentPlace.geometry.location.lng(),
-        };
-        this.center = this.marker;
-        this.zoomLevel = 20;
-      }
+    onResize() {
+      (this.$refs.map as any).mapObject._onResize();
     },
     onClickMarker() {
       if (this.marker) this.center = this.marker;
@@ -111,13 +136,6 @@ export default Vue.extend({
           lng: position.coords.longitude,
         };
       });
-    },
-    onRightClickMap(mouseArgs: any) {
-      if (this.disabled) return;
-      this.marker = {
-        lat: mouseArgs.latLng.lat(),
-        lng: mouseArgs.latLng.lng(),
-      };
     },
   },
 });

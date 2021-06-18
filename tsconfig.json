@@ -15,7 +15,7 @@
       "~/*": ["./*"],
       "@/*": ["./*"]
     },
-    "types": ["@nuxt/types", "@nuxtjs/axios", "@types/node", "@nuxtjs/vuetify", "@nuxtjs/toast",  "@nuxtjs/auth-next",]
+    "types": ["@nuxt/types", "@nuxtjs/axios", "@types/node", "@nuxtjs/vuetify", "@nuxtjs/toast",  "@nuxtjs/auth-next", "nuxt-leaflet"]
   },
   "exclude": ["node_modules", ".nuxt", "dist"]
 }

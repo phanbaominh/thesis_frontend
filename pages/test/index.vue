@@ -4,10 +4,11 @@
       <BaseTest />
       <v-btn @click="onTest">Query</v-btn>
       <v-btn @click="onNewData">New Data</v-btn>
-      <input v-model="text" type="text" />
+      <!-- <input v-model="text" type="text" />
       <v-btn @click="onNewNoti">New noti</v-btn>
-      <v-btn @click="onNewDevice">New device</v-btn>
+      <v-btn @click="onNewDevice">New device</v-btn> -->
     </div>
+    <BaseMap />
     <!-- <BuildingPlaceMap /> -->
   </div>
 </template>

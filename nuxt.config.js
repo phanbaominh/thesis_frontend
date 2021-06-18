@@ -30,7 +30,6 @@ export default {
     '~/plugins/axios.ts',
     '~/plugins/chart.ts',
     '~/plugins/handleErrors.ts',
-    '~/plugins/map.ts',
     '~/plugins/utils.ts',
   ],
 
@@ -54,6 +53,7 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/toast',
     '@nuxtjs/auth-next',
+    'nuxt-leaflet',
   ],
   auth: {
     strategies: {

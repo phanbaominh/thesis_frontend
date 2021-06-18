@@ -19,13 +19,15 @@
     "chart.js": "2",
     "core-js": "^3.8.3",
     "dayjs": "^1.10.4",
+    "leaflet-geosearch": "^3.3.2",
     "nuxt": "^2.14.12",
+    "nuxt-leaflet": "^0.0.25",
     "nuxt-typed-vuex": "^0.1.22",
     "socket.io-client": "^4.0.1",
     "vue-chartjs": "^3.5.1",
     "vue-markdown": "^2.2.4",
-    "vue2-google-maps": "^0.10.7",
-    "vue2-google-maps-withscopedautocomp": "^0.12.1"
+    "vue2-leaflet": "^2.7.0",
+    "vue2-leaflet-geosearch": "^1.0.6"
   },
   "devDependencies": {
     "@nuxt/types": "^2.14.12",
