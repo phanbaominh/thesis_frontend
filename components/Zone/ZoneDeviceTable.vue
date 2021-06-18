@@ -371,7 +371,12 @@ export default Vue.extend({
       const index = this.deviceTableData.findIndex(
         (device) => device._id === deviceInfo.deviceId
       );
-      console.log('device index', index, deviceInfo.deviceId);
+      console.log(
+        'device index',
+        index,
+        deviceInfo.deviceId,
+        this.deviceTableData.map((dev) => dev._id)
+      );
       if (index < 0) return;
       const device = this.deviceTableData[index];
       this.$set(this.deviceTableData, index, {
