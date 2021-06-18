@@ -231,6 +231,8 @@ export interface ZoneInfo {
   mediaName: string;
   timeStart: number;
   adName: string;
+  media: { path: string; name: string };
+  ad: { _id: string; name: string };
 }
 
 export interface ZoneDeviceLog {
@@ -238,6 +240,7 @@ export interface ZoneDeviceLog {
   mediaName: string | null;
   adName: string;
   timeStart: string;
+  status: string;
 }
 
 export interface Zone {

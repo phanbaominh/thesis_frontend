@@ -23,6 +23,7 @@ export default Vue.extend({
         { text: 'Media Name', value: 'mediaName' },
         { text: 'Ad Name', value: 'adName' },
         { text: 'Time start', value: 'timeStart' },
+        { text: 'Status', value: 'status' },
       ],
       devicesLog: [] as ZoneDeviceLog[],
     };
@@ -43,6 +44,7 @@ export default Vue.extend({
       adName: log.adOfferId.name,
       mediaName: log.videoId.name,
       name: log.deviceId.name,
+      status: 'Played',
     }));
   },
   created() {
@@ -62,10 +64,11 @@ export default Vue.extend({
       const name =
         this.zone.deviceArray.find((device) => device._id === zoneInfo.deviceId)
           ?.name || 'None';
-      const mediaName = zoneInfo.mediaName;
+      const mediaName = zoneInfo.media ? zoneInfo.mediaName : 'None';
       this.devicesLog.unshift({
         name,
         mediaName,
+        status: zoneInfo.media ? 'Played' : 'Stopped',
         timeStart: this.$utils.timeFormat(zoneInfo.timeStart),
         adName: zoneInfo.adName,
       });

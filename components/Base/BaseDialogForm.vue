@@ -50,7 +50,7 @@ export default Vue.extend({
       type: String,
     },
     action: {
-      required: true,
+      default: '',
       type: String,
     },
     controlDialog: {

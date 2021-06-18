@@ -57,6 +57,7 @@ export default Vue.extend({
     },
     isPause() {
       this.dataIsPause = this.isPause;
+      if (this.dataIsPause) this.clearProgressInterval();
     },
   },
   created() {
@@ -77,7 +78,10 @@ export default Vue.extend({
       }, 1000);
     },
     clearProgressInterval() {
-      if (this.prevProgressInterval) clearInterval(this.prevProgressInterval);
+      if (this.prevProgressInterval) {
+        this.progress = 0;
+        clearInterval(this.prevProgressInterval);
+      }
     },
     resetProgressInterval() {
       this.clearProgressInterval();
@@ -89,7 +93,7 @@ export default Vue.extend({
         .substr(14, 5);
     },
     async onPause() {
-      const eventName = this.isPause ? 'play-video-auto' : 'pause-video';
+      const eventName = this.dataIsPause ? 'play-video-auto' : 'quit-video';
       this.dataIsPause
         ? this.setProgressInterval()
         : this.clearProgressInterval();

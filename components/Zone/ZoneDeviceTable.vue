@@ -58,7 +58,18 @@
               </v-card>
             </v-card>
           </v-dialog>
+          <BaseButtonToolbar icon="play" title="Play" @click="onPlay" />
+          <DialogDelete :max-width="500" @delete="onPause">
+            <template #title>Do want to stop all devices</template>
+            <template #default="{ on }">
+              <BaseButtonToolbar icon="pause" title="Pause" v-on="on" />
+            </template>
+          </DialogDelete>
 
+          <ZoneDeviceTableVolumeControl
+            :zone="zone"
+            :control-perm="canControlZone"
+          />
           <v-spacer></v-spacer>
           <v-col :cols="$vuetify.breakpoint.xsOnly ? 5 : 6" md="3">
             <v-text-field
@@ -109,7 +120,9 @@
       <span v-else> None </span>
     </template>
     <template #item.media="{ item: device }">
-      {{ `${device.media ? $truncate(device.media.name) : 'None'}` }}
+      <span :title="device.media ? device.media.name : 'None'">{{
+        `${device.media ? $truncate(device.media.name) : 'None'}`
+      }}</span>
       <MediaTabItemPlayDialog
         v-if="device.media"
         xsmall
@@ -121,7 +134,7 @@
       {{ $utils.timeFormat(item.timeStart) }}
     </template>
     <template #expanded-item="{ item: device }">
-      <td :colspan="4">
+      <td v-if="$vuetify.breakpoint.smAndUp" :colspan="4">
         <!-- <v-row>
           <v-col cols="6">
             <ZoneDeviceTableRowPlayControl
@@ -144,7 +157,7 @@
           :control-perm="canControlZone"
         />
         <ZoneDeviceTableRowVolumeControl
-          v-bind="device"
+          :device="device"
           :control-perm="canControlZone"
         />
       </td>
@@ -378,7 +391,28 @@ export default Vue.extend({
         ...device,
         views: deviceRunResult.views,
         cost: deviceRunResult.cost,
+        avgViews:
+          ((device.avgViews + deviceRunResult.views) * 1.0) /
+          (device.numberOfTimes + 1),
+        numberOfTimes: device.numberOfTimes + 1,
       });
+    },
+    videoControlRequest(eventName: string, payload?: { [key: string]: any }) {
+      this.$handleErrors(async () => {
+        await this.$axios.$post(this.$apiUrl.videoControl, {
+          eventName,
+          payload: {
+            zoneId: this.zone._id,
+            ...payload,
+          },
+        });
+      });
+    },
+    onPlay() {
+      this.videoControlRequest('play-video-auto');
+    },
+    onPause() {
+      this.videoControlRequest('quit-video');
     },
   },
 });
