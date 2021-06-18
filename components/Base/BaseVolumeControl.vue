@@ -70,7 +70,7 @@ export default Vue.extend({
     onVolume(endVolume: number) {
       this.$emit('change', {
         eventName: 'volume-video',
-        volumeVideo: endVolume,
+        payload: { volumeVideo: endVolume },
       });
     },
   },
