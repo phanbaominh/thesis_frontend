@@ -167,7 +167,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import {
-  AdLog,
   Device,
   DeviceTableRow,
   Permission,
@@ -396,8 +395,8 @@ export default Vue.extend({
       const device = this.deviceTableData[index];
       this.$set(this.deviceTableData, index, {
         ...device,
-        views: deviceRunResult.views,
-        cost: deviceRunResult.cost,
+        views: device.views + deviceRunResult.views,
+        cost: device.cost + deviceRunResult.moneyCharge,
         avgViews:
           ((device.avgViews + deviceRunResult.views) * 1.0) /
           (device.numberOfTimes + 1),
