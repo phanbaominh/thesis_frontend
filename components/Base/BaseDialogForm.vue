@@ -18,7 +18,11 @@
         </v-btn>
       </slot>
     </template>
-    <v-card class="pt-2 px-4">
+    <v-card
+      class="pt-2 px-4 card-focus"
+      :ripple="false"
+      @click="$emit('click')"
+    >
       <BaseDialogTitle @close="onCloseDialog">
         {{ title }}
         <slot name="title.append"></slot>

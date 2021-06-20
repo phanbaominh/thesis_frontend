@@ -243,6 +243,11 @@ export interface ZoneDeviceLog {
   status: string;
 }
 
+export interface ZonePrice {
+  value: number;
+  desc: string;
+}
+
 export interface Zone {
   _id: string;
   name: string;
@@ -257,6 +262,7 @@ export interface Zone {
   location: { lat: number; lng: number };
   locationDesc: string;
   pricePerTimePeriod: number;
+  priceArray?: ZonePrice[];
 }
 export interface DetailedAd {
   _id: string;

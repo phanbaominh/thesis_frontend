@@ -3,7 +3,7 @@
     <v-card class="pa-4">
       <v-card-title>
         <BaseBackButton @click="onBack"> </BaseBackButton>
-        Create an ad
+        {{ initAd ? `Update ad ${initAd.name}` : 'Create an ad' }}
       </v-card-title>
       <BaseFetcher :fetch-state="$fetchState">
         <template #pending>Fetching adsets, media...</template>

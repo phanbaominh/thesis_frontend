@@ -10,7 +10,6 @@
       hint="Search in the text box on the map or double click on map to add a marker"
       persistent-hint
       :error-messages="errorMessages"
-      disabled
     >
     </v-text-field>
     <l-map
@@ -18,7 +17,7 @@
       v-resize="onResize"
       :zoom="zoomLevel"
       :center="center"
-      style="height: 400px"
+      style="height: 400px; z-index: 0"
     >
       <l-tile-layer
         url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
@@ -64,9 +63,9 @@ export default Vue.extend({
         showMarker: false,
         autoClose: true,
       },
-      center: { lat: 0, lng: 0 },
+      center: { lat: 11, lng: 107 },
       currentPlace: null as any,
-      zoomLevel: this.initMarker ? 20 : 12,
+      zoomLevel: this.initMarker ? 20 : 10,
       marker: this.initMarker
         ? this.$L.latLng(this.initMarker) // ({ ...this.initMarker } as { lat: number; lng: number })
         : null,

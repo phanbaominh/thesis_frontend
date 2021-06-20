@@ -1,5 +1,5 @@
 <template>
-  <ZoneCreateForm :init-zone="zone" />
+  <ZoneForm :init-zone="zone" />
 </template>
 <script lang="ts">
 import Vue from 'vue';

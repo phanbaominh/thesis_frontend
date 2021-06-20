@@ -3,7 +3,7 @@
     <v-card class="pa-4">
       <v-card-title>
         <BaseBackButton @click="onBack"> </BaseBackButton>
-        Create a zone
+        {{ initZone ? `Update zone ${initZone.name}` : 'Create a zone' }}
       </v-card-title>
       <v-form
         ref="form"
@@ -36,7 +36,7 @@
           dense
           :rules="[(v) => !!v || 'Description of location is required']"
         ></v-text-field>
-        <v-text-field
+        <!-- <v-text-field
           v-model="zone.pricePerTimePeriod"
           name="pricePerTimePeriod"
           label="Price per second"
@@ -48,7 +48,8 @@
             (v) => !!v || 'Price per second is required',
             (v) => (v && v >= 0) || 'Price per second has to be larger than 0',
           ]"
-        ></v-text-field>
+        ></v-text-field> -->
+        <ZoneFormPrice :is-disabled="hasAds" :init-prices="initPrices" />
         <BaseSubmitActions>
           {{ initZone ? 'Update' : 'Create' }}
         </BaseSubmitActions>
@@ -77,12 +78,23 @@ export default Vue.extend({
         ...this.initZone,
       } as Zone,
       errorMessages: '',
+      initPrices: [] as any[],
     };
   },
   computed: {
     hasAds(): boolean {
       return this.initZone && this.initZone.adArray.length > 0;
     },
+  },
+  created() {
+    for (let i = 0; i < 24; i++) {
+      this.initPrices.push({
+        value: 10,
+        desc: 'Normal hours',
+      });
+    }
+    this.$set(this.initPrices, 2, { value: 20, desc: 'Cool' });
+    this.$set(this.initPrices, 4, { value: 30, desc: 'Cringe' });
   },
   methods: {
     async onSubmit() {
