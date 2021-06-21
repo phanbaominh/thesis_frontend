@@ -49,7 +49,11 @@
             (v) => (v && v >= 0) || 'Price per second has to be larger than 0',
           ]"
         ></v-text-field> -->
-        <ZoneFormPrice :is-disabled="hasAds" :init-prices="initPrices" />
+        <ZoneFormPrice
+          :is-disabled="hasAds"
+          :init-prices="zone.priceArray"
+          @change="zone.priceArray = $event"
+        />
         <BaseSubmitActions>
           {{ initZone ? 'Update' : 'Create' }}
         </BaseSubmitActions>
@@ -75,26 +79,16 @@ export default Vue.extend({
         location: null as { lat: number; lng: number } | null,
         locationDesc: '',
         pricePerTimePeriod: 0,
+        priceArray: [],
         ...this.initZone,
       } as Zone,
       errorMessages: '',
-      initPrices: [] as any[],
     };
   },
   computed: {
     hasAds(): boolean {
       return this.initZone && this.initZone.adArray.length > 0;
     },
-  },
-  created() {
-    for (let i = 0; i < 24; i++) {
-      this.initPrices.push({
-        value: 10,
-        desc: 'Normal hours',
-      });
-    }
-    this.$set(this.initPrices, 2, { value: 20, desc: 'Cool' });
-    this.$set(this.initPrices, 4, { value: 30, desc: 'Cringe' });
   },
   methods: {
     async onSubmit() {
@@ -103,6 +97,9 @@ export default Vue.extend({
         this.errorMessages = 'A marker is required';
         return;
       }
+      this.zone.pricePerTimePeriod = this.zone.priceArray.find(
+        (price) => price.desc === 'Normal hours'
+      )?.value;
       await this.$handleErrors(async () => {
         const newZone = this.initZone
           ? ((

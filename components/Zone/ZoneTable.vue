@@ -74,8 +74,14 @@
       {{ `${zone.locationDesc}` }}
       <lazy-zone-map-dialog class="ml-2" :location="zone.location" />
     </template>
-    <template #item.pricePerTimePeriod="{ item: { pricePerTimePeriod } }">
+    <!-- <template #item.pricePerTimePeriod="{ item: { pricePerTimePeriod } }">
       {{ $utils.moneyFormat(pricePerTimePeriod) }}
+    </template> -->
+    <template #item.priceArray="{ item: { priceArray, pricePerTimePeriod } }">
+      <BasePriceCell
+        :price-array="priceArray"
+        :price-per-time-period="pricePerTimePeriod"
+      />
     </template>
     <template #item.adCount="{ item: { adArray } }">
       {{ adArray.length }}
@@ -114,9 +120,13 @@ export default Vue.extend({
           text: 'Ads',
           value: 'adCount',
         },
+        // {
+        //   text: 'Price per second',
+        //   value: 'pricePerTimePeriod',
+        // },
         {
           text: 'Price per second',
-          value: 'pricePerTimePeriod',
+          value: 'priceArray',
         },
         // {
         //   text: 'Profit per view',

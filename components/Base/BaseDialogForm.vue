@@ -84,6 +84,13 @@ export default Vue.extend({
     controlDialog() {
       this.dialog = false;
     },
+    dialog() {
+      if (this.dialog === false) {
+        this.$emit('close');
+      } else {
+        this.$emit('open');
+      }
+    },
   },
   methods: {
     onSubmit() {
@@ -91,7 +98,6 @@ export default Vue.extend({
       this.$emit('submit');
     },
     onCloseDialog() {
-      this.$emit('close');
       this.dialog = false;
     },
   },

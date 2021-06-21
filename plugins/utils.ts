@@ -9,6 +9,7 @@ const utils = {
     return dayjs.unix(time).format(formatString);
   },
   moneyFormat(amount: number, currency = 'VND'): string {
+    amount = Number(amount);
     const isInteger = Number.isInteger(amount);
     const amountString = isInteger ? amount.toString() : amount.toFixed(2);
     const stringArray = isInteger

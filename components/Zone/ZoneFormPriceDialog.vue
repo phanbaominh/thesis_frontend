@@ -5,6 +5,7 @@
     :control-dialog="dialog"
     :max-width="1000"
     @submit="onSubmit"
+    @open="setData"
     @click="onClickOutside"
   >
     <template #activator="{ on }">
@@ -101,8 +102,8 @@ export default Vue.extend({
   data() {
     return {
       count: 0,
-      hods: (this.initPrices ? [] : [[]]) as number[][],
-      prices: (this.initPrices ? [] : [{ value: 0, desc: '' }]) as ZonePrice[],
+      hods: [] as number[][],
+      prices: [] as ZonePrice[],
       // prices: this.initPrices as ZonePrice[],
       allHodItems: AdsetConst.hods.map((hod) => ({
         text: `${hod}-${hod + 1}`,
@@ -110,25 +111,33 @@ export default Vue.extend({
       })) as Select[],
       hodItems: [] as Select[],
       selectedHods: [] as number[],
+      renderContent: false,
     };
   },
   created() {
-    this.initPrices.forEach((initPrice, h) => {
-      if (initPrice.desc !== 'Normal hours') {
-        const index = this.prices.findIndex(
-          (price) => price.desc === initPrice.desc
-        );
-        if (index >= 0) {
-          this.hods[index].push(h);
-        } else {
-          this.hods.push([h]);
-          this.prices.push(initPrice);
-        }
-      }
-    });
-    this.setHodItems();
+    this.setData();
   },
   methods: {
+    setData() {
+      this.hods = (this.initPrices.length > 0 ? [] : [[]]) as number[][];
+      this.prices = (this.initPrices.length > 0
+        ? []
+        : [{ value: 0, desc: '' }]) as ZonePrice[];
+      this.initPrices.forEach((initPrice, h) => {
+        if (initPrice.desc !== 'Normal hours') {
+          const index = this.prices.findIndex(
+            (price) => price.desc === initPrice.desc
+          );
+          if (index >= 0) {
+            this.hods[index].push(h);
+          } else {
+            this.hods.push([h]);
+            this.prices.push(initPrice);
+          }
+        }
+      });
+      this.setHodItems();
+    },
     setHodItemsSpecific(state: boolean) {
       this.hodItems = this.hodItems.map((item) => ({
         ...item,
@@ -156,7 +165,13 @@ export default Vue.extend({
       this.prices = this.prices.filter((_, curIndex) => curIndex !== index);
     },
     onSubmit() {
-      this.$emit('submit', { hods: this.hods, prices: this.prices });
+      this.$emit('submit', {
+        hods: this.hods,
+        prices: this.prices.map((price) => ({
+          value: Number(price.value),
+          desc: price.desc,
+        })),
+      });
     },
     onSelectHours(currentSelectedHod: number[]) {
       this.selectedHods = currentSelectedHod;

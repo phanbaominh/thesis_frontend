@@ -1,6 +1,6 @@
 <template>
   <BaseFetcher :fetch-state="$fetchState">
-    <template #pending> Loading ad set</template>
+    <template #pending> Loading zones</template>
     <v-select
       v-model="selectedZoneIds"
       dense

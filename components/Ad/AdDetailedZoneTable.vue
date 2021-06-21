@@ -22,6 +22,12 @@
       {{ item.locationDesc }}
       <ZoneMapDialog class="ml-2" :location="item.location" />
     </template>
+    <template #item.priceArray="{ item: { priceArray, pricePerTimePeriod } }">
+      <BasePriceCell
+        :price-array="priceArray"
+        :price-per-time-period="pricePerTimePeriod"
+      />
+    </template>
   </v-data-table>
 </template>
 <script lang="ts">
@@ -37,7 +43,7 @@ export default Vue.extend({
     return {
       headers: [
         { text: 'Name', value: 'name' },
-        { text: 'Price', value: 'pricePerTimePeriod', metric: 'VND/s' },
+        { text: 'Price', value: 'priceArray', metric: 'VND/s' },
         { text: 'Location', value: 'locationDesc' },
       ],
     };

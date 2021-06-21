@@ -24,14 +24,7 @@
       </template>
     </v-text-field>
 
-    <v-data-table
-      v-if="prices.length > 0"
-      :headers="tableHeaders"
-      :items="tableData"
-      :items-per-page="24"
-      class="elevation-1"
-      hide-default-footer
-    ></v-data-table>
+    <BasePriceTable v-if="prices.length > 0" :prices="prices" />
   </div>
 </template>
 <script lang="ts">
@@ -94,18 +87,19 @@ export default Vue.extend({
       for (let i = 0; i < AdsetConst.hods.length; i++) {
         if (this.prices[i] && this.prices[i].desc === 'Normal hours') {
           this.$set(this.prices, i, {
-            value: this.defaultPrice,
+            value: Number(this.defaultPrice),
             desc: 'Normal hours',
           });
         }
       }
+      this.$emit('change', this.prices);
     },
   },
   methods: {
     onSubmit({ hods, prices }: { hods: number[][]; prices: ZonePrice[] }) {
       for (let i = 0; i < AdsetConst.hods.length; i++) {
         this.$set(this.prices, i, {
-          value: this.defaultPrice,
+          value: Number(this.defaultPrice),
           desc: 'Normal hours',
         });
       }
@@ -115,6 +109,7 @@ export default Vue.extend({
         });
       });
       this.dialog = !this.dialog;
+      this.$emit('change', this.prices);
     },
   },
 });
