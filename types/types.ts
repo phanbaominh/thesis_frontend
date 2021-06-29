@@ -262,7 +262,7 @@ export interface Zone {
   location: { lat: number; lng: number };
   locationDesc: string;
   pricePerTimePeriod: number;
-  priceArray?: ZonePrice[];
+  priceArray: ZonePrice[];
 }
 export interface DetailedAd {
   _id: string;

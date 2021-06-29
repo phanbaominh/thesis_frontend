@@ -3,7 +3,7 @@
     <v-card class="pa-4">
       <v-card-title>
         <BaseBackButton @click="onBack"> </BaseBackButton>
-        {{ initZone ? `Update zone ${initZone.name}` : 'Create a zone' }}
+        {{ initZone ? `Update zone "${initZone.name}"` : 'Create a zone' }}
       </v-card-title>
       <v-form
         ref="form"
@@ -97,9 +97,9 @@ export default Vue.extend({
         this.errorMessages = 'A marker is required';
         return;
       }
-      this.zone.pricePerTimePeriod = this.zone.priceArray.find(
-        (price) => price.desc === 'Normal hours'
-      )?.value;
+      this.zone.pricePerTimePeriod =
+        this.zone.priceArray.find((price) => price.desc === 'Normal hours')
+          ?.value || 0;
       await this.$handleErrors(async () => {
         const newZone = this.initZone
           ? ((

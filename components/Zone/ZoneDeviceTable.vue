@@ -62,7 +62,19 @@
           <DialogDelete :max-width="500" @delete="onPause">
             <template #title>Do want to stop all devices</template>
             <template #default="{ on }">
-              <BaseButtonToolbar icon="pause" title="Pause" v-on="on" />
+              <v-btn
+                :small="!$vuetify.breakpoint.xs"
+                :x-small="$vuetify.breakpoint.xs"
+                fab
+                depressed
+                color="blue"
+                title="Pause"
+                class="align-self-center mr-2"
+                v-on="on"
+                @click="$emit('click', $event)"
+              >
+                <v-icon>mdi-pause</v-icon>
+              </v-btn>
             </template>
           </DialogDelete>
 
