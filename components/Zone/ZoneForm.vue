@@ -79,7 +79,7 @@ export default Vue.extend({
         location: null as { lat: number; lng: number } | null,
         locationDesc: '',
         pricePerTimePeriod: 0,
-        priceArray: [],
+        priceArray: new Array(24).fill({ value: 0, desc: 'Normal hours' }),
         ...this.initZone,
       } as Zone,
       errorMessages: '',
