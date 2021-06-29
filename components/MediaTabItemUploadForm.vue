@@ -145,7 +145,9 @@ export default Vue.extend({
         const bodyFormData = new FormData();
         bodyFormData.append('video', this.uploadedFile!);
         bodyFormData.append('duration', this.duration.toString());
+
         bodyFormData.append('adset', JSON.stringify(this.adset));
+        console.log(bodyFormData.getAll('duration'));
         await this.$handleErrors(
           async () => {
             this.isUploading = true;

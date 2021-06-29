@@ -59,9 +59,10 @@ export default Vue.extend({
   methods: {
     async onNew(adset: Adset) {
       await this.$handleErrors(async () => {
-        await this.$axios.$post(this.$apiUrl.adsets, adset);
+        this.adsets.push(
+          (await this.$axios.$post(this.$apiUrl.adsets, adset)).adset
+        );
         this.newDialog = !this.newDialog;
-        this.adsets.push(adset);
       });
     },
     onDelete(adset: Adset) {
