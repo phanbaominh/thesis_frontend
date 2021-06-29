@@ -64,7 +64,10 @@
               <v-list dense>
                 <v-list-item v-for="(key, index) in filteredKeys" :key="index">
                   <v-list-item-content> {{ key }}: </v-list-item-content>
-                  <v-list-item-content class="align-end">
+                  <v-list-item-content
+                    class="align-end"
+                    style="word-wrap: break-word"
+                  >
                     {{ device[key] || 'None' }}
                   </v-list-item-content>
                 </v-list-item>
