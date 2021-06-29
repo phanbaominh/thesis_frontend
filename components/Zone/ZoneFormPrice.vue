@@ -12,7 +12,7 @@
       :disabled="isDisabled"
       :rules="[
         (v) => !!v || 'Price per second is required',
-        (v) => (v && v >= 0) || 'Price per second has to be larger than 0',
+        (v) => (v && v > 0) || 'Price per second has to be larger than 0',
       ]"
     >
       <template #append-outer>
