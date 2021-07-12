@@ -98,7 +98,8 @@ export default Vue.extend({
         params: this.query,
       })
     ).data as AnalyticsData[];
-    this.tableData = result;
+    let dataId = 0;
+    this.tableData = result.map((result) => ({ id: dataId++, ...result }));
     const freq = this.$accessor.analytics.frequency;
     const timeStart = this.$accessor.analytics.timeStart;
     const timeEnd = this.$accessor.analytics.timeEnd;

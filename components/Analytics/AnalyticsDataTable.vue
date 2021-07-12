@@ -3,7 +3,7 @@
     v-model="selected"
     :headers="headers"
     :items="data"
-    item-key="_id"
+    item-key="id"
     show-select
     class="elevation-1"
   >
@@ -47,7 +47,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      selected: [],
+      selected: this.data,
     };
   },
   watch: {
