@@ -164,6 +164,7 @@ export default Vue.extend({
         {
           text: 'Actions',
           value: 'actions',
+          width: '150px',
         },
       ],
       search: '',
