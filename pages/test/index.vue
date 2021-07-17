@@ -30,19 +30,31 @@ import testData from '~/test';
 //       '609b6212a24d2734798b6508',
 //       '609b5d76a24d2734798b6507',
 //     ]),
-function getFakeSnapshot() {
+function getFakeSnapshot(ageList: number[], genderList: number[]) {
   const nof = faker.datatype.number({ max: 10, min: 3 });
   return {
-    ages: new Array(nof)
-      .fill(0)
-      .map(() => faker.helpers.randomize([0, 3, 10, 20, 30, 40, 50, 60, 70])),
+    ages: new Array(nof).fill(0).map(() => faker.helpers.randomize(ageList)),
     genders: new Array(nof)
       .fill(0)
-      .map(() => faker.helpers.randomize([10, 11])),
+      .map(() => faker.helpers.randomize(genderList)),
     number_of_face: nof,
   };
 }
 function getFakeData() {
+  const ageList = [0, 3, 3, 70, 70] as number[];
+  [10, 20, 30, 40, 50, 60].forEach((age) => {
+    const no = faker.datatype.number({ max: 5, min: 2 });
+    for (let i = 0; i < no; i++) {
+      ageList.push(age);
+    }
+  });
+  const genderList = [] as number[];
+  [10, 11].forEach((age) => {
+    const no = faker.datatype.number({ max: 3, min: 1 });
+    for (let i = 0; i < no; i++) {
+      genderList.push(age);
+    }
+  });
   return {
     zoneId: faker.helpers.randomize(testData.zoneIds),
     videoId: faker.helpers.randomize(testData.videoIds),
@@ -52,11 +64,13 @@ function getFakeData() {
     moneyCharge: faker.datatype.number({ min: 1000, max: 10000 }),
     timeStamp:
       faker.date
-        .between(dayjs().subtract(40, 'd').toDate(), dayjs().hour(23).toDate())
+        .between(dayjs().subtract(365, 'd').toDate(), dayjs().hour(23).toDate())
         .valueOf() / 1000,
     snapshots: new Array(faker.datatype.number({ min: 1, max: 20 }))
       .fill(0)
-      .map(() => getFakeSnapshot()),
+      .map(() => {
+        return getFakeSnapshot(ageList, genderList);
+      }),
   };
 }
 export default Vue.extend({
