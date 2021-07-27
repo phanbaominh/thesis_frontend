@@ -14,7 +14,7 @@
             depressed
             color="grey lighten-2"
             v-bind="attrs"
-            :disabled="notifications.length === 0 ? true : false"
+            :disabled="notiLength === 0 ? true : false"
             v-on="on"
             @click="onMenu"
           >
@@ -61,6 +61,7 @@ export default Vue.extend({
   data() {
     return {
       notifications: [] as AppNotification[],
+      notiLength: 0,
       notReadCount: 0,
       menu: false,
     };
@@ -69,6 +70,7 @@ export default Vue.extend({
     this.notifications = (
       await this.$axios.$get(this.$apiUrl.userNotification)
     ).notifications;
+    this.notiLength = this.notifications.length;
     this.notReadCount = this.notifications.filter(
       (noti) => !noti.isRead
     ).length;
@@ -76,6 +78,7 @@ export default Vue.extend({
   created() {
     this.$socket.on('notification', (newNoti) => {
       this.notifications.unshift(newNoti);
+      this.notiLength += 1;
       this.notReadCount += 1;
     });
   },
