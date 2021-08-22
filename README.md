@@ -7,7 +7,7 @@
 $ cp .env.example .env
 
 # (optional) copy and config test data, go to /test to generate fake data for analytics
-$ cp test.ts.example test.ts
+$ cp test.ts.cp test.ts
 
 # install dependencies
 $ yarn install
